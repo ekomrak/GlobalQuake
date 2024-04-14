@@ -15,11 +15,13 @@ import java.util.List;
 public class DatabaseService {
     private final Jdbi jdbi;
     private final Cache<Long, TelegramUser> usersCache;
-    private final Cache<CacheListType, List<TelegramUser>> usersListsCache;
+    private final Cache<UsersCacheListType, List<TelegramUser>> usersListsCache;
+    private final Cache<CountCacheListType, Integer> countCache;
 
     public DatabaseService() {
         usersCache = Caffeine.newBuilder().build();
         usersListsCache = Caffeine.newBuilder().build();
+        countCache = Caffeine.newBuilder().build();
         HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider();
         jdbi = Jdbi.create(hikariDataSourceProvider.getHikariDataSource()).installPlugin(new SqlObjectPlugin()).installPlugin(new CaffeineCachePlugin());
     }
@@ -29,37 +31,38 @@ public class DatabaseService {
     }
 
     public List<TelegramUser> listActiveUsers() {
-        return usersListsCache.get(CacheListType.ALL_ACTIVE_USERS, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listActiveUsers));
+        return usersListsCache.get(UsersCacheListType.ALL_ACTIVE_USERS, usersCacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listActiveUsers));
     }
 
     public List<TelegramUser> listUsersWithEarthquakeAlert() {
-        return usersListsCache.get(CacheListType.USERS_WITH_EARTHQUAKE_ALERT, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithEarthquakeAlert));
+        return usersListsCache.get(UsersCacheListType.USERS_WITH_EARTHQUAKE_ALERT, usersCacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithEarthquakeAlert));
     }
 
     public List<TelegramUser> listUsersWithClusterAlert() {
-        return usersListsCache.get(CacheListType.USERS_WITH_CLUSTER_ALERT, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithClusterAlert));
+        return usersListsCache.get(UsersCacheListType.USERS_WITH_CLUSTER_ALERT, usersCacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithClusterAlert));
     }
 
     public List<TelegramUser> listUsersWithStationAlert() {
-        return usersListsCache.get(CacheListType.USERS_WITH_STATION_ALERT, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithStationAlert));
+        return usersListsCache.get(UsersCacheListType.USERS_WITH_STATION_ALERT, usersCacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::listUsersWithStationAlert));
     }
 
     public void updateTelegramUser(TelegramUser user) {
         jdbi.useExtension(UsersDao.class, extension -> extension.updateTelegramUser(user));
         invalidateUser(user.getId());
-        invalidateAllLists();
+        invalidateAllUsersLists();
     }
 
     public void insertTelegramUser(TelegramUser user) {
         jdbi.useExtension(UsersDao.class, extension -> extension.insertTelegramUser(user));
+        invalidateAllCountLists();
     }
 
     public int countAllUsers() {
-        return jdbi.withExtension(UsersDao.class, UsersDao::countAllUsers);
+        return countCache.get(CountCacheListType.ALL, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::countAllUsers));
     }
 
     public int countActiveUsers() {
-        return jdbi.withExtension(UsersDao.class, UsersDao::countActiveUsers);
+        return countCache.get(CountCacheListType.ACTIVE, cacheListType -> jdbi.withExtension(UsersDao.class, UsersDao::countActiveUsers));
     }
 
     public int getUserOrder(Long id) {
@@ -78,16 +81,25 @@ public class DatabaseService {
         usersCache.invalidate(userId);
     }
 
-    public void invalidateList(CacheListType cacheListType) {
-        usersListsCache.invalidate(cacheListType);
+    public void invalidateUsersListCache(UsersCacheListType usersCacheListType) {
+        usersListsCache.invalidate(usersCacheListType);
     }
 
-    public void invalidateAllLists() {
+    public void invalidateCountCache(CountCacheListType cacheListType) {
+        countCache.invalidate(cacheListType);
+    }
+
+    public void invalidateAllUsersLists() {
         usersListsCache.invalidateAll();
+    }
+
+    public void invalidateAllCountLists() {
+        countCache.invalidateAll();
     }
 
     public void invalidateAllCaches() {
         usersCache.invalidateAll();
-        invalidateAllLists();
+        invalidateAllUsersLists();
+        invalidateAllCountLists();
     }
 }

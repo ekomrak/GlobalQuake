@@ -48,8 +48,10 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JCheckBox enableTelegramStationHighIntensityLocation;
     private JCheckBox enableTelegramStationHighIntensityImage;
     private JCheckBox enableTelegramStationHighIntensityMap;
-    private JTextField tsStationMinIntensity;
-    private JTextField tsStationMaxDist;
+    private JTextField tsStationMinIntensity1;
+    private JTextField tsStationMaxDist1;
+    private JTextField tsStationMinIntensity2;
+    private JTextField tsStationMaxDist2;
 
     private JCheckBox useFreeTts;
 
@@ -227,13 +229,31 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         enableTelegramStationHighIntensityMap = new JCheckBox("Send earthquake map", Settings.enableTelegramStationHighIntensityMap);
         tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityMap, createGbcOneLine(4));
 
-        tsStationHighIntensityAlertPanel.add(new JLabel("Station alert min intensity: ", SwingConstants.LEFT), createGbc(0, 5));
-        tsStationMinIntensity = new JTextField(String.format("%s", Settings.tsStationMinIntensity));
-        tsStationHighIntensityAlertPanel.add(tsStationMinIntensity, createGbc(1, 5));
+        JPanel area1Panel = new JPanel(new GridBagLayout());
+        area1Panel.setBorder(BorderFactory.createTitledBorder("Area 1"));
 
-        tsStationHighIntensityAlertPanel.add(new JLabel("Station alert max distance: ", SwingConstants.LEFT), createGbc(0, 6));
-        tsStationMaxDist = new JTextField(String.format("%s", Settings.tsStationMaxDist));
-        tsStationHighIntensityAlertPanel.add(tsStationMaxDist, createGbc(1, 6));
+        area1Panel.add(new JLabel("Station alert min intensity: ", SwingConstants.LEFT), createGbc(0, 0));
+        tsStationMinIntensity1 = new JTextField(String.format("%s", Settings.tsStationMinIntensity1));
+        area1Panel.add(tsStationMinIntensity1, createGbc(1, 0));
+
+        area1Panel.add(new JLabel("Station alert max distance: ", SwingConstants.LEFT), createGbc(0, 1));
+        tsStationMaxDist1 = new JTextField(String.format("%s", Settings.tsStationMaxDist1));
+        area1Panel.add(tsStationMaxDist1, createGbc(1, 1));
+
+        tsStationHighIntensityAlertPanel.add(area1Panel, createGbcOneLine(5));
+
+        JPanel area2Panel = new JPanel(new GridBagLayout());
+        area2Panel.setBorder(BorderFactory.createTitledBorder("Area 2"));
+
+        area2Panel.add(new JLabel("Station alert min intensity: ", SwingConstants.LEFT), createGbc(0, 0));
+        tsStationMinIntensity2 = new JTextField(String.format("%s", Settings.tsStationMinIntensity2));
+        area2Panel.add(tsStationMinIntensity2, createGbc(1, 0));
+
+        area2Panel.add(new JLabel("Station alert max distance: ", SwingConstants.LEFT), createGbc(0, 1));
+        tsStationMaxDist2 = new JTextField(String.format("%s", Settings.tsStationMaxDist2));
+        area2Panel.add(tsStationMaxDist2, createGbc(1, 1));
+
+        tsStationHighIntensityAlertPanel.add(area1Panel, createGbcOneLine(6));
 
         add(tsStationHighIntensityAlertPanel);
     }
@@ -289,8 +309,10 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.enableTelegramStationHighIntensityLocation = enableTelegramStationHighIntensityLocation.isSelected();
         Settings.enableTelegramStationHighIntensityImage = enableTelegramStationHighIntensityImage.isSelected();
         Settings.enableTelegramStationHighIntensityMap = enableTelegramStationHighIntensityMap.isSelected();
-        Settings.tsStationMinIntensity = parseDouble(tsStationMinIntensity.getText(), "Station alert min intensity", 0, Double.MAX_VALUE);
-        Settings.tsStationMaxDist = parseDouble(tsStationMaxDist.getText(), "Station alert max distance", 0, 30000);
+        Settings.tsStationMinIntensity1 = parseDouble(tsStationMinIntensity1.getText(), "Station alert min intensity", 0, Double.MAX_VALUE);
+        Settings.tsStationMaxDist1 = parseDouble(tsStationMaxDist1.getText(), "Station alert max distance", 0, 30000);
+        Settings.tsStationMinIntensity2 = parseDouble(tsStationMinIntensity2.getText(), "Station alert min intensity", 0, Double.MAX_VALUE);
+        Settings.tsStationMaxDist2 = parseDouble(tsStationMaxDist2.getText(), "Station alert max distance", 0, 30000);
 
         Settings.useFreeTts = useFreeTts.isSelected();
     }

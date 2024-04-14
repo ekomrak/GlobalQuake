@@ -2,7 +2,7 @@ package globalquake.telegram.abilities;
 
 import globalquake.client.GlobalQuakeClient;
 import globalquake.telegram.TelegramService;
-import globalquake.db.CacheListType;
+import globalquake.db.UsersCacheListType;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
 
 import static org.telegram.telegrambots.abilitybots.api.objects.Locality.USER;
@@ -26,12 +26,12 @@ public class CacheAbility extends AbstractAbility {
                         GlobalQuakeClient.instance.getDatabaseService().invalidateAllCaches();
                         getTelegramService().getSilent().send("Все кеши сброшены.", ctx.chatId());
                     } else if ("list".equalsIgnoreCase(input)) {
-                        GlobalQuakeClient.instance.getDatabaseService().invalidateAllLists();
+                        GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
                         getTelegramService().getSilent().send("Все списки сброшены.", ctx.chatId());
                     } else {
-                        CacheListType cacheListType = CacheListType.findByName(input);
-                        if (cacheListType != null) {
-                            GlobalQuakeClient.instance.getDatabaseService().invalidateList(cacheListType);
+                        UsersCacheListType usersCacheListType = UsersCacheListType.findByName(input);
+                        if (usersCacheListType != null) {
+                            GlobalQuakeClient.instance.getDatabaseService().invalidateUsersListCache(usersCacheListType);
                             getTelegramService().getSilent().send("Кеш сброшен.", ctx.chatId());
                         } else {
                             try {

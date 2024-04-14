@@ -4,7 +4,7 @@ import globalquake.client.GlobalQuakeClient;
 import globalquake.core.Settings;
 import globalquake.core.earthquake.data.Cluster;
 import globalquake.core.intensity.IntensityScales;
-import globalquake.db.CacheListType;
+import globalquake.db.UsersCacheListType;
 import globalquake.db.entities.TelegramUser;
 import globalquake.telegram.SettingsState;
 import globalquake.telegram.TelegramService;
@@ -53,7 +53,7 @@ public class ProcessInputAbility extends AbstractAbility {
                                 if (telegramUser != null) {
                                     telegramUser.setEnableTelegramEarthquakeAlert(!telegramUser.getEnableTelegramEarthquakeAlert());
                                     GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
-                                    GlobalQuakeClient.instance.getDatabaseService().invalidateList(CacheListType.USERS_WITH_EARTHQUAKE_ALERT);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateUsersListCache(UsersCacheListType.USERS_WITH_EARTHQUAKE_ALERT);
                                     navigateToEarthquakeSettings(userId, chatId, messageId);
                                 }
                             }
@@ -111,7 +111,7 @@ public class ProcessInputAbility extends AbstractAbility {
                                 if (telegramUser != null) {
                                     telegramUser.setEnableTelegramPossibleShakingAlert(!telegramUser.getEnableTelegramPossibleShakingAlert());
                                     GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
-                                    GlobalQuakeClient.instance.getDatabaseService().invalidateList(CacheListType.USERS_WITH_CLUSTER_ALERT);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateUsersListCache(UsersCacheListType.USERS_WITH_CLUSTER_ALERT);
                                     navigateToClusterSettings(userId, chatId, messageId);
                                 }
                             }
@@ -157,7 +157,7 @@ public class ProcessInputAbility extends AbstractAbility {
                                 if (telegramUser != null) {
                                     telegramUser.setEnableTelegramStationHighIntensityAlert(!telegramUser.getEnableTelegramStationHighIntensityAlert());
                                     GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
-                                    GlobalQuakeClient.instance.getDatabaseService().invalidateList(CacheListType.USERS_WITH_STATION_ALERT);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateUsersListCache(UsersCacheListType.USERS_WITH_STATION_ALERT);
                                     navigateToStationSettings(userId, chatId, messageId);
                                 }
                             }
@@ -188,13 +188,21 @@ public class ProcessInputAbility extends AbstractAbility {
                                     navigateToStationSettings(userId, chatId, messageId);
                                 }
                             }
-                            case "station_distance" -> {
-                                getTelegramService().getUserState().put(userId, SettingsState.STATION_DIST);
-                                getTelegramService().getSilent().forceReply("Введите значение для:\nРасстояние:", chatId);
+                            case "station_distance_1" -> {
+                                getTelegramService().getUserState().put(userId, SettingsState.STATION_DIST_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 1: Расстояние:", chatId);
                             }
-                            case "station_intensity" -> {
-                                getTelegramService().getUserState().put(userId, SettingsState.STATION_INTENSITY);
-                                getTelegramService().getSilent().forceReply("Введите значение для:\nИнтенсивность:", chatId);
+                            case "station_intensity_1" -> {
+                                getTelegramService().getUserState().put(userId, SettingsState.STATION_INTENSITY_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 1: Интенсивность:", chatId);
+                            }
+                            case "station_distance_2" -> {
+                                getTelegramService().getUserState().put(userId, SettingsState.STATION_DIST_2);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 2: Расстояние:", chatId);
+                            }
+                            case "station_intensity_2" -> {
+                                getTelegramService().getUserState().put(userId, SettingsState.STATION_INTENSITY_2);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 2: Интенсивность:", chatId);
                             }
                             default -> navigateToSettings(userId, chatId, messageId);
                         }
@@ -370,14 +378,14 @@ public class ProcessInputAbility extends AbstractAbility {
                                     }
                                     navigateToClusterSettings(userId, chatId);
                                 }
-                                case STATION_DIST -> {
+                                case STATION_DIST_1 -> {
                                     try {
                                         TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
 
                                         if (telegramUser != null) {
                                             int dist = Integer.parseInt(messageText);
                                             if (dist >= 0 && dist <= 1000) {
-                                                telegramUser.setTsStationMaxDist(dist);
+                                                telegramUser.setTsStationMaxDist1(dist);
                                                 GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
                                             } else {
                                                 getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 1000", chatId);
@@ -388,14 +396,50 @@ public class ProcessInputAbility extends AbstractAbility {
                                     }
                                     navigateToStationSettings(userId, chatId);
                                 }
-                                case STATION_INTENSITY -> {
+                                case STATION_INTENSITY_1 -> {
                                     try {
                                         TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
 
                                         if (telegramUser != null) {
                                             int intensity = Integer.parseInt(messageText);
                                             if (intensity >= 500 && intensity <= 100000) {
-                                                telegramUser.setTsStationMinIntensity(intensity);
+                                                telegramUser.setTsStationMinIntensity1(intensity);
+                                                GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                            } else {
+                                                getTelegramService().getSilent().send("Значение должно быть в интервале от 500 до 100000", chatId);
+                                            }
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        getTelegramService().getSilent().send("Неправильное число", chatId);
+                                    }
+                                    navigateToStationSettings(userId, chatId);
+                                }
+                                case STATION_DIST_2 -> {
+                                    try {
+                                        TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                        if (telegramUser != null) {
+                                            int dist = Integer.parseInt(messageText);
+                                            if (dist >= 0 && dist <= 1000) {
+                                                telegramUser.setTsStationMaxDist2(dist);
+                                                GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                            } else {
+                                                getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 1000", chatId);
+                                            }
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        getTelegramService().getSilent().send("Неправильное число", chatId);
+                                    }
+                                    navigateToStationSettings(userId, chatId);
+                                }
+                                case STATION_INTENSITY_2 -> {
+                                    try {
+                                        TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                        if (telegramUser != null) {
+                                            int intensity = Integer.parseInt(messageText);
+                                            if (intensity >= 500 && intensity <= 100000) {
+                                                telegramUser.setTsStationMinIntensity2(intensity);
                                                 GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
                                             } else {
                                                 getTelegramService().getSilent().send("Значение должно быть в интервале от 500 до 100000", chatId);
@@ -450,8 +494,8 @@ public class ProcessInputAbility extends AbstractAbility {
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать геолокацию: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramEarthquakeLocation()))).callbackData("earthquake_location").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramEarthquakeImage()))).callbackData("earthquake_image").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramEarthquakeMap()))).callbackData("earthquake_map").build()))
-                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1. Расстояние: %d".formatted(telegramUser.getTsEarthquakeMaxDistArea1())).callbackData("earthquake_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Магнитуда: %.1f".formatted(telegramUser.getTsEarthquakeMinMagnitudeArea1())).callbackData("earthquake_mag_1").build()))
-                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2. Расстояние: %d".formatted(telegramUser.getTsEarthquakeMaxDistArea2())).callbackData("earthquake_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Магнитуда: %.1f".formatted(telegramUser.getTsEarthquakeMinMagnitudeArea2())).callbackData("earthquake_mag_2").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1: Расстояние: %d".formatted(telegramUser.getTsEarthquakeMaxDistArea1())).callbackData("earthquake_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Магнитуда: %.1f".formatted(telegramUser.getTsEarthquakeMinMagnitudeArea1())).callbackData("earthquake_mag_1").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2: Расстояние: %d".formatted(telegramUser.getTsEarthquakeMaxDistArea2())).callbackData("earthquake_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Магнитуда: %.1f".formatted(telegramUser.getTsEarthquakeMinMagnitudeArea2())).callbackData("earthquake_mag_2").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Уровень ощутимости: %d".formatted(telegramUser.getTsEarthquakeMinIntensity() + 1)).callbackData("earthquake_intensity").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
             sendInlineKeyboard(markupInline, chatId, messageId);
@@ -488,7 +532,8 @@ public class ProcessInputAbility extends AbstractAbility {
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать геолокацию: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramStationHighIntensityLocation()))).callbackData("station_location").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramStationHighIntensityImage()))).callbackData("station_image").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту: %s".formatted(TelegramUtils.booleanToString(telegramUser.getEnableTelegramStationHighIntensityMap()))).callbackData("station_map").build()))
-                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Расстояние: %d".formatted(telegramUser.getTsStationMaxDist())).callbackData("station_distance").build(), InlineKeyboardButton.builder().text("Интенсивность: %d".formatted(telegramUser.getTsStationMinIntensity())).callbackData("station_intensity").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1: Расстояние: %d".formatted(telegramUser.getTsStationMaxDist1())).callbackData("station_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Интенсивность: %d".formatted(telegramUser.getTsStationMinIntensity1())).callbackData("station_intensity_1").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2: Расстояние: %d".formatted(telegramUser.getTsStationMaxDist2())).callbackData("station_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Интенсивность: %d".formatted(telegramUser.getTsStationMinIntensity2())).callbackData("station_intensity_2").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
             sendInlineKeyboard(markupInline, chatId, messageId);
         }

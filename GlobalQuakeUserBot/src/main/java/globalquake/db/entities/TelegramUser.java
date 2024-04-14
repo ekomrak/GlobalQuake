@@ -43,8 +43,10 @@ public class TelegramUser {
     private Boolean enableTelegramStationHighIntensityLocation;
     private Boolean enableTelegramStationHighIntensityImage;
     private Boolean enableTelegramStationHighIntensityMap;
-    private Integer tsStationMinIntensity;
-    private Integer tsStationMaxDist;
+    private Integer tsStationMinIntensity1;
+    private Integer tsStationMaxDist1;
+    private Integer tsStationMinIntensity2;
+    private Integer tsStationMaxDist2;
 
     public TelegramUser() {
 
@@ -103,8 +105,10 @@ public class TelegramUser {
         enableTelegramStationHighIntensityLocation = false;
         enableTelegramStationHighIntensityImage = false;
         enableTelegramStationHighIntensityMap = true;
-        tsStationMinIntensity = 4000;
-        tsStationMaxDist = 300;
+        tsStationMinIntensity1 = 4000;
+        tsStationMaxDist1 = 100;
+        tsStationMinIntensity2 = 10000;
+        tsStationMaxDist2 = 400;
 
         tsEarthquakeMinIntensity = 2;
     }
@@ -253,20 +257,36 @@ public class TelegramUser {
         this.enableTelegramStationHighIntensityAlert = enableTelegramStationHighIntensityAlert;
     }
 
-    public Integer getTsStationMinIntensity() {
-        return tsStationMinIntensity;
+    public Integer getTsStationMinIntensity1() {
+        return tsStationMinIntensity1;
     }
 
-    public void setTsStationMinIntensity(Integer tsStationMinIntensity) {
-        this.tsStationMinIntensity = tsStationMinIntensity;
+    public void setTsStationMinIntensity1(Integer tsStationMinIntensity1) {
+        this.tsStationMinIntensity1 = tsStationMinIntensity1;
     }
 
-    public Integer getTsStationMaxDist() {
-        return tsStationMaxDist;
+    public Integer getTsStationMaxDist1() {
+        return tsStationMaxDist1;
     }
 
-    public void setTsStationMaxDist(Integer tsStationMaxDist) {
-        this.tsStationMaxDist = tsStationMaxDist;
+    public void setTsStationMaxDist1(Integer tsStationMaxDist1) {
+        this.tsStationMaxDist1 = tsStationMaxDist1;
+    }
+
+    public Integer getTsStationMinIntensity2() {
+        return tsStationMinIntensity2;
+    }
+
+    public void setTsStationMinIntensity2(Integer tsStationMinIntensity2) {
+        this.tsStationMinIntensity2 = tsStationMinIntensity2;
+    }
+
+    public Integer getTsStationMaxDist2() {
+        return tsStationMaxDist2;
+    }
+
+    public void setTsStationMaxDist2(Integer tsStationMaxDist2) {
+        this.tsStationMaxDist2 = tsStationMaxDist2;
     }
 
     public Long getOrderId() {

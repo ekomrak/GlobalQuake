@@ -133,13 +133,21 @@ public class ProcessInputAbility extends AbstractAbility {
                                 Settings.save();
                                 navigateToStationSettings(chatId, messageId);
                             }
-                            case "station_distance" -> {
-                                getTelegramService().setSettingsState(SettingsState.STATION_DIST);
-                                getTelegramService().getSilent().forceReply("Введите значение для:\nРасстояние:", chatId);
+                            case "station_distance_1" -> {
+                                getTelegramService().setSettingsState(SettingsState.STATION_DIST_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 1: Расстояние:", chatId);
                             }
-                            case "station_intensity" -> {
-                                getTelegramService().setSettingsState(SettingsState.STATION_INTENSITY);
-                                getTelegramService().getSilent().forceReply("Введите значение для:\nИнтенсивность:", chatId);
+                            case "station_intensity_1" -> {
+                                getTelegramService().setSettingsState(SettingsState.STATION_INTENSITY_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 1: Интенсивность:", chatId);
+                            }
+                            case "station_distance_2" -> {
+                                getTelegramService().setSettingsState(SettingsState.STATION_DIST_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 2: Расстояние:", chatId);
+                            }
+                            case "station_intensity_2" -> {
+                                getTelegramService().setSettingsState(SettingsState.STATION_INTENSITY_1);
+                                getTelegramService().getSilent().forceReply("Введите значение для:\nЗона 2: Интенсивность:", chatId);
                             }
                             default -> navigateToSettings(chatId, messageId);
                         }
@@ -275,11 +283,11 @@ public class ProcessInputAbility extends AbstractAbility {
                                 }
                                 navigateToClusterSettings(chatId);
                             }
-                            case STATION_DIST -> {
+                            case STATION_DIST_1 -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
                                     if (dist >=0 && dist <= 30000) {
-                                        Settings.tsStationMaxDist = dist;
+                                        Settings.tsStationMaxDist1 = dist;
                                         Settings.save();
                                     } else {
                                         getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 30000", chatId);
@@ -289,11 +297,39 @@ public class ProcessInputAbility extends AbstractAbility {
                                 }
                                 navigateToStationSettings(chatId);
                             }
-                            case STATION_INTENSITY -> {
+                            case STATION_INTENSITY_1 -> {
                                 try {
                                     double intensity = Double.parseDouble(messageText);
                                     if (intensity >= 0 && intensity <= 1000000) {
-                                        Settings.tsStationMinIntensity = intensity;
+                                        Settings.tsStationMinIntensity1 = intensity;
+                                        Settings.save();
+                                    } else {
+                                        getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 1000000", chatId);
+                                    }
+                                } catch (NumberFormatException e) {
+                                    getTelegramService().getSilent().send("Неправильное число", chatId);
+                                }
+                                navigateToStationSettings(chatId);
+                            }
+                            case STATION_DIST_2 -> {
+                                try {
+                                    double dist = Double.parseDouble(messageText);
+                                    if (dist >=0 && dist <= 30000) {
+                                        Settings.tsStationMaxDist2 = dist;
+                                        Settings.save();
+                                    } else {
+                                        getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 30000", chatId);
+                                    }
+                                } catch (NumberFormatException e) {
+                                    getTelegramService().getSilent().send("Неправильное число", chatId);
+                                }
+                                navigateToStationSettings(chatId);
+                            }
+                            case STATION_INTENSITY_2 -> {
+                                try {
+                                    double intensity = Double.parseDouble(messageText);
+                                    if (intensity >= 0 && intensity <= 1000000) {
+                                        Settings.tsStationMinIntensity2 = intensity;
                                         Settings.save();
                                     } else {
                                         getTelegramService().getSilent().send("Значение должно быть в интервале от 0 до 1000000", chatId);
@@ -338,8 +374,8 @@ public class ProcessInputAbility extends AbstractAbility {
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать геолокацию: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramEarthquakeLocation))).callbackData("earthquake_location").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramEarthquakeImage))).callbackData("earthquake_image").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramEarthquakeMap))).callbackData("earthquake_map").build()))
-                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1. Расстояние: %.1f".formatted(Settings.tsEarthquakeMaxDistArea1)).callbackData("earthquake_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Магнитуда: %.1f".formatted(Settings.tsEarthquakeMinMagnitudeArea1)).callbackData("earthquake_mag_1").build()))
-                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2. Расстояние: %.1f".formatted(Settings.tsEarthquakeMaxDistArea2)).callbackData("earthquake_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Магнитуда: %.1f".formatted(Settings.tsEarthquakeMinMagnitudeArea2)).callbackData("earthquake_mag_2").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1: Расстояние: %.1f".formatted(Settings.tsEarthquakeMaxDistArea1)).callbackData("earthquake_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Магнитуда: %.1f".formatted(Settings.tsEarthquakeMinMagnitudeArea1)).callbackData("earthquake_mag_1").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2: Расстояние: %.1f".formatted(Settings.tsEarthquakeMaxDistArea2)).callbackData("earthquake_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Магнитуда: %.1f".formatted(Settings.tsEarthquakeMinMagnitudeArea2)).callbackData("earthquake_mag_2").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Уровень ощутимости: %d".formatted(Settings.tsEarthquakeMinIntensity + 1)).callbackData("earthquake_intensity").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
         sendInlineKeyboard(markupInline, chatId, messageId);
@@ -370,7 +406,8 @@ public class ProcessInputAbility extends AbstractAbility {
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать геолокацию: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramStationHighIntensityLocation))).callbackData("station_location").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramStationHighIntensityImage))).callbackData("station_image").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту: %s".formatted(TelegramUtils.booleanToString(Settings.enableTelegramStationHighIntensityMap))).callbackData("station_map").build()))
-                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Расстояние: %.1f".formatted(Settings.tsStationMaxDist)).callbackData("station_distance").build(), InlineKeyboardButton.builder().text("Интенсивность: %.1f".formatted(Settings.tsStationMinIntensity)).callbackData("station_intensity").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 1: Расстояние: %.1f".formatted(Settings.tsStationMaxDist1)).callbackData("station_distance_1").build(), InlineKeyboardButton.builder().text("Зона 1: Интенсивность: %.1f".formatted(Settings.tsStationMinIntensity1)).callbackData("station_intensity_1").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Зона 2: Расстояние: %.1f".formatted(Settings.tsStationMaxDist2)).callbackData("station_distance_2").build(), InlineKeyboardButton.builder().text("Зона 2: Интенсивность: %.1f".formatted(Settings.tsStationMinIntensity2)).callbackData("station_intensity_2").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
         sendInlineKeyboard(markupInline, chatId, messageId);
     }

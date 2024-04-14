@@ -19,27 +19,17 @@ public final class TelegramUtils {
     }
 
     public static boolean canSend(Earthquake earthquake, TelegramUser user, double distGCD, double pga) {
-        if (earthquake == null) {
-            return false;
-        }
-
         double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(user.getTsEarthquakeMinIntensity()).getPga();
 
         return (((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea1()) && (distGCD <= user.getTsEarthquakeMaxDistArea1())) || ((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea2()) && (distGCD <= user.getTsEarthquakeMaxDistArea2())) || (pga >= earthquakeThreshold));
     }
 
     public static boolean canSend(Cluster cluster, TelegramUser user, double distGCD) {
-        if (cluster == null) {
-            return false;
-        }
         return (cluster.getLevel() >= user.getTsPossibleShakingMinLevel()) && (distGCD <= user.getTsPossibleShakingMaxDist());
     }
 
     public static boolean canSend(ClientStation clientStation, TelegramUser user, double distGCD) {
-        if (clientStation == null) {
-            return false;
-        }
-        return (clientStation.getMaxRatio60S() >= user.getTsStationMinIntensity()) && (distGCD <= user.getTsStationMaxDist());
+        return ((clientStation.getMaxRatio60S() >= user.getTsStationMinIntensity1()) && (distGCD <= user.getTsStationMaxDist1()) || (clientStation.getMaxRatio60S() >= user.getTsStationMinIntensity2()) && (distGCD <= user.getTsStationMaxDist2()));
     }
 
     public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga) {

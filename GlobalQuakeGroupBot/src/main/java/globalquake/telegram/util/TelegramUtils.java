@@ -13,7 +13,7 @@ public final class TelegramUtils {
     private TelegramUtils() {}
 
     public static boolean canSend(Earthquake earthquake, double distGCD, double pga) {
-        if (earthquake == null || !Settings.enableTelegramEarthquakeAlert) {
+        if (Boolean.FALSE.equals(Settings.enableTelegramEarthquakeAlert)) {
             return false;
         }
 
@@ -23,7 +23,7 @@ public final class TelegramUtils {
     }
 
     public static boolean canSend(Cluster cluster, double distGCD) {
-        if (cluster == null || !Settings.enableTelegramPossibleShakingAlert) {
+        if (Boolean.FALSE.equals(Settings.enableTelegramPossibleShakingAlert)) {
             return false;
         }
 
@@ -31,11 +31,11 @@ public final class TelegramUtils {
     }
 
     public static boolean canSend(ClientStation clientStation, double distGCD) {
-        if (clientStation == null || !Settings.enableTelegramStationHighIntensityAlert) {
+        if (Boolean.FALSE.equals(Settings.enableTelegramStationHighIntensityAlert)) {
             return false;
         }
 
-        return (clientStation.getMaxRatio60S() >= Settings.tsStationMinIntensity) && (distGCD <= Settings.tsStationMaxDist);
+        return ((clientStation.getMaxRatio60S() >= Settings.tsStationMinIntensity1) && (distGCD <= Settings.tsStationMaxDist1) || (clientStation.getMaxRatio60S() >= Settings.tsStationMinIntensity2) && (distGCD <= Settings.tsStationMaxDist2));
     }
 
     public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga) {

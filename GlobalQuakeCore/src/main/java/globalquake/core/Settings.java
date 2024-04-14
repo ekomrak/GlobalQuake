@@ -213,8 +213,10 @@ public final class Settings {
     public static Boolean enableTelegramStationHighIntensityLocation;
     public static Boolean enableTelegramStationHighIntensityImage;
     public static Boolean enableTelegramStationHighIntensityMap;
-    public static Double tsStationMinIntensity;
-    public static Double tsStationMaxDist;
+    public static Double tsStationMinIntensity1;
+    public static Double tsStationMaxDist1;
+    public static Double tsStationMinIntensity2;
+    public static Double tsStationMaxDist2;
 
     public static Boolean enableSpeechEarthquakeAlert;
     public static Boolean enableSpeechPossibleShakingAlert;
@@ -415,8 +417,10 @@ public final class Settings {
         loadProperty("enableTelegramStationHighIntensityLocation", "false");
         loadProperty("enableTelegramStationHighIntensityImage", "false");
         loadProperty("enableTelegramStationHighIntensityMap", "true");
-        loadProperty("tsStationMinIntensity", "4000.0");
-        loadProperty("tsStationMaxDist", "300.0", o -> validateDouble(0, 30000, (Double) o));
+        loadProperty("tsStationMinIntensity1", "4000.0");
+        loadProperty("tsStationMaxDist1", "100.0", o -> validateDouble(0, 30000, (Double) o));
+        loadProperty("tsStationMinIntensity2", "10000.0");
+        loadProperty("tsStationMaxDist2", "400.0", o -> validateDouble(0, 30000, (Double) o));
 
         loadProperty("enableSpeechEarthquakeAlert", "true");
         loadProperty("enableSpeechPossibleShakingAlert", "true");

@@ -192,7 +192,7 @@ public class SpeechAndSoundService {
     }
 
     private boolean canAlert(ClientStation clientStation, double distGCD) {
-        return (distGCD <= Settings.tsStationMaxDist) && (clientStation.getMaxRatio60S() >= Settings.tsStationMinIntensity);
+        return (distGCD <= Settings.tsStationMaxDist1) && (clientStation.getMaxRatio60S() >= Settings.tsStationMinIntensity1);
     }
 
     private String generateEarthquakeText(Earthquake earthquake, double distGCD) {

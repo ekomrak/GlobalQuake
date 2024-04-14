@@ -1,6 +1,7 @@
 package globalquake.telegram.abilities;
 
 import globalquake.client.GlobalQuakeClient;
+import globalquake.db.CountCacheListType;
 import globalquake.telegram.TelegramService;
 import globalquake.db.entities.TelegramUser;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
@@ -25,6 +26,7 @@ public class UnsubscribeAbility extends AbstractAbility {
                     if (telegramUser != null) {
                         telegramUser.setEnabled(false);
                         updateTelegramUser(telegramUser, ctx.user(), ctx.chatId());
+                        GlobalQuakeClient.instance.getDatabaseService().invalidateCountCache(CountCacheListType.ACTIVE);
                     } else {
                         insertTelegramUser(ctx.user(), ctx.chatId(), false);
                     }

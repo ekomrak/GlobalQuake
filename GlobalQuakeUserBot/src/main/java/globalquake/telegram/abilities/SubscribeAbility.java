@@ -1,6 +1,7 @@
 package globalquake.telegram.abilities;
 
 import globalquake.client.GlobalQuakeClient;
+import globalquake.db.CountCacheListType;
 import globalquake.telegram.TelegramService;
 import globalquake.db.entities.TelegramUser;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
@@ -24,11 +25,12 @@ public class SubscribeAbility extends AbstractAbility {
                     TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(ctx.user().getId());
                     if (telegramUser == null) {
                         insertTelegramUser(ctx.user(), ctx.chatId(), true);
-                        GlobalQuakeClient.instance.getDatabaseService().invalidateAllLists();
                     } else {
                         telegramUser.setEnabled(true);
                         updateTelegramUser(telegramUser, ctx.user(), ctx.chatId());
+                        GlobalQuakeClient.instance.getDatabaseService().invalidateCountCache(CountCacheListType.ACTIVE);
                     }
+                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
 
                     getTelegramService().getSilent().send("""
                             Теперь вы будете получать уведомления о землетрясениях.
