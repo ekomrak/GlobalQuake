@@ -124,6 +124,7 @@ public class SettingsFrame extends GQFrame {
 			panels.add(new HypocenterAnalysisSettingsPanel());
 		}
 		panels.add(new DebugSettingsPanel());
+		panels.add(new AlertV2SettingsPanel());
 
 		for (SettingsPanel panel : panels) {
 			JScrollPane scrollPane = new JScrollPane(panel);

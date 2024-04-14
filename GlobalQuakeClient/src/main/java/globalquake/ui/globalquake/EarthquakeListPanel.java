@@ -7,6 +7,7 @@ import globalquake.core.intensity.Level;
 import globalquake.ui.archived.ArchivedQuakeAnimation;
 import globalquake.ui.archived.ArchivedQuakeUI;
 import globalquake.core.Settings;
+import globalquake.utils.GeoUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,6 @@ import java.text.DecimalFormatSymbols;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class EarthquakeListPanel extends JPanel {
     private double scroll = 0;
@@ -37,7 +37,10 @@ public class EarthquakeListPanel extends JPanel {
         if(archivedQuakes == null){
             return null;
         }
-        return archivedQuakes.stream().filter(ArchivedQuake::shouldBeDisplayed).collect(Collectors.toList());
+        return archivedQuakes.stream().filter(archivedQuake -> {
+            double distGCD = GeoUtils.greatCircleDistance(archivedQuake.getLat(), archivedQuake.getLon(), Settings.homeLat, Settings.homeLon);
+            return (((archivedQuake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((archivedQuake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || !Settings.enableLimitedArchivedEarthquakes);
+        }).toList();
     }
 
     public EarthquakeListPanel(Frame parent, List<ArchivedQuake> archivedQuakes) {

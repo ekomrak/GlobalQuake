@@ -3,10 +3,12 @@ package globalquake.client;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
 import globalquake.client.data.ClientStation;
+import globalquake.core.Settings;
 import globalquake.core.database.StationDatabaseManager;
 import globalquake.core.station.AbstractStation;
 import globalquake.core.station.GlobalStationManager;
 import globalquake.events.specific.StationCreateEvent;
+import globalquake.utils.GeoUtils;
 import gqserver.api.Packet;
 import gqserver.api.data.station.StationInfoData;
 import gqserver.api.data.station.StationIntensityData;
@@ -79,7 +81,8 @@ public class GlobalStationManagerClient extends GlobalStationManager {
         }
         List<AbstractStation> list = new ArrayList<>();
         for(StationInfoData infoData : stationsInfoPacket.stationInfoDataList()) {
-            if(!stationsIdMap.containsKey(infoData.index())) {
+            double distGCD = GeoUtils.greatCircleDistance(infoData.lat(), infoData.lon(), Settings.homeLat, Settings.homeLon);
+            if ((distGCD <= Settings.stationsLoadDist) && (!stationsIdMap.containsKey(infoData.index())) || Boolean.TRUE.equals(!Settings.enableLimitedStations)) {
                 ClientStation station;
                 list.add(station = new ClientStation(
                         infoData.network(),

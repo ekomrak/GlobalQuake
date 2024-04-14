@@ -8,10 +8,12 @@
 	<version>0.11.0_build-56</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>GlobalQuakeClient</module>
-		<module>GlobalQuakeCore</module>
 		<module>GlobalQuakeAPI</module>
+		<module>GlobalQuakeCore</module>
 		<module>GlobalQuakeServer</module>
+		<module>GlobalQuakeClient</module>
+		<module>GlobalQuakeUserBot</module>
+		<module>GlobalQuakeGroupBot</module>
     </modules>
 
 	<properties>

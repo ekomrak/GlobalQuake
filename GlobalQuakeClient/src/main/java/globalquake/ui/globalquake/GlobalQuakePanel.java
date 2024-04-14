@@ -543,7 +543,10 @@ public class GlobalQuakePanel extends GlobePanel {
 
     @SuppressWarnings("SameParameterValue")
     private void drawEarthquakesBox(Graphics2D g, int x, int y) {
-        List<Earthquake> quakes = GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes();
+        List<Earthquake> quakes = GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes().stream().filter(earthquake -> {
+            double distGCD = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), Settings.homeLat, Settings.homeLon);
+            return (((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || !Settings.enableLimitedEarthquakes);
+        }).toList();
         int displayedQuake = quakes.isEmpty() ? -1 : (int) ((System.currentTimeMillis() / 5000) % (quakes.size()));
 
         g.setFont(new Font("Arial", Font.BOLD, 16));
