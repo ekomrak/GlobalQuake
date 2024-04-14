@@ -1,15 +1,18 @@
 package globalquake.client;
 
+import globalquake.core.Settings;
 import globalquake.events.GlobalQuakeLocalEventListener;
 import globalquake.events.specific.SocketReconnectEvent;
 import globalquake.events.specific.StationCreateEvent;
 import globalquake.events.specific.StationMonitorCloseEvent;
 import globalquake.events.specific.StationMonitorOpenEvent;
 import globalquake.main.Main;
+import globalquake.telegram.util.MapImageDrawer;
 import globalquake.ui.StationMonitor;
 import globalquake.ui.globalquake.GlobalQuakeFrame;
 import gqserver.api.Packet;
 import gqserver.api.packets.data.DataRequestPacket;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -75,6 +78,8 @@ public class GlobalQuakeClient extends GlobalQuakeLocal {
                 openedStationMonitors.stream().filter(stationMonitor -> stationMonitor.getStation().getIdentifier().equals(stationCreateEvent.station().getIdentifier())).forEach(stationMonitor -> stationMonitor.swapStation(stationCreateEvent.station()));
             }
         });
+
+        new MapImageDrawer();
     }
 
     public void processPacket(ClientSocket socket, Packet packet) throws IOException {
@@ -86,6 +91,13 @@ public class GlobalQuakeClient extends GlobalQuakeLocal {
 
     @Override
     public GlobalQuakeLocal createFrame() {
+        try {
+            getBotsApplication().registerBot(Settings.telegramBotToken, getTelegramService());
+            getTelegramService().onRegister();
+        } catch (TelegramApiException e) {
+            Logger.error(e);
+        }
+
         try {
             globalQuakeFrame = new GlobalQuakeFrame();
             globalQuakeFrame.setVisible(true);

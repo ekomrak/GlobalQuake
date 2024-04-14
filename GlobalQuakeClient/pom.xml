@@ -54,7 +54,31 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>libraries-bom</artifactId>
+                <version>26.37.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>GlobalQuakeAPI</artifactId>
+            <version>0.9.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>GlobalQuakeCore</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>edu.sc.seis</groupId>
             <artifactId>seisFile</artifactId>
@@ -66,21 +90,9 @@
             <version>4.1.1</version>
         </dependency>
         <dependency>
-            <groupId>xspanger.GlobalQuake</groupId>
-            <artifactId>GlobalQuakeAPI</artifactId>
-            <version>0.9.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>xspanger.GlobalQuake</groupId>
-            <artifactId>GlobalQuakeCore</artifactId>
-            <version>0.11.0_build-56</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>tinylog-api</artifactId>
-            <version>2.5.0</version>
+            <version>2.7.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -102,13 +114,37 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>5.6</version>
+            <version>5.9</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.flowpowered/flow-noise -->
         <dependency>
             <groupId>com.flowpowered</groupId>
             <artifactId>flow-noise</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-abilities</artifactId>
+            <version>7.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-client</artifactId>
+            <version>7.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.sociaal</groupId>
+            <artifactId>freetts</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-texttospeech</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
         </dependency>
     </dependencies>
 

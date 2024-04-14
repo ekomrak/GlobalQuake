@@ -1,0 +1,16 @@
+package globalquake.telegram;
+
+public enum SettingsState {
+    HOME_LAT,
+    HOME_LON,
+    EARTHQUAKE_DIST_1,
+    EARTHQUAKE_DIST_2,
+    EARTHQUAKE_MAG_1,
+    EARTHQUAKE_MAG_2,
+    EARTHQUAKE_INTENSITY,
+    CLUSTER_DIST,
+    CLUSTER_LEVEL,
+    STATION_DIST,
+    STATION_INTENSITY,
+    NONE
+}

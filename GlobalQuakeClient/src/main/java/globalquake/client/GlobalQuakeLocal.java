@@ -2,6 +2,7 @@ package globalquake.client;
 
 import globalquake.alert.AlertManager;
 import globalquake.core.GlobalQuake;
+import globalquake.core.Settings;
 import globalquake.core.database.StationDatabaseManager;
 import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.events.GlobalQuakeEventHandler;
@@ -10,7 +11,12 @@ import globalquake.events.GlobalQuakeLocalEventHandler;
 import globalquake.intensity.ShakemapService;
 import globalquake.main.Main;
 import globalquake.sounds.SoundsService;
+import globalquake.speech.SpeechAndSoundService;
+import globalquake.telegram.TelegramService;
 import globalquake.ui.globalquake.GlobalQuakeFrame;
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
+import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.tinylog.Logger;
 
 import java.awt.*;
@@ -25,8 +31,11 @@ public class GlobalQuakeLocal extends GlobalQuake {
 
     public static GlobalQuakeLocal instance;
     private final ShakemapService shakemapService;
-    @SuppressWarnings("unused")
+
+    private final TelegramBotsLongPollingApplication botsApplication;
     private final SoundsService soundsService;
+    private final TelegramService telegramService;
+    private final SpeechAndSoundService speechService;
 
     protected GlobalQuakeFrame globalQuakeFrame;
 
@@ -38,6 +47,9 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
+        this.botsApplication = new TelegramBotsLongPollingApplication();
+        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        this.speechService = new SpeechAndSoundService();
     }
 
     public GlobalQuakeLocal(StationDatabaseManager stationDatabaseManager) {
@@ -49,6 +61,9 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
+        this.botsApplication = new TelegramBotsLongPollingApplication();
+        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        this.speechService = new SpeechAndSoundService();
     }
 
     public GlobalQuakeLocal(StationDatabaseManager stationDatabaseManager, GlobalStationManager globalStationManager) {
@@ -60,9 +75,19 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
+        this.botsApplication = new TelegramBotsLongPollingApplication();
+        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        this.speechService = new SpeechAndSoundService();
     }
 
     public GlobalQuakeLocal createFrame() {
+        try {
+            botsApplication.registerBot(Settings.telegramBotToken, telegramService);
+            telegramService.onRegister();
+        } catch (TelegramApiException e) {
+            Logger.error(e);
+        }
+
         EventQueue.invokeLater(() -> {
             try {
                 globalQuakeFrame = new GlobalQuakeFrame();
@@ -88,6 +113,14 @@ public class GlobalQuakeLocal extends GlobalQuake {
         return this;
     }
 
+    protected TelegramBotsLongPollingApplication getBotsApplication() {
+        return botsApplication;
+    }
+
+    protected TelegramService getTelegramService() {
+        return telegramService;
+    }
+
     @SuppressWarnings("unused")
     @Override
     public void destroy() {
@@ -95,6 +128,13 @@ public class GlobalQuakeLocal extends GlobalQuake {
         getLocalEventHandler().stopHandler();
         getShakemapService().stop();
         soundsService.destroy();
+        telegramService.destroy();
+        speechService.destroy();
+        try {
+            botsApplication.close();
+        } catch (Exception e) {
+            Logger.error(e);
+        }
     }
 
     public GlobalQuakeLocalEventHandler getLocalEventHandler() {

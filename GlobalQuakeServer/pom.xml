@@ -56,6 +56,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>GlobalQuakeAPI</artifactId>
+            <version>0.9.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>GlobalQuakeCore</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>edu.sc.seis</groupId>
             <artifactId>seisFile</artifactId>
             <version>2.1.0-SNAPSHOT</version>
@@ -83,7 +95,7 @@
         <dependency>
             <groupId>uk.me.berndporr</groupId>
             <artifactId>iirj</artifactId>
-            <version>1.3</version>
+            <version>1.7</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.wendykierp/JTransforms -->
         <dependency>
@@ -96,31 +108,19 @@
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>tinylog-api</artifactId>
-            <version>2.5.0</version>
+            <version>2.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>tinylog-impl</artifactId>
-            <version>2.5.0</version>
+            <version>2.7.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.uber/h3 -->
-        <dependency>
-            <groupId>xspanger.GlobalQuake</groupId>
-            <artifactId>GlobalQuakeAPI</artifactId>
-            <version>0.9.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>xspanger.GlobalQuake</groupId>
-            <artifactId>GlobalQuakeCore</artifactId>
-            <version>0.11.0_build-56</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.20</version>
+            <version>5.0.0-beta.22</version>
         </dependency>
 
 

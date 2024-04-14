@@ -180,6 +180,60 @@ public final class Settings {
     @SuppressWarnings("unused")
     public static Boolean debugSendPGV;
 
+    public static Boolean enableLimitedStations;
+    public static Double stationsLoadDist;
+    public static Boolean enableLimitedEarthquakes;
+    public static Boolean enableLimitedArchivedEarthquakes;
+
+    public static String telegramBotToken;
+    public static String telegramBotUsername;
+    public static String telegramChatId;
+    public static Integer telegramMessageThreadId;
+    public static Integer telegramCreatorId;
+
+    public static Boolean enableTelegramEarthquakeAlert;
+    public static Boolean enableTelegramEarthquakeLocation;
+    public static Boolean enableTelegramEarthquakeImage;
+    public static Boolean enableTelegramEarthquakeMap;
+    public static Double tsEarthquakeMinMagnitudeArea1;
+    public static Double tsEarthquakeMaxDistArea1;
+    public static Double tsEarthquakeMinMagnitudeArea2;
+    public static Double tsEarthquakeMaxDistArea2;
+    public static Integer tsEarthquakeIntensityScale;
+    public static Integer tsEarthquakeMinIntensity;
+
+    public static Boolean enableTelegramPossibleShakingAlert;
+    public static Boolean enableTelegramPossibleShakingLocation;
+    public static Boolean enableTelegramPossibleShakingImage;
+    public static Boolean enableTelegramPossibleShakingMap;
+    public static Integer tsPossibleShakingMinLevel;
+    public static Double tsPossibleShakingMaxDist;
+
+    public static Boolean enableTelegramStationHighIntensityAlert;
+    public static Boolean enableTelegramStationHighIntensityLocation;
+    public static Boolean enableTelegramStationHighIntensityImage;
+    public static Boolean enableTelegramStationHighIntensityMap;
+    public static Double tsStationMinIntensity;
+    public static Double tsStationMaxDist;
+
+    public static Boolean enableSpeechEarthquakeAlert;
+    public static Boolean enableSpeechPossibleShakingAlert;
+    public static Boolean enableSpeechStationHighIntensityAlert;
+
+    public static Boolean enableSoundEarthquakeAlert;
+    public static Boolean enableSoundPossibleShakingAlert;
+    public static Boolean enableSoundStationHighIntensityAlert;
+
+    public static Boolean useFreeTts;
+
+    public static String jdbcUrl;
+    public static String pgUsername;
+    public static String pgPassword;
+
+    public static String influxOrg;
+    public static String influxBucket;
+    public static String influxToken;
+
     static {
         load();
         save();
@@ -327,6 +381,60 @@ public final class Settings {
         loadProperty("oldEventsMagnitudeFilterEnabled", "false");
         loadProperty("oldEventsMagnitudeFilter", "4.0", o -> validateDouble(0, 10, (Double) o));
         loadProperty("oldEventsOpacity", "100.0", o -> validateDouble(0, 100, (Double) o));
+
+        loadProperty("enableLimitedStations", "true");
+        loadProperty("stationsLoadDist", "1000.0", o -> validateDouble(0, 30000, (Double) o));
+        loadProperty("enableLimitedEarthquakes", "true");
+        loadProperty("enableLimitedArchivedEarthquakes", "true");
+
+        loadProperty("telegramBotToken", "");
+        loadProperty("telegramBotUsername", "");
+        loadProperty("telegramChatId", "");
+        loadProperty("telegramMessageThreadId", "0");
+        loadProperty("telegramCreatorId", "0");
+
+        loadProperty("enableTelegramEarthquakeAlert", "true");
+        loadProperty("enableTelegramEarthquakeLocation", "false");
+        loadProperty("enableTelegramEarthquakeImage", "true");
+        loadProperty("enableTelegramEarthquakeMap", "false");
+        loadProperty("tsEarthquakeMinMagnitudeArea1", "0.0", o -> validateDouble(0, 10, (Double) o));
+        loadProperty("tsEarthquakeMaxDistArea1", "100.0", o -> validateDouble(0, 30000, (Double) o));
+        loadProperty("tsEarthquakeMinMagnitudeArea2", "5.0", o -> validateDouble(0, 10, (Double) o));
+        loadProperty("tsEarthquakeMaxDistArea2", "300.0", o -> validateDouble(0, 30000, (Double) o));
+        loadProperty("tsEarthquakeIntensityScale", "0", o -> validateInt(0, IntensityScales.INTENSITY_SCALES.length - 1, (Integer) o));
+        loadProperty("tsEarthquakeMinIntensity", "1", o -> validateInt(0, IntensityScales.INTENSITY_SCALES[tsEarthquakeIntensityScale].getLevels().size() - 1, (Integer) o));
+
+        loadProperty("enableTelegramPossibleShakingAlert", "true");
+        loadProperty("enableTelegramPossibleShakingLocation", "false");
+        loadProperty("enableTelegramPossibleShakingImage", "false");
+        loadProperty("enableTelegramPossibleShakingMap", "true");
+        loadProperty("tsPossibleShakingMinLevel", "2", o -> validateInt(0, 4, (Integer) o));
+        loadProperty("tsPossibleShakingMaxDist", "300.0", o -> validateDouble(0, 30000, (Double) o));
+
+        loadProperty("enableTelegramStationHighIntensityAlert", "true");
+        loadProperty("enableTelegramStationHighIntensityLocation", "false");
+        loadProperty("enableTelegramStationHighIntensityImage", "false");
+        loadProperty("enableTelegramStationHighIntensityMap", "true");
+        loadProperty("tsStationMinIntensity", "4000.0");
+        loadProperty("tsStationMaxDist", "300.0", o -> validateDouble(0, 30000, (Double) o));
+
+        loadProperty("enableSpeechEarthquakeAlert", "true");
+        loadProperty("enableSpeechPossibleShakingAlert", "true");
+        loadProperty("enableSpeechStationHighIntensityAlert", "true");
+
+        loadProperty("enableSoundEarthquakeAlert", "false");
+        loadProperty("enableSoundPossibleShakingAlert", "true");
+        loadProperty("enableSoundStationHighIntensityAlert", "true");
+
+        loadProperty("useFreeTts", "true");
+
+        loadProperty("jdbcUrl", "");
+        loadProperty("pgUsername", "");
+        loadProperty("pgPassword", "");
+
+        loadProperty("influxOrg", "");
+        loadProperty("influxBucket", "");
+        loadProperty("influxToken", "");
     }
 
     private static void runUpdateService() throws IOException {
