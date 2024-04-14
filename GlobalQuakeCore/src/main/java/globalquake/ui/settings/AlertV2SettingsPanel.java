@@ -253,7 +253,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         tsStationMaxDist2 = new JTextField(String.format("%s", Settings.tsStationMaxDist2));
         area2Panel.add(tsStationMaxDist2, createGbc(1, 1));
 
-        tsStationHighIntensityAlertPanel.add(area1Panel, createGbcOneLine(6));
+        tsStationHighIntensityAlertPanel.add(area2Panel, createGbcOneLine(6));
 
         add(tsStationHighIntensityAlertPanel);
     }
