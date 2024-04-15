@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
-import static org.telegram.telegrambots.abilitybots.api.objects.Locality.USER;
+import static org.telegram.telegrambots.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.telegrambots.abilitybots.api.objects.Privacy.PUBLIC;
 
 public class ProcessInputAbility extends AbstractAbility {
@@ -24,7 +24,7 @@ public class ProcessInputAbility extends AbstractAbility {
                 .name("default")
                 .flag(update -> update.hasCallbackQuery() || update.hasMessage())
                 .privacy(PUBLIC)
-                .locality(USER)
+                .locality(ALL)
                 .input(0)
                 .action(ctx -> {
                     if (ctx.update().hasCallbackQuery()) {
