@@ -1,10 +1,8 @@
 package globalquake.ui;
 
-import globalquake.core.database.Channel;
-import globalquake.core.database.Network;
-import globalquake.core.database.Station;
-import globalquake.core.database.StationDatabaseManager;
+import globalquake.core.database.*;
 import globalquake.ui.stationselect.StationColor;
+import org.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +46,13 @@ public class StationCountPanel extends JPanel {
                         if(channel.equals(station.getSelectedChannel())){
                             if(channel.isAvailable()){
                                 sel++;
+                                Logger.info("Channel: %s".formatted(channel.toString()));
+                                for (SeedlinkNetwork seedlinkNetwork : channel.getSeedlinkNetworks().keySet()) {
+                                    Logger.info("Seedlink: %s".formatted(seedlinkNetwork.toString()));
+                                }
+                                for (StationSource stationSource : channel.getStationSources()) {
+                                    Logger.info("StationSource: %s".formatted(stationSource.toString()));
+                                }
                             } else {
                                 unb++;
                             }

@@ -17,11 +17,13 @@ public class DatabaseService {
     private final Cache<Long, TelegramUser> usersCache;
     private final Cache<UsersCacheListType, List<TelegramUser>> usersListsCache;
     private final Cache<CountCacheListType, Integer> countCache;
+    //private final Cache<EarthquakeCacheListType, List<ArchivedEarthquake>> earthquakeListCache;
 
     public DatabaseService() {
         usersCache = Caffeine.newBuilder().build();
         usersListsCache = Caffeine.newBuilder().build();
         countCache = Caffeine.newBuilder().build();
+        //earthquakeListCache = Caffeine.newBuilder().build();
         HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider();
         jdbi = Jdbi.create(hikariDataSourceProvider.getHikariDataSource()).installPlugin(new SqlObjectPlugin()).installPlugin(new CaffeineCachePlugin());
     }

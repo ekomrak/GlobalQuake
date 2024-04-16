@@ -1,7 +1,10 @@
 package globalquake.ui.stationselect;
 
 import globalquake.core.database.Channel;
+import globalquake.core.database.SeedlinkNetwork;
 import globalquake.core.database.Station;
+import globalquake.core.database.StationSource;
+import org.tinylog.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,6 +59,14 @@ public class StationEditDialog extends JDialog {
     private JTextArea createInfoTextArea(Station selectedStation) {
         JTextArea textAreaInfo = new JTextArea();
         textAreaInfo.setEditable(false);
+        if (selectedStation.getSelectedChannel() != null) {
+            for (SeedlinkNetwork seedlinkNetwork : selectedStation.getSelectedChannel().getSeedlinkNetworks().keySet()) {
+                textAreaInfo.append("Seedlink: %s\n".formatted(seedlinkNetwork.toString()));
+            }
+            for (StationSource stationSource : selectedStation.getSelectedChannel().getStationSources()) {
+                textAreaInfo.append("StationSource: %s\n".formatted(stationSource.toString()));
+            }
+        }
         textAreaInfo.append("Network Code: %s\n".formatted(selectedStation.getNetwork().getNetworkCode()));
         textAreaInfo.append("Network Description:\n    %s\n".formatted(selectedStation.getNetwork().getDescription().trim()));
         textAreaInfo.append("Station Code: %s\n".formatted(selectedStation.getStationCode()));
