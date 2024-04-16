@@ -1,8 +1,9 @@
-package globalquake.ui.globalquake.feature;
+package globalquake.telegram.feature;
 
 import globalquake.core.GlobalQuake;
 import globalquake.core.Settings;
 import globalquake.core.archive.ArchivedQuake;
+import globalquake.ui.globalquake.feature.FeatureEarthquake;
 import globalquake.ui.globe.GlobeRenderer;
 import globalquake.ui.globe.Point2D;
 import globalquake.ui.globe.RenderProperties;
