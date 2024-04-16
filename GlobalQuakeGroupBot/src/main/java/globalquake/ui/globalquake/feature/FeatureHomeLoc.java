@@ -70,6 +70,10 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
             graphics.setColor(Color.magenta);
             graphics.setStroke(new BasicStroke(3f));
             graphics.draw(elementCross.getShape());
+
+            graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
+            String str = "Home";
+            graphics.drawString(str, (int) (renderProperties.width * 0.5 - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) (renderProperties.height * 0.5 - 15));
         }
     }
 
