@@ -12,6 +12,7 @@ import globalquake.ui.globe.feature.RenderFeature;
 import globalquake.utils.Scale;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -94,6 +95,10 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
         graphics.setStroke(new BasicStroke((float) Math.max(0.1, 1.4 + entity.getOriginal().getMag() * 0.4)));
         graphics.draw(entity.getRenderElement(0).getShape());
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+
+        var point3D = GlobeRenderer.createVec3D(getCenterCoords(entity));
+        var centerPonint = renderer.projectPoint(point3D, renderProperties);
+        drawDetails(graphics, centerPonint, entity.getOriginal());
     }
 
     private Color getColor(ArchivedQuake quake) {
@@ -113,6 +118,27 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
         return new Color(col.getRed(), col.getGreen(), col.getBlue(), alpha);
     }
 
+    private void drawDetails(Graphics2D graphics, Point2D centerPonint, ArchivedQuake quake) {
+        graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
+
+        double size = 3 + Math.pow(quake.getMag(), 2) * 0.6;
+
+        String str = "M%.1f  %s".formatted(quake.getMag(), Settings.getSelectedDistanceUnit().format(quake.getDepth(), 1));
+        int y=  (int)centerPonint.y - 24 - (int)size;
+        graphics.setColor(FeatureEarthquake.getCrossColor(quake.getMag()));
+        graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
+
+        y+=15;
+
+        graphics.setColor(Color.white);
+        str = "%s".formatted(Settings.formatDateTime(Instant.ofEpochMilli(quake.getOrigin())));
+        graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
+
+        y+=30 + (int) size * 2;
+
+        str = "%s".formatted(quake.getRegion());
+        graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
+    }
 
     @Override
     public Point2D getCenterCoords(RenderEntity<?> entity) {
