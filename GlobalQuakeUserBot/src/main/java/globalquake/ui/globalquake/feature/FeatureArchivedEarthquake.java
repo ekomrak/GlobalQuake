@@ -133,11 +133,6 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
         graphics.setColor(Color.white);
         str = "%s".formatted(Settings.formatDateTime(Instant.ofEpochMilli(quake.getOrigin())));
         graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
-
-        y+=30 + (int) size * 2;
-
-        str = "%s".formatted(quake.getRegion());
-        graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
     }
 
     @Override
