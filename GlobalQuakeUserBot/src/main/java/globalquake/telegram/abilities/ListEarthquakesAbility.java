@@ -42,7 +42,7 @@ public class ListEarthquakesAbility extends AbstractAbility {
                         for (ArchivedEarthquake earthquake : earthquakes) {
                             LocalDateTime origin = earthquake.getOrigin();
                             ZoneId oldZone = ZoneId.of("UTC");
-                            ZoneId newZone = ZoneId.of("Asia/Qyzylorda");
+                            ZoneId newZone = ZoneId.of(Settings.timezoneStr);
                             LocalDateTime newDateTime = origin.atZone(oldZone).withZoneSameInstant(newZone).toLocalDateTime();
 
                             double distGCD = GeoUtils.greatCircleDistance(earthquake.getLatitude(), earthquake.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
