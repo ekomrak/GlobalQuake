@@ -149,6 +149,9 @@ public final class EventImageDrawer {
         g.draw(line1);
         g.draw(line2);
 
+        g.setFont(new Font("Calibri", Font.PLAIN, 13));
+        String str = "Home";
+        g.drawString(str, (int) (x - g.getFontMetrics().stringWidth(str) * 0.5), (int) (y - 20));
     }
 
     private static void drawDetails(Graphics2D graphics, double centerLat, double centerLon, LocalDateTime origin, double eventLat, double eventLon, double depth, double magnitude) {
