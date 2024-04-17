@@ -37,6 +37,7 @@ public final class EventImageDrawer {
         Graphics2D g = img.createGraphics();
         drawCommonPart(g, earthquake.getLat(), earthquake.getLon());
         drawEventPoint(g, earthquake.getLat(), earthquake.getLon(), earthquake.getLat(), earthquake.getLon());
+        drawDetails(g, earthquake.getLat(), earthquake.getLon(), earthquake.getOriginDate(), earthquake.getLat(), earthquake.getLon(), earthquake.getDepth(), earthquake.getMag());
         drawHome(g, user, earthquake.getLat(), earthquake.getLon());
 
         g.setStroke(new BasicStroke(1f));
@@ -78,7 +79,11 @@ public final class EventImageDrawer {
         drawCommonPart(g, user.getHomeLat(), user.getHomeLon());
         for (ArchivedEarthquake archivedEarthquake : archivedEarthquakeList) {
             drawEventPoint(g, archivedEarthquake.getLatitude(), archivedEarthquake.getLongitude(), user.getHomeLat(), user.getHomeLon());
-            drawDetails(g, user.getHomeLat(), user.getHomeLon(), archivedEarthquake);
+            LocalDateTime origin = archivedEarthquake.getOrigin();
+            ZoneId oldZone = ZoneId.of("UTC");
+            ZoneId newZone = ZoneId.of(Settings.timezoneStr);
+            LocalDateTime newDateTime = origin.atZone(oldZone).withZoneSameInstant(newZone).toLocalDateTime();
+            drawDetails(g, user.getHomeLat(), user.getHomeLon(), newDateTime, archivedEarthquake.getLatitude(), archivedEarthquake.getLongitude(), archivedEarthquake.getDepth(), archivedEarthquake.getMagnitude());
         }
         drawHome(g, user, user.getHomeLat(), user.getHomeLon());
 
@@ -146,23 +151,19 @@ public final class EventImageDrawer {
 
     }
 
-    private static void drawDetails(Graphics2D graphics, double centerLat, double centerLon, ArchivedEarthquake archivedEarthquake) {
+    private static void drawDetails(Graphics2D graphics, double centerLat, double centerLon, LocalDateTime origin, double eventLat, double eventLon, double depth, double magnitude) {
         graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
 
-        String str = "M%.1f  %s".formatted(archivedEarthquake.getMagnitude(), Settings.getSelectedDistanceUnit().format(archivedEarthquake.getDepth(), 1));
-        double x = getX(archivedEarthquake.getLongitude(), centerLon);
-        double y = getY(archivedEarthquake.getLatitude(), centerLat) - 40;
-        graphics.setColor(FeatureEarthquake.getCrossColor(archivedEarthquake.getMagnitude()));
+        String str = "M%.1f  %s".formatted(magnitude, Settings.getSelectedDistanceUnit().format(depth, 1));
+        double x = getX(eventLon, centerLon);
+        double y = getY(eventLat, centerLat) - 40;
+        graphics.setColor(FeatureEarthquake.getCrossColor(magnitude));
         graphics.drawString(str, (int) (x - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) y);
 
         y+=15;
 
         graphics.setColor(Color.white);
-        LocalDateTime origin = archivedEarthquake.getOrigin();
-        ZoneId oldZone = ZoneId.of("UTC");
-        ZoneId newZone = ZoneId.of(Settings.timezoneStr);
-        LocalDateTime newDateTime = origin.atZone(oldZone).withZoneSameInstant(newZone).toLocalDateTime();
-        str = "%s".formatted(Settings.formatDateTime(newDateTime));
+        str = "%s".formatted(Settings.formatDateTime(origin));
         graphics.drawString(str, (int) (x - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) y);
     }
 
