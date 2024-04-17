@@ -6,13 +6,21 @@ import globalquake.core.intensity.IntensityScales;
 import globalquake.db.entities.ArchivedEarthquake;
 import globalquake.db.entities.TelegramUser;
 import globalquake.telegram.TelegramService;
+import globalquake.telegram.util.EventImageDrawer;
 import globalquake.telegram.util.TelegramUtils;
 import globalquake.utils.GeoUtils;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import static org.telegram.telegrambots.abilitybots.api.objects.Locality.USER;
 import static org.telegram.telegrambots.abilitybots.api.objects.Privacy.PUBLIC;
@@ -60,7 +68,14 @@ public class ListEarthquakesAbility extends AbstractAbility {
                             first = false;
                         }
 
-                        getTelegramService().getSilent().sendMd((text.toString()), ctx.chatId());
+                        Optional<Message> message = getTelegramService().getSilent().sendMd((text.toString()), ctx.chatId());
+                        if (!earthquakes.isEmpty() && message.isPresent()) {
+                            try {
+                                getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).photo(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                            } catch (TelegramApiException | IOException e) {
+                                Logger.error(e);
+                            }
+                        }
                         GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "list", "user", ctx.user().getId().toString()).increment();
                     } else {
                         sendNotActiveWarning(telegramUser, ctx.user(), ctx.chatId());

@@ -1,10 +1,13 @@
 package globalquake.telegram.util;
 
+import globalquake.core.Settings;
 import globalquake.core.analysis.Event;
 import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.regions.GQPolygon;
 import globalquake.core.regions.Regions;
+import globalquake.db.entities.ArchivedEarthquake;
 import globalquake.db.entities.TelegramUser;
+import globalquake.ui.globalquake.feature.FeatureEarthquake;
 import globalquake.utils.Scale;
 
 import javax.imageio.ImageIO;
@@ -16,6 +19,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+
 
 public final class EventImageDrawer {
     private static final int width = 1024;
@@ -28,7 +35,9 @@ public final class EventImageDrawer {
     public static InputStream drawEarthquakeImage(TelegramUser user, Earthquake earthquake) throws IOException {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
-        drawCommonPart(g, user, earthquake.getLat(), earthquake.getLon());
+        drawCommonPart(g, earthquake.getLat(), earthquake.getLon());
+        drawEventPoint(g, earthquake.getLat(), earthquake.getLon(), earthquake.getLat(), earthquake.getLon());
+        drawHome(g, user, earthquake.getLat(), earthquake.getLon());
 
         g.setStroke(new BasicStroke(1f));
         for (Event event : earthquake.getCluster().getAssignedEvents().values()) {
@@ -51,7 +60,9 @@ public final class EventImageDrawer {
     public static InputStream drawEventImage(TelegramUser user, double eventLat, double eventLon) throws IOException {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
-        drawCommonPart(g, user, eventLat, eventLon);
+        drawCommonPart(g, eventLat, eventLon);
+        drawEventPoint(g, eventLat, eventLon, eventLat, eventLon);
+        drawHome(g, user, eventLat, eventLon);
 
         g.dispose();
 
@@ -61,7 +72,25 @@ public final class EventImageDrawer {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    private static void drawCommonPart(Graphics2D g, TelegramUser user, double eventLat, double eventLon) {
+    public static InputStream drawEventsImage(TelegramUser user, List<ArchivedEarthquake> archivedEarthquakeList) throws IOException {
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics2D g = img.createGraphics();
+        drawCommonPart(g, user.getHomeLat(), user.getHomeLon());
+        for (ArchivedEarthquake archivedEarthquake : archivedEarthquakeList) {
+            drawEventPoint(g, archivedEarthquake.getLatitude(), archivedEarthquake.getLongitude(), user.getHomeLat(), user.getHomeLon());
+            drawDetails(g, user.getHomeLat(), user.getHomeLon(), archivedEarthquake);
+        }
+        drawHome(g, user, user.getHomeLat(), user.getHomeLon());
+
+        g.dispose();
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(img, "PNG", os);
+
+        return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    private static void drawCommonPart(Graphics2D g, double centerLat, double centerLon) {
         g.setColor(oceanC);
         g.fillRect(0, 0, width, height);
 
@@ -71,8 +100,8 @@ public final class EventImageDrawer {
             for (int i = 0; i < polygon.getSize(); i++) {
                 double lat = polygon.getLats()[i];
                 double lon = polygon.getLons()[i];
-                double x = getX(lon, eventLon);
-                double y = getY(lat, eventLat);
+                double x = getX(lon, centerLon);
+                double y = getY(lat, centerLat);
 
                 if (!add && isOnScreen(x, y)) {
                     add = true;
@@ -86,34 +115,55 @@ public final class EventImageDrawer {
                 g.draw(awt);
             }
         }
+    }
 
-        {
-            double x = getX(eventLon, eventLon);
-            double y = getY(eventLat, eventLat);
-            double r = 12;
-            Line2D.Double line1 = new Line2D.Double(x - r, y - r, x + r, y + r);
-            Line2D.Double line2 = new Line2D.Double(x - r, y + r, x + r, y - r);
-            g.setColor(Color.white);
-            g.setStroke(new BasicStroke(8f));
-            g.draw(line1);
-            g.draw(line2);
-            g.setColor(Color.orange);
-            g.setStroke(new BasicStroke(6f));
-            g.draw(line1);
-            g.draw(line2);
-        }
+    private static void drawEventPoint(Graphics2D g, double eventLat, double eventLon, double centerLat, double centerLon) {
+        double x = getX(eventLon, centerLon);
+        double y = getY(eventLat, centerLat);
+        double r = 12;
+        Line2D.Double line1 = new Line2D.Double(x - r, y - r, x + r, y + r);
+        Line2D.Double line2 = new Line2D.Double(x - r, y + r, x + r, y - r);
+        g.setColor(Color.white);
+        g.setStroke(new BasicStroke(8f));
+        g.draw(line1);
+        g.draw(line2);
+        g.setColor(Color.orange);
+        g.setStroke(new BasicStroke(6f));
+        g.draw(line1);
+        g.draw(line2);
+    }
 
-        {
-            double x = getX(user.getHomeLon(), eventLon);
-            double y = getY(user.getHomeLat(), eventLat);
-            double r = 12;
-            Line2D.Double line1 = new Line2D.Double(x - r, y, x + r, y);
-            Line2D.Double line2 = new Line2D.Double(x, y + r, x, y - r);
-            g.setColor(Color.magenta);
-            g.setStroke(new BasicStroke(3f));
-            g.draw(line1);
-            g.draw(line2);
-        }
+    private static void drawHome(Graphics2D g, TelegramUser user, double centerLat, double centerLon) {
+        double x = getX(user.getHomeLon(), centerLon);
+        double y = getY(user.getHomeLat(), centerLat);
+        double r = 12;
+        Line2D.Double line1 = new Line2D.Double(x - r, y, x + r, y);
+        Line2D.Double line2 = new Line2D.Double(x, y + r, x, y - r);
+        g.setColor(Color.magenta);
+        g.setStroke(new BasicStroke(3f));
+        g.draw(line1);
+        g.draw(line2);
+
+    }
+
+    private static void drawDetails(Graphics2D graphics, double centerLat, double centerLon, ArchivedEarthquake archivedEarthquake) {
+        graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
+
+        String str = "M%.1f  %s".formatted(archivedEarthquake.getMagnitude(), Settings.getSelectedDistanceUnit().format(archivedEarthquake.getDepth(), 1));
+        double x = getX(archivedEarthquake.getLongitude(), centerLon);
+        double y = getY(archivedEarthquake.getLatitude(), centerLat) - 40;
+        graphics.setColor(FeatureEarthquake.getCrossColor(archivedEarthquake.getMagnitude()));
+        graphics.drawString(str, (int) (x - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) y);
+
+        y+=15;
+
+        graphics.setColor(Color.white);
+        LocalDateTime origin = archivedEarthquake.getOrigin();
+        ZoneId oldZone = ZoneId.of("UTC");
+        ZoneId newZone = ZoneId.of(Settings.timezoneStr);
+        LocalDateTime newDateTime = origin.atZone(oldZone).withZoneSameInstant(newZone).toLocalDateTime();
+        str = "%s".formatted(Settings.formatDateTime(newDateTime));
+        graphics.drawString(str, (int) (x - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) y);
     }
 
     private static boolean isOnScreen(double x, double y) {
