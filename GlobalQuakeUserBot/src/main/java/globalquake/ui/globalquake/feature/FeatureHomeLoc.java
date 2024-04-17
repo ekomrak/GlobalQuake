@@ -76,7 +76,7 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
 
             graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
             String str = "Home";
-            graphics.drawString(str, (int) (renderProperties.width * 0.5 - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) (renderProperties.height * 0.5 - 15));
+            graphics.drawString(str, (int) (renderProperties.width * 0.5 - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) (renderProperties.height * 0.5 - 20));
         }
     }
 
