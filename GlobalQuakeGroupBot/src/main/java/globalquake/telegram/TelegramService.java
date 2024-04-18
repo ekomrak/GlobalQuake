@@ -230,7 +230,7 @@ public class TelegramService extends AbilityBot {
                                 InputFile inputFile = null;
                                 boolean sendAsAPhoto = true;
                                 if (Boolean.TRUE.equals(Settings.enableTelegramStationHighIntensityImage)) {
-                                    inputFile = new InputFile(EventImageDrawer.drawEventImage(clientStation.getLatitude(), clientStation.getLongitude()), "Station.png");
+                                    inputFile = new InputFile(EventImageDrawer.drawEventImage(clientStation.getLatitude(), clientStation.getLongitude()), "Station_%d.png".formatted(System.currentTimeMillis()));
                                     sendAsAPhoto = Settings.sendImageAsAPhoto;
                                 }
                                 if (Boolean.TRUE.equals(Settings.enableTelegramStationHighIntensityMap)) {
