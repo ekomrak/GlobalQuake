@@ -37,6 +37,27 @@ public class ProcessInputAbility extends AbstractAbility {
                         long userId = ctx.update().getCallbackQuery().getFrom().getId();
 
                         switch (callData) {
+                            case "general_settings" -> navigateToGeneralSettings(userId, chatId, messageId);
+                            case "general_image" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendImageAsAPhoto(!telegramUser.getSendImageAsAPhoto());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGeneralSettings(userId, chatId, messageId);
+                                }
+                            }
+                            case "general_map" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendMapAsAPhoto(!telegramUser.getSendMapAsAPhoto());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGeneralSettings(userId, chatId, messageId);
+                                }
+                            }
                             case "home_settings" -> navigateToHomeSettings(userId, chatId, messageId);
                             case "home_lat" -> {
                                 getTelegramService().getUserState().put(userId, SettingsState.HOME_LAT);
@@ -462,8 +483,24 @@ public class ProcessInputAbility extends AbstractAbility {
         TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
         if (telegramUser != null) {
             InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Основные настройки").callbackData("general_settings").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Координаты дома").callbackData("home_settings").build(), InlineKeyboardButton.builder().text("Потенциальные землетрясения").callbackData("cluster_settings").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Землетрясения").callbackData("earthquake_settings").build(), InlineKeyboardButton.builder().text("Датчики").callbackData("station_settings").build())).build();
+            sendInlineKeyboard(markupInline, chatId, messageId);
+        }
+    }
+
+    private void navigateToGeneralSettings(long userId, long chatId) {
+        navigateToGeneralSettings(userId, chatId);
+    }
+
+    private void navigateToGeneralSettings(long userId, long chatId, Integer messageId) {
+        TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+        if (telegramUser != null) {
+            InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку как документ: %s".formatted(TelegramUtils.booleanToString(!telegramUser.getSendImageAsAPhoto()))).callbackData("general_image").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту как документ: %s".formatted(TelegramUtils.booleanToString(!telegramUser.getSendMapAsAPhoto()))).callbackData("general_map").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
             sendInlineKeyboard(markupInline, chatId, messageId);
         }
     }

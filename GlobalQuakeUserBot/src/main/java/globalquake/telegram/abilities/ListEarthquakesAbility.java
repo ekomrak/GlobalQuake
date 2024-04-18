@@ -10,6 +10,7 @@ import globalquake.telegram.util.EventImageDrawer;
 import globalquake.telegram.util.TelegramUtils;
 import globalquake.utils.GeoUtils;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -71,7 +72,11 @@ public class ListEarthquakesAbility extends AbstractAbility {
                         Optional<Message> message = getTelegramService().getSilent().sendMd((text.toString()), ctx.chatId());
                         if (!earthquakes.isEmpty() && message.isPresent()) {
                             try {
-                                getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).photo(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                                if (Boolean.TRUE.equals(telegramUser.getSendImageAsAPhoto())) {
+                                    getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).photo(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                                } else {
+                                    getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).document(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                                }
                             } catch (TelegramApiException | IOException e) {
                                 Logger.error(e);
                             }

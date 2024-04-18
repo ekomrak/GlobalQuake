@@ -21,7 +21,7 @@ import java.util.List;
 
 public class FeatureCities extends RenderFeature<CityLocation> {
 
-    private static final int MIN_POPULATION = 200_000;
+    private static final int MIN_POPULATION = 1;
     private final Collection<CityLocation> cityLocations;
 
     public FeatureCities() {
@@ -99,6 +99,8 @@ public class FeatureCities extends RenderFeature<CityLocation> {
     public void render(GlobeRenderer renderer, Graphics2D graphics, RenderEntity<CityLocation> entity, RenderProperties renderProperties) {
         RenderElement element = entity.getRenderElement(0);
         if (element.shouldDraw) {
+            AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+            graphics.setComposite(alcom);
             graphics.setColor(Color.white);
             graphics.setStroke(new BasicStroke(3f));
 
@@ -115,6 +117,8 @@ public class FeatureCities extends RenderFeature<CityLocation> {
                 graphics.setFont(new Font("Calibri", Font.PLAIN, 14));
                 graphics.drawString(str, (int) centerPonint.x - graphics.getFontMetrics().stringWidth(str) / 2, (int) centerPonint.y - 8);
             }
+            alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+            graphics.setComposite(alcom);
         }
     }
 

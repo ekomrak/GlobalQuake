@@ -39,12 +39,17 @@ public final class TelegramUtils {
     }
 
     public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga) {
+        return generateEarthquakeMessage(earthquake, distGCD, pga, false);
+    }
+
+    public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga, boolean test) {
         String quality = "?";
         if (earthquake.getHypocenter().quality != null) {
             quality = earthquake.getHypocenter().quality.getSummary().toString();
         }
 
-        return "<b>Землетрясение обнаружено.</b>\n" +
+        String header = test ? "<b>Выдуманное землетрясение.</b>\n" : "<b>Землетрясение обнаружено.</b>\n";
+        return  header +
                 "<b>" + "M%.1f".formatted(earthquake.getMag()) + " " + earthquake.getRegion() + "</b>\n" +
                 "Расстояние: %.1f км. Глубина: %.1f км.%n".formatted(distGCD, earthquake.getDepth()) +
                 "MMI: " + formatLevel(IntensityScales.MMI.getLevel(pga)) + " / Shindo: " + formatLevel(IntensityScales.SHINDO.getLevel(pga)) + "\n" +

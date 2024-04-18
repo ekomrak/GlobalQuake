@@ -18,15 +18,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class EventImageDrawer {
-    private static final int width = 1024;
-    private static final int height = 768;
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
     private static double scroll = 1.5;
     private static final Color oceanC = new Color(7, 37, 48);
     private static final Color landC = new Color(15, 47, 68);
     private static final Color borderC = new Color(153, 153, 153);
 
     public static InputStream drawEarthquakeImage(Earthquake earthquake) throws IOException {
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
         drawCommonPart(g, earthquake.getLat(), earthquake.getLon());
 
@@ -49,7 +49,7 @@ public final class EventImageDrawer {
     }
 
     public static InputStream drawEventImage(double eventLat, double eventLon) throws IOException {
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
         drawCommonPart(g, eventLat, eventLon);
 
@@ -63,7 +63,7 @@ public final class EventImageDrawer {
 
     private static void drawCommonPart(Graphics2D g, double eventLat, double eventLon) {
         g.setColor(oceanC);
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
 
         for (GQPolygon polygon : Regions.raw_polygonsUHD) {
             Polygon awt = new Polygon();
@@ -117,15 +117,15 @@ public final class EventImageDrawer {
     }
 
     private static boolean isOnScreen(double x, double y) {
-        return x >= 0 && y >= 0 && x < width && y < height;
+        return x >= 0 && y >= 0 && x < WIDTH && y < HEIGHT;
     }
 
     private static double getX(double lon, double centerLon) {
-        return (lon - centerLon) / (scroll / 100.0) + (width * 0.5);
+        return (lon - centerLon) / (scroll / 100.0) + (WIDTH * 0.5);
     }
 
     private static double getY(double lat, double centerLat) {
         return (centerLat - lat) / (scroll / (300 - 200 * Math.cos(0.5 * Math.toRadians(centerLat + lat))))
-                + (height * 0.5);
+                + (HEIGHT * 0.5);
     }
 }

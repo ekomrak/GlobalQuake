@@ -33,6 +33,17 @@ public class ProcessInputAbility extends AbstractAbility {
                         long chatId = ctx.update().getCallbackQuery().getMessage().getChatId();
 
                         switch (callData) {
+                            case "general_settings" -> navigateToGeneralSettings(chatId, messageId);
+                            case "general_image" -> {
+                                Settings.sendImageAsAPhoto = !Settings.sendImageAsAPhoto;
+                                Settings.save();
+                                navigateToGeneralSettings(chatId, messageId);
+                            }
+                            case "general_map" -> {
+                                Settings.sendMapAsAPhoto = !Settings.sendMapAsAPhoto;
+                                Settings.save();
+                                navigateToGeneralSettings(chatId, messageId);
+                            }
                             case "home_settings" -> navigateToHomeSettings(chatId, messageId);
                             case "home_lat" -> {
                                 getTelegramService().setSettingsState(SettingsState.HOME_LAT);
@@ -188,7 +199,7 @@ public class ProcessInputAbility extends AbstractAbility {
                             case EARTHQUAKE_DIST_1 -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
-                                    if (dist >=0 && dist <= 30000) {
+                                    if (dist >= 0 && dist <= 30000) {
                                         Settings.tsEarthquakeMaxDistArea1 = dist;
                                         Settings.save();
                                     } else {
@@ -216,7 +227,7 @@ public class ProcessInputAbility extends AbstractAbility {
                             case EARTHQUAKE_DIST_2 -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
-                                    if (dist >=0 && dist <= 30000) {
+                                    if (dist >= 0 && dist <= 30000) {
                                         Settings.tsEarthquakeMaxDistArea2 = dist;
                                         Settings.save();
                                     } else {
@@ -258,7 +269,7 @@ public class ProcessInputAbility extends AbstractAbility {
                             case CLUSTER_DIST -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
-                                    if (dist >=0 && dist <= 30000) {
+                                    if (dist >= 0 && dist <= 30000) {
                                         Settings.tsPossibleShakingMaxDist = dist;
                                         Settings.save();
                                     } else {
@@ -286,7 +297,7 @@ public class ProcessInputAbility extends AbstractAbility {
                             case STATION_DIST_1 -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
-                                    if (dist >=0 && dist <= 30000) {
+                                    if (dist >= 0 && dist <= 30000) {
                                         Settings.tsStationMaxDist1 = dist;
                                         Settings.save();
                                     } else {
@@ -314,7 +325,7 @@ public class ProcessInputAbility extends AbstractAbility {
                             case STATION_DIST_2 -> {
                                 try {
                                     double dist = Double.parseDouble(messageText);
-                                    if (dist >=0 && dist <= 30000) {
+                                    if (dist >= 0 && dist <= 30000) {
                                         Settings.tsStationMaxDist2 = dist;
                                         Settings.save();
                                     } else {
@@ -348,8 +359,21 @@ public class ProcessInputAbility extends AbstractAbility {
 
     private void navigateToSettings(long chatId, int messageId) {
         InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Основные настройки").callbackData("general_settings").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Координаты дома").callbackData("home_settings").build(), InlineKeyboardButton.builder().text("Потенциальные землетрясения").callbackData("cluster_settings").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Землетрясения").callbackData("earthquake_settings").build(), InlineKeyboardButton.builder().text("Датчики").callbackData("station_settings").build())).build();
+        sendInlineKeyboard(markupInline, chatId, messageId);
+    }
+
+    private void navigateToGeneralSettings(long chatId) {
+        navigateToGeneralSettings(chatId);
+    }
+
+    private void navigateToGeneralSettings(long chatId, Integer messageId) {
+        InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку как документ: %s".formatted(TelegramUtils.booleanToString(!Settings.sendImageAsAPhoto))).callbackData("general_image").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту как документ: %s".formatted(TelegramUtils.booleanToString(!Settings.sendMapAsAPhoto))).callbackData("general_map").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
         sendInlineKeyboard(markupInline, chatId, messageId);
     }
 

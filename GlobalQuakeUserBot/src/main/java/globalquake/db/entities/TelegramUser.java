@@ -48,6 +48,9 @@ public class TelegramUser {
     private Integer tsStationMinIntensity2;
     private Integer tsStationMaxDist2;
 
+    private Boolean sendImageAsAPhoto;
+    private Boolean sendMapAsAPhoto;
+
     public TelegramUser() {
 
     }
@@ -111,6 +114,9 @@ public class TelegramUser {
         tsStationMaxDist2 = 400;
 
         tsEarthquakeMinIntensity = 2;
+
+        sendImageAsAPhoto = true;
+        sendMapAsAPhoto = true;
     }
 
     public Long getId() {
@@ -399,5 +405,21 @@ public class TelegramUser {
 
     public void setTsEarthquakeMinIntensity(Integer tsEarthquakeMinIntensity) {
         this.tsEarthquakeMinIntensity = tsEarthquakeMinIntensity;
+    }
+
+    public Boolean getSendImageAsAPhoto() {
+        return sendImageAsAPhoto;
+    }
+
+    public void setSendImageAsAPhoto(Boolean sendImageAsAPhoto) {
+        this.sendImageAsAPhoto = sendImageAsAPhoto;
+    }
+
+    public Boolean getSendMapAsAPhoto() {
+        return sendMapAsAPhoto;
+    }
+
+    public void setSendMapAsAPhoto(Boolean sendMapAsAPhoto) {
+        this.sendMapAsAPhoto = sendMapAsAPhoto;
     }
 }

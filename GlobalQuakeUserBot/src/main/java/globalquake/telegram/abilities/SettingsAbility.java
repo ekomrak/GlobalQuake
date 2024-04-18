@@ -32,6 +32,7 @@ public class SettingsAbility extends AbstractAbility {
                         updateTelegramUser(telegramUser, ctx.user(), ctx.chatId());
 
                         InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Основные настройки").callbackData("general_settings").build()))
                                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Координаты дома").callbackData("home_settings").build(), InlineKeyboardButton.builder().text("Потенциальные землетрясения").callbackData("cluster_settings").build()))
                                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Землетрясения").callbackData("earthquake_settings").build(), InlineKeyboardButton.builder().text("Датчики").callbackData("station_settings").build())).build();
 

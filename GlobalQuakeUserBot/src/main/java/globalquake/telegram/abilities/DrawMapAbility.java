@@ -5,6 +5,7 @@ import globalquake.telegram.TelegramService;
 import globalquake.db.entities.TelegramUser;
 import globalquake.telegram.util.MapImageDrawer;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -33,7 +34,11 @@ public class DrawMapAbility extends AbstractAbility {
                         updateTelegramUser(telegramUser, ctx.user(), ctx.chatId());
 
                         try {
-                            getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).photo(new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                            if (Boolean.TRUE.equals(telegramUser.getSendMapAsAPhoto())) {
+                                getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).photo(new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                            } else {
+                                getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(ctx.chatId()).document(new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                            }
                             GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "map", "user", ctx.user().getId().toString()).increment();
                         } catch (TelegramApiException | IOException e) {
                             Logger.error(e);

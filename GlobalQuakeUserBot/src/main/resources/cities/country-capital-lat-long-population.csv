@@ -43,7 +43,6 @@ Chad,N'Djaména,12.1067,15.0444,1322679,Capital
 Channel Islands,St. Helier,49.1880,-2.1049,34386,Capital
 Channel Islands,St. Peter Port,49.4598,-2.5353,16271,Capital
 Chile,Santiago,-33.4569,-70.6483,6680371,Capital
-China,Beijing,39.9075,116.3972,19617963,Capital
 "China, Hong Kong SAR",Hong Kong,22.2796,114.1887,7428887,Capital
 "China, Macao SAR",Macao,22.2006,113.5461,632418,Capital
 "China, Taiwan Province of China",Taibei,25.0470,121.5457,2705791,Others
@@ -109,11 +108,9 @@ Italy,Roma (Rome),41.8947,12.4811,4209710,Capital
 Jamaica,Kingston,17.9970,-76.7936,589083,Capital
 Japan,Tokyo,35.6895,139.6917,37468302,Capital
 Jordan,Amman,31.9552,35.9450,2064582,Capital
-Kazakhstan,Astana,51.1801,71.4460,1068113,Capital
 Kenya,Nairobi,-1.2833,36.8167,4385853,Capital
 Kiribati,Tarawa,1.3272,172.9813,64011,Capital
 Kuwait,Al Kuwayt (Kuwait City),29.3697,47.9783,2989270,Capital
-Kyrgyzstan,Bishkek,42.8700,74.5900,996319,Capital
 Lao People's Democratic Republic,Vientiane,17.9667,102.6000,664754,Capital
 Latvia,Riga,56.9460,24.1059,637089,Capital
 Lebanon,Bayrut (Beirut),33.9000,35.4833,2385271,Capital
@@ -203,7 +200,6 @@ Swaziland,Mbabane,-26.3167,31.1333,68010,Capital
 Sweden,Stockholm,59.3326,18.0649,1582968,Capital
 Switzerland,Bern,46.9481,7.4474,422153,Capital
 Syrian Arab Republic,Dimashq (Damascus),33.5086,36.3084,2319545,Capital
-Tajikistan,Dushanbe,38.5358,68.7791,872653,Capital
 TFYR Macedonia,Skopje,42.0000,21.4333,584208,Capital
 Thailand,Krung Thep (Bangkok),13.7220,100.5252,10156316,Capital
 Timor-Leste,Dili,-8.5601,125.5668,281135,Capital
@@ -224,7 +220,6 @@ United Republic of Tanzania,Dodoma,-6.1722,35.7395,261645,Capital
 United States of America,"Washington, D.C.",38.8951,-77.0364,5206593,Capital
 United States Virgin Islands,Charlotte Amalie,18.3419,-64.9307,52322,Capital
 Uruguay,Montevideo,-34.8335,-56.1674,1736989,Capital
-Uzbekistan,Tashkent,41.2647,69.2163,2463969,Capital
 Vanuatu,Port Vila,-17.7338,168.3219,52690,Capital
 Venezuela (Bolivarian Republic of),Caracas,10.4880,-66.8792,2934560,Capital
 Viet Nam,Hà Noi,21.0245,105.8412,4282738,Capital
@@ -233,3 +228,116 @@ Western Sahara,El Aaiún,27.1532,-13.2014,232388,Capital
 Yemen,Sana'a',15.3531,44.2078,2779317,Capital
 Zambia,Lusaka,-15.4134,28.2771,2523844,Capital
 Zimbabwe,Harare,-17.8294,31.0539,1515016,Capital
+China,Beijing,39.9067,116.3975,18522000,Capital
+Uzbekistan,Tashkent,41.3111,69.2797,2956384,Capital
+Kazakhstan,Almaty,43.24,76.915,1916822,Others
+Kazakhstan,Shymkent,42.3167,69.5958,1184113,Others
+Kyrgyzstan,Bishkek,42.8747,74.6122,1120827,Capital
+Kazakhstan,Astana,51.1472,71.4222,1078362,Capital
+China,Kashgar,39.4681,75.9938,920000,Others
+Tajikistan,Dushanbe,38.5367,68.78,863400,Capital
+China,Shache,38.4261,77.25,851374,Others
+Tajikistan,Khujand,40.2833,69.6333,770000,Others
+China,Korla,41.7259,86.1746,770000,Others
+China,Shihezi,44.3054,86.0804,717000,Others
+Uzbekistan,Andijon,40.7833,72.3333,547800,Others
+Uzbekistan,Samarkand,39.6547,66.9758,546303,Others
+China,Ghulja,43.9,81.35,542507,Others
+China,Aksu,41.185,80.2904,535657,Others
+Kazakhstan,Qaraghandy,49.8028,73.1056,497777,Others
+China,Karamay,45.5799,84.8892,487000,Others
+China,Kuqa,41.7156,82.9322,462588,Others
+Kazakhstan,Oskemen,49.9833,82.6167,400142,Others
+Kazakhstan,Aqtobe,50.2836,57.2297,387807,Others
+Kazakhstan,Taraz,42.9,71.3667,357795,Others
+Kyrgyzstan,Osh,40.53,72.8,353080,Others
+Kazakhstan,Semey,50.4333,80.2667,350201,Others
+Kazakhstan,Pavlodar,52.3,76.95,343091,Others
+China,Hotan,37.1167,79.9167,322300,Others
+Uzbekistan,Nukus,42.4667,59.6,319583,Others
+Uzbekistan,Farg`ona,40.3864,71.7864,288850,Others
+Uzbekistan,Bukhara,39.7667,64.4231,280187,Others
+Uzbekistan,Qarshi,38.8667,65.8,274891,Others
+Uzbekistan,Qo`qon,40.5286,70.9425,259700,Others
+Kazakhstan,Turkistan,43.3019,68.2692,250000,Others
+Kazakhstan,Qyzylorda,44.85,65.5167,242462,Others
+China,Bole,44.8539,82.0514,235585,Others
+Kazakhstan,Oral,51.2225,51.3725,234184,Others
+Tajikistan,Konibodom,40.2833,70.4167,219000,Others
+Kazakhstan,Qostanay,53.2,63.62,217135,Others
+Kazakhstan,Petropavl,54.8833,69.1667,201446,Others
+Kazakhstan,Temirtau,50.05,72.95,185082,Others
+Kazakhstan,Aqtau,43.6525,51.1575,183350,Others
+China,Kuytun,44.4264,84.9032,166261,Others
+Kazakhstan,Kokshetau,53.2833,69.3833,165153,Others
+Uzbekistan,Jizzax,40.1158,67.8422,163200,Others
+China,Tacheng,46.7517,82.9869,161037,Others
+Kazakhstan,Ekibastuz,51.6667,75.3667,159760,Others
+China,Aral,40.548,81.281,158593,Others
+Uzbekistan,Urganch,41.55,60.6333,150000,Others
+Kazakhstan,Zhangaozen,43.3378,52.8553,147962,Others
+China,Altay,47.8666,88.1166,142000,Others
+Uzbekistan,Olmaliq,40.85,69.6,141894,Others
+Uzbekistan,Termiz,37.2167,67.2833,136200,Others
+Uzbekistan,Navoiy,40.0844,65.3792,134100,Others
+Kazakhstan,Atyrau,47.1167,51.8833,130916,Others
+Kazakhstan,Taldyqorghan,45.0167,78.3667,129960,Others
+Kazakhstan,Rudnyy,52.9667,63.1333,128200,Others
+Uzbekistan,Angren,41.0167,70.1436,126962,Others
+Tajikistan,Kulob,37.9092,69.7819,106300,Others
+Uzbekistan,Xiva,41.3814,60.3611,105300,Others
+Uzbekistan,Shahrisabz,39.05,66.8333,100300,Others
+Uzbekistan,Chust,40.9978,71.2403,100200,Others
+Kazakhstan,Zhezqazghan,47.7833,67.7,90661,Others
+Uzbekistan,Kattagan,40.2,64.9167,86745,Others
+Kyrgyzstan,Karakol,42.4903,78.3917,85588,Others
+China,Korgas,44.2125,80.4097,85000,Others
+Kazakhstan,Kentau,43.5167,68.5167,81484,Others
+Uzbekistan,Qunghirot,43.0758,58.9067,80090,Others
+Uzbekistan,Denov,38.2667,67.9,78300,Others
+Kazakhstan,Balqash,46.8481,74.995,78002,Others
+China,Kargilik,37.885,77.4131,75730,Others
+Kazakhstan,Aqsu,52.0333,76.9167,69354,Others
+Tajikistan,Istaravshan,39.9108,69.0064,65600,Others
+China,Qarqan,38.1338,85.5333,65572,Others
+Kazakhstan,Kapchagay,43.8833,77.0833,61677,Others
+Uzbekistan,Kattaqo'rg'on Shahri,39.8989,66.2561,58950,Others
+Tajikistan,Tursunzoda,38.5108,68.2303,55700,Others
+Uzbekistan,Guliston,40.4833,68.7833,55600,Others
+Uzbekistan,Zarafshon Shahri,41.6081,64.2264,54300,Others
+Kyrgyzstan,Tokmok,42.8333,75.2833,53231,Others
+Tajikistan,Panjakent,39.5,67.6167,52500,Others
+Tajikistan,Isfara,40.1167,70.6333,51700,Others
+Kyrgyzstan,Kyzyl-Kyya,40.2611,72.1306,51300,Others
+Kazakhstan,Zharkent,44.1667,80,42617,Others
+Kyrgyzstan,Balykchy,42.4611,76.1803,42380,Others
+Kyrgyzstan,Talas,42.5167,72.2333,40308,Others
+Kazakhstan,Esik,43.35,77.4667,36715,Others
+Kazakhstan,Shu,43.5983,73.7614,35000,Others
+Kyrgyzstan,Naryn,41.4333,76,34822,Others
+Kazakhstan,Uzynaghash,43.2297,76.31,30589,Others
+China,Uchturpan,41.2136,79.2319,27836,Others
+Kyrgyzstan,Toktogul,41.8722,72.9389,20577,Others
+Kyrgyzstan,Mayluu-Suu,41.2457,72.448,20200,Others
+Kazakhstan,Shongzhy,43.5417,79.4703,17263,Others
+Kyrgyzstan,Kara-Kulja,40.6333,73.5925,15616,Others
+Kazakhstan,Bayserke,43.4797,77.0336,15124,Others
+Kyrgyzstan,Bokonbaev,42.11,76.99,14267,Others
+Kyrgyzstan,Kerben,41.5,71.75,14141,Others
+Kyrgyzstan,Gulcho,40.3167,73.4333,13755,Others
+Kyrgyzstan,Kyzyl-Adyr,42.62,71.59,13612,Others
+Kyrgyzstan,Tup,42.73,78.36,12355,Others
+Kyrgyzstan,Kok-Janggak,41.0333,73.2,12117,Others
+China,Aheqi,40.9365,78.4023,11910,Others
+Kyrgyzstan,Cholpon-Ata,42.65,77.0833,11520,Others
+Kyrgyzstan,Kochkor,42.2158,75.7556,11373,Others
+Kyrgyzstan,Arslanbob,41.3333,72.9333,11291,Others
+Kyrgyzstan,Kazarman,41.4,74.05,11191,Others
+Kyrgyzstan,Baetov,41.21,74.9,10682,Others
+Kyrgyzstan,Kemin,42.7861,75.6917,10354,Others
+Kyrgyzstan,Kayyngdy,42.83,73.68,9561,Others
+Kyrgyzstan,Anan'evo,42.73,77.66,9470,Others
+Kazakhstan,Kegen,43.0197,79.2203,9049,Others
+Kyrgyzstan,Saruu,42.3222,77.9222,8501,Others
+Kazakhstan,Otar,43.5375,75.2089,4540,Others
+Kazakhstan,Burubaytal,44.935,74.018,336,Others

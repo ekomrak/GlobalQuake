@@ -236,6 +236,9 @@ public final class Settings {
     public static String influxBucket;
     public static String influxToken;
 
+    public static Boolean sendImageAsAPhoto;
+    public static Boolean sendMapAsAPhoto;
+
     static {
         load();
         save();
@@ -439,6 +442,9 @@ public final class Settings {
         loadProperty("influxOrg", "");
         loadProperty("influxBucket", "");
         loadProperty("influxToken", "");
+
+        loadProperty("sendImageAsAPhoto", "true");
+        loadProperty("sendMapAsAPhoto", "true");
     }
 
     private static void runUpdateService() throws IOException {

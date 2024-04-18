@@ -14,13 +14,7 @@ import globalquake.core.intensity.IntensityScales;
 import globalquake.core.intensity.Level;
 import globalquake.core.regions.Regions;
 import globalquake.intensity.ShakeMap;
-import globalquake.telegram.feature.FeatureArchivedEarthquake;
-import globalquake.telegram.feature.FeatureCluster;
-import globalquake.telegram.feature.FeatureEarthquake;
-import globalquake.telegram.feature.FeatureGlobalStation;
-import globalquake.ui.globalquake.feature.FeatureCities;
-import globalquake.ui.globalquake.feature.FeatureHomeLoc;
-import globalquake.ui.globalquake.feature.FeatureShakemap;
+import globalquake.ui.globalquake.feature.*;
 import globalquake.ui.globe.GlobeRenderer;
 import globalquake.ui.globe.RenderProperties;
 import globalquake.ui.globe.feature.FeatureGeoPolygons;
@@ -49,8 +43,6 @@ public class MapImageDrawer {
     public static final Color GRAY_COLOR = new Color(20, 20, 20);
     private static final Color BLUE_COLOR = new Color(20, 20, 160);
     public static final DecimalFormat f4d = new DecimalFormat("0.0000", new DecimalFormatSymbols(Locale.ENGLISH));
-    private static final int WIDTH = 1920;
-    private static final int HEIGHT = 1080;
     private static double scroll = 0.1;
     private final GlobeRenderer renderer;
     public static MapImageDrawer instance;
@@ -78,9 +70,15 @@ public class MapImageDrawer {
 
 
     public InputStream drawMap() throws IOException {
-        renderer.updateCamera(new RenderProperties(WIDTH, HEIGHT, Settings.homeLat, Settings.homeLon, scroll));
+        int width = 1280;
+        int height = 720;
+        if (Boolean.FALSE.equals(Settings.sendMapAsAPhoto)) {
+            width = 1920;
+            height = 1080;
+        }
+        renderer.updateCamera(new RenderProperties(width, height, Settings.homeLat, Settings.homeLon, scroll));
 
-        BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
 
         renderer.render(g, renderer.getRenderProperties());
@@ -88,7 +86,7 @@ public class MapImageDrawer {
         drawEarthquakesBox(g, 0, 0);
 
         if (Boolean.TRUE.equals(Settings.displayAlertBox)) {
-            drawAlertsBox(g);
+            drawAlertsBox(g, width, height);
         }
 
         if (Boolean.TRUE.equals(Settings.displayTime)) {
@@ -114,7 +112,7 @@ public class MapImageDrawer {
                 }
             }
 
-            g.drawString(str, WIDTH - g.getFontMetrics().stringWidth(str) - 6, HEIGHT - 9);
+            g.drawString(str, width - g.getFontMetrics().stringWidth(str) - 6, height - 9);
         }
 
         g.dispose();
@@ -243,7 +241,7 @@ public class MapImageDrawer {
         }
     }
 
-    private void drawAlertsBox(Graphics2D g) {
+    private void drawAlertsBox(Graphics2D g, int widthImage, int heightImage) {
         Earthquake quake = null;
         double maxPGA = 0.0;
         double distGC = 0;
@@ -288,7 +286,7 @@ public class MapImageDrawer {
         }
 
         int width = 400;
-        int x = WIDTH / 2 - width / 2;
+        int x = widthImage / 2 - width / 2;
         int height;
 
         Color color;
@@ -312,7 +310,7 @@ public class MapImageDrawer {
             str = "Strong shaking is expected!";
         }
 
-        int y = HEIGHT - height;
+        int y = heightImage - height;
 
         RoundRectangle2D.Double rect = new RoundRectangle2D.Double(x, y, width, height, 10, 10);
         g.setColor(color);

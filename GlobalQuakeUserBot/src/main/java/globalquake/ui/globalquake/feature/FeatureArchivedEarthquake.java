@@ -119,6 +119,8 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
     }
 
     private void drawDetails(Graphics2D graphics, Point2D centerPonint, ArchivedQuake quake) {
+        AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f);
+        graphics.setComposite(alcom);
         graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
 
         double size = 3 + Math.pow(quake.getMag(), 2) * 0.6;
@@ -133,6 +135,8 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
         graphics.setColor(Color.white);
         str = "%s".formatted(Settings.formatDateTime(Instant.ofEpochMilli(quake.getOrigin())));
         graphics.drawString(str, (int) (centerPonint.x - graphics.getFontMetrics().stringWidth(str) * 0.5), y);
+        alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        graphics.setComposite(alcom);
     }
 
     @Override

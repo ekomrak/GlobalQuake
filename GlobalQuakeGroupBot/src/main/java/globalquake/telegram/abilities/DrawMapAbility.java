@@ -4,6 +4,7 @@ import globalquake.core.Settings;
 import globalquake.telegram.TelegramService;
 import globalquake.telegram.util.MapImageDrawer;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -28,7 +29,11 @@ public class DrawMapAbility extends AbstractAbility {
                 .privacy(ADMIN)
                 .action(ctx -> {
                     try {
-                        getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(Settings.telegramChatId).photo(new InputFile(MapImageDrawer.instance.drawMap(), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                        if (Boolean.TRUE.equals(Settings.sendMapAsAPhoto)) {
+                            getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(Settings.telegramChatId).photo(new InputFile(MapImageDrawer.instance.drawMap(), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                        } else {
+                            getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(Settings.telegramChatId).document(new InputFile(MapImageDrawer.instance.drawMap(), "map_%d.png".formatted(System.currentTimeMillis()))).build());
+                        }
                     } catch (TelegramApiException | IOException e) {
                         Logger.error(e);
                     }
