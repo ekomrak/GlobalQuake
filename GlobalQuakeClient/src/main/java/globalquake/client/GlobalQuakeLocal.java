@@ -34,7 +34,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
 
     private final TelegramBotsLongPollingApplication botsApplication;
     private final SoundsService soundsService;
-    private final TelegramService telegramService;
+    private TelegramService telegramService;
     private final SpeechAndSoundService speechService;
 
     protected GlobalQuakeFrame globalQuakeFrame;
@@ -48,7 +48,9 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
-        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        }
         this.speechService = new SpeechAndSoundService();
     }
 
@@ -62,7 +64,9 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
-        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        }
         this.speechService = new SpeechAndSoundService();
     }
 
@@ -76,16 +80,20 @@ public class GlobalQuakeLocal extends GlobalQuake {
         this.shakemapService = new ShakemapService();
         this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
-        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        }
         this.speechService = new SpeechAndSoundService();
     }
 
     public GlobalQuakeLocal createFrame() {
-        try {
-            botsApplication.registerBot(Settings.telegramBotToken, telegramService);
-            telegramService.onRegister();
-        } catch (TelegramApiException e) {
-            Logger.error(e);
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            try {
+                botsApplication.registerBot(Settings.telegramBotToken, telegramService);
+                telegramService.onRegister();
+            } catch (TelegramApiException e) {
+                Logger.error(e);
+            }
         }
 
         EventQueue.invokeLater(() -> {

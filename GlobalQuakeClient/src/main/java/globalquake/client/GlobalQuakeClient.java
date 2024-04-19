@@ -91,11 +91,13 @@ public class GlobalQuakeClient extends GlobalQuakeLocal {
 
     @Override
     public GlobalQuakeLocal createFrame() {
-        try {
-            getBotsApplication().registerBot(Settings.telegramBotToken, getTelegramService());
-            getTelegramService().onRegister();
-        } catch (TelegramApiException e) {
-            Logger.error(e);
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            try {
+                getBotsApplication().registerBot(Settings.telegramBotToken, getTelegramService());
+                getTelegramService().onRegister();
+            } catch (TelegramApiException e) {
+                Logger.error(e);
+            }
         }
 
         try {
