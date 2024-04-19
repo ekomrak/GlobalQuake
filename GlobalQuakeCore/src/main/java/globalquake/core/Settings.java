@@ -398,7 +398,7 @@ public final class Settings {
         loadProperty("telegramMessageThreadId", "0");
         loadProperty("telegramCreatorId", "0");
 
-        loadProperty("enableTelegramEarthquakeAlert", "true");
+        loadProperty("enableTelegramEarthquakeAlert", "false");
         loadProperty("enableTelegramEarthquakeLocation", "false");
         loadProperty("enableTelegramEarthquakeImage", "true");
         loadProperty("enableTelegramEarthquakeMap", "false");
@@ -409,14 +409,14 @@ public final class Settings {
         loadProperty("tsEarthquakeIntensityScale", "0", o -> validateInt(0, IntensityScales.INTENSITY_SCALES.length - 1, (Integer) o));
         loadProperty("tsEarthquakeMinIntensity", "1", o -> validateInt(0, IntensityScales.INTENSITY_SCALES[tsEarthquakeIntensityScale].getLevels().size() - 1, (Integer) o));
 
-        loadProperty("enableTelegramPossibleShakingAlert", "true");
+        loadProperty("enableTelegramPossibleShakingAlert", "false");
         loadProperty("enableTelegramPossibleShakingLocation", "false");
         loadProperty("enableTelegramPossibleShakingImage", "false");
         loadProperty("enableTelegramPossibleShakingMap", "true");
         loadProperty("tsPossibleShakingMinLevel", "2", o -> validateInt(0, 4, (Integer) o));
         loadProperty("tsPossibleShakingMaxDist", "300.0", o -> validateDouble(0, 30000, (Double) o));
 
-        loadProperty("enableTelegramStationHighIntensityAlert", "true");
+        loadProperty("enableTelegramStationHighIntensityAlert", "false");
         loadProperty("enableTelegramStationHighIntensityLocation", "false");
         loadProperty("enableTelegramStationHighIntensityImage", "false");
         loadProperty("enableTelegramStationHighIntensityMap", "true");
