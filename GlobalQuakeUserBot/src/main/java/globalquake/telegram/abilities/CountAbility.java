@@ -22,7 +22,7 @@ public class CountAbility extends AbstractAbility {
                 .action(ctx -> {
                     Integer activeUsers = GlobalQuakeClient.instance.getDatabaseService().countActiveUsers();
                     Integer allUsers = GlobalQuakeClient.instance.getDatabaseService().countAllUsers();
-                    getTelegramService().getSilent().send("Активных пользователей: %d (%d%%)%nВсего пользователей: %d".formatted(activeUsers, (activeUsers / allUsers) * 100, allUsers), ctx.chatId());
+                    getTelegramService().getSilent().send("Активных пользователей: %d (%.0f%%)%nВсего пользователей: %d".formatted(activeUsers, ((float) activeUsers / (float) allUsers) * 100, allUsers), ctx.chatId());
                     GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "count", "user", ctx.user().getId().toString()).increment();
                 })
                 .build();
