@@ -16,7 +16,7 @@ public class FeatureGeoPolygons extends RenderFeature<GQPolygon> {
 
     public static final Color oceanColor = new Color(5, 20, 30);
     public static final Color landColor = new Color(15, 47, 68);
-    public static final Color borderColor = new Color(153, 153, 153);
+    public static final Color borderColor = new Color(255, 255, 255);
 
     private final List<GQPolygon> polygonList;
     private final double minScroll;
