@@ -70,10 +70,9 @@ public class FeatureCluster extends RenderFeature<Cluster> {
         elementRoot.shouldDraw = renderer.project3D(elementRoot.getShape(), elementRoot.getPolygon(), true, renderProperties);
    }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean isEntityVisible(RenderEntity<?> entity) {
-        Cluster cluster = ((RenderEntity<Cluster>)entity).getOriginal();
+    public boolean isEntityVisible(RenderEntity<Cluster> entity) {
+        Cluster cluster = entity.getOriginal();
         return (!Settings.hideClustersWithQuake && GlobalQuake.instance.currentTimeMillis() - cluster.getLastUpdate() <= FLASH_TIME * 5) ||
                 GlobalQuake.instance.currentTimeMillis() - cluster.getLastUpdate() <= FLASH_TIME && cluster.getEarthquake() == null;
     }
@@ -88,7 +87,7 @@ public class FeatureCluster extends RenderFeature<Cluster> {
 
         graphics.setStroke(new BasicStroke(1f));
 
-        if(Settings.antialiasingClusters) {
+        if(Boolean.TRUE.equals(Settings.antialiasingClusters)) {
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
@@ -102,7 +101,7 @@ public class FeatureCluster extends RenderFeature<Cluster> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
+    public Point2D getCenterCoords(RenderEntity<Cluster> entity) {
         return null;
     }
 

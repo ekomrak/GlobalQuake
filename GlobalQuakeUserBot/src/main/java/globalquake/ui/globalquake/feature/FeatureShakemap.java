@@ -162,8 +162,7 @@ public class FeatureShakemap extends RenderFeature<IntensityHex> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        IntensityHex hex = (IntensityHex) entity.getOriginal();
-        return hex.center();
+    public Point2D getCenterCoords(RenderEntity<IntensityHex> entity) {
+        return entity.getOriginal().center();
     }
 }

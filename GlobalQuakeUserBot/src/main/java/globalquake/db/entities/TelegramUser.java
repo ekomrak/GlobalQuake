@@ -51,6 +51,9 @@ public class TelegramUser {
     private Boolean sendImageAsAPhoto;
     private Boolean sendMapAsAPhoto;
 
+    private Boolean showSmallCities;
+    private Boolean showFaults;
+
     public TelegramUser() {
 
     }
@@ -117,6 +120,9 @@ public class TelegramUser {
 
         sendImageAsAPhoto = true;
         sendMapAsAPhoto = true;
+
+        showSmallCities = true;
+        showFaults = false;
     }
 
     public Long getId() {
@@ -421,5 +427,21 @@ public class TelegramUser {
 
     public void setSendMapAsAPhoto(Boolean sendMapAsAPhoto) {
         this.sendMapAsAPhoto = sendMapAsAPhoto;
+    }
+
+    public Boolean getShowSmallCities() {
+        return showSmallCities;
+    }
+
+    public void setShowSmallCities(Boolean showSmallCities) {
+        this.showSmallCities = showSmallCities;
+    }
+
+    public Boolean getShowFaults() {
+        return showFaults;
+    }
+
+    public void setShowFaults(Boolean showFaults) {
+        this.showFaults = showFaults;
     }
 }

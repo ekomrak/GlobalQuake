@@ -6,6 +6,7 @@ import globalquake.core.GlobalQuake;
 import globalquake.core.Settings;
 import globalquake.core.exception.ApplicationErrorHandler;
 import globalquake.core.exception.FatalIOException;
+import globalquake.core.faults.Faults;
 import globalquake.core.regions.Regions;
 import globalquake.intensity.ShakeMap;
 import globalquake.utils.Scale;
@@ -26,6 +27,7 @@ public class Main {
 
         try {
             Regions.init();
+            Faults.init();
             Scale.load();
             ShakeMap.init();
         } catch (IOException e) {

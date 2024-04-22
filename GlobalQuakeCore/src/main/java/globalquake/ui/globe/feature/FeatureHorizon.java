@@ -74,7 +74,7 @@ public class FeatureHorizon extends RenderFeature<Point2D>{
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
+    public Point2D getCenterCoords(RenderEntity<Point2D> entity) {
         return null;
     }
 }

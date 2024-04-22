@@ -213,7 +213,7 @@ public class FeatureSelectableStation extends RenderFeature<Station> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
+    public Point2D getCenterCoords(RenderEntity<Station> entity) {
         return new Point2D(((Station) (entity.getOriginal())).getLatitude(), ((Station) (entity.getOriginal())).getLongitude());
     }
 }

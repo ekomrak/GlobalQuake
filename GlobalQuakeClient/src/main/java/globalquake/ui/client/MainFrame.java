@@ -6,6 +6,7 @@ import globalquake.core.database.StationSource;
 import globalquake.core.earthquake.GQHypocs;
 import globalquake.core.exception.FatalIOException;
 import globalquake.core.exception.RuntimeApplicationException;
+import globalquake.core.faults.Faults;
 import globalquake.core.geo.taup.TauPTravelTimeCalculator;
 import globalquake.core.regions.Regions;
 import globalquake.core.training.EarthquakeAnalysisTraining;
@@ -78,6 +79,7 @@ public class MainFrame extends GQFrame {
         getProgressBar().setString("Loading regions...");
         getProgressBar().setValue((int) ((phase++ / PHASES) * 100.0));
         Regions.init();
+        Faults.init();
         getProgressBar().setString("Loading scales...");
         getProgressBar().setValue((int) ((phase++ / PHASES) * 100.0));
         Scale.load();

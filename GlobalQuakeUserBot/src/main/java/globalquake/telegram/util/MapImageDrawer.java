@@ -9,6 +9,7 @@ import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.earthquake.data.MagnitudeReading;
 import globalquake.core.earthquake.quality.QualityClass;
+import globalquake.core.faults.Faults;
 import globalquake.core.geo.taup.TauPTravelTimeCalculator;
 import globalquake.core.intensity.IntensityScales;
 import globalquake.core.intensity.Level;
@@ -46,7 +47,11 @@ public class MapImageDrawer {
     public static final DecimalFormat f4d = new DecimalFormat("0.0000", new DecimalFormatSymbols(Locale.ENGLISH));
     private static double scroll = 0.1;
     private final GlobeRenderer renderer;
+
     private final FeatureHomeLoc featureHomeLoc;
+    private final FeatureCities featureCities;
+    private final FeatureFaults featureFaults;
+
     public static MapImageDrawer instance;
 
     public MapImageDrawer() {
@@ -61,12 +66,15 @@ public class MapImageDrawer {
         renderer.addFeature(new FeatureGeoPolygons(Regions.raw_polygonsHW, 0, 0.5));
         renderer.addFeature(new FeatureGeoPolygons(Regions.raw_polygonsIT, 0, 0.20));
 
+        featureFaults = new FeatureFaults(Faults.raw_polygons, 0, 0.25);
+        renderer.addFeature(featureFaults);
         renderer.addFeature(new FeatureShakemap());
         renderer.addFeature(new FeatureGlobalStation(GlobalQuake.instance.getStationManager().getStations()));
         renderer.addFeature(new FeatureArchivedEarthquake(GlobalQuake.instance.getArchive().getArchivedQuakes()));
         renderer.addFeature(new FeatureEarthquake(GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes()));
         renderer.addFeature(new FeatureCluster(GlobalQuake.instance.getClusterAnalysis().getClusters()));
-        renderer.addFeature(new FeatureCities());
+        featureCities = new FeatureCities();
+        renderer.addFeature(featureCities);
         featureHomeLoc = new FeatureHomeLoc();
         renderer.addFeature(featureHomeLoc);
     }
@@ -80,6 +88,12 @@ public class MapImageDrawer {
         }
         renderer.updateCamera(new RenderProperties(width, height, user.getHomeLat(), user.getHomeLon(), scroll));
         featureHomeLoc.setPlaceholders(user.getHomeLat(), user.getHomeLon());
+        if (user.getShowSmallCities()) {
+            featureCities.setMinPopulation(1);
+        } else {
+            featureCities.setMinPopulation(200000);
+        }
+        featureFaults.setEnabled(user.getShowFaults());
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();

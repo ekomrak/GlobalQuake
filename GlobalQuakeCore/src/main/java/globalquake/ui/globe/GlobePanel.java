@@ -384,7 +384,7 @@ public class GlobePanel extends JPanel implements GeoUtils {
     private void handleClick(int x, int y) {
         ArrayList<RenderEntity<?>> clicked = new ArrayList<>();
         renderer.getRenderFeatures().parallelStream().forEach(feature -> {
-            for (RenderEntity<?> entity : feature.getEntities()) {
+            for (RenderEntity entity : feature.getEntities()) {
                 if(!feature.isEntityVisible(entity)){
                     continue;
                 }

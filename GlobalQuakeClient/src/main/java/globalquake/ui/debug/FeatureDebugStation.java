@@ -67,7 +67,7 @@ public class FeatureDebugStation extends RenderFeature<DebugStation> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
+    public Point2D getCenterCoords(RenderEntity<DebugStation> entity) {
         return ((RenderEntity<DebugStation>)entity).getOriginal().coords();
     }
 }

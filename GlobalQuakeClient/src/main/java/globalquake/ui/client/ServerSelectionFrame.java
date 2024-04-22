@@ -6,6 +6,7 @@ import globalquake.client.GlobalQuakeLocal;
 import globalquake.core.GlobalQuake;
 import globalquake.core.Settings;
 import globalquake.core.exception.RuntimeApplicationException;
+import globalquake.core.faults.Faults;
 import globalquake.core.geo.taup.TauPTravelTimeCalculator;
 import globalquake.intensity.ShakeMap;
 import globalquake.main.Main;
@@ -161,6 +162,7 @@ public class ServerSelectionFrame extends GQFrame {
 
     private static void init() throws Exception{
         Regions.init();
+        Faults.init();
         Scale.load();
         ShakeMap.init();
         Sounds.load();

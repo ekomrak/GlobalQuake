@@ -119,8 +119,8 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
     }
 
     @Override
-    public boolean isEntityVisible(RenderEntity<?> entity) {
-        AbstractStation station = (AbstractStation) entity.getOriginal();
+    public boolean isEntityVisible(RenderEntity<AbstractStation> entity) {
+        AbstractStation station = entity.getOriginal();
 
         if (Boolean.TRUE.equals(Settings.hideDeadStations) && !station.hasDisplayableData()) {
             return false;
@@ -231,7 +231,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((AbstractStation) (entity.getOriginal())).getLatitude(), ((AbstractStation) (entity.getOriginal())).getLongitude());
+    public Point2D getCenterCoords(RenderEntity<AbstractStation> entity) {
+        return new Point2D(entity.getOriginal().getLatitude(), entity.getOriginal().getLongitude());
     }
 }

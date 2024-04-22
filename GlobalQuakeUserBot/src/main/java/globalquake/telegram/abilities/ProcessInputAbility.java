@@ -58,6 +58,26 @@ public class ProcessInputAbility extends AbstractAbility {
                                     navigateToGeneralSettings(userId, chatId, messageId);
                                 }
                             }
+                            case "general_cities" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setShowSmallCities(!telegramUser.getShowSmallCities());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGeneralSettings(userId, chatId, messageId);
+                                }
+                            }
+                            case "general_faults" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setShowFaults(!telegramUser.getShowFaults());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGeneralSettings(userId, chatId, messageId);
+                                }
+                            }
                             case "home_settings" -> navigateToHomeSettings(userId, chatId, messageId);
                             case "home_lat" -> {
                                 getTelegramService().getUserState().put(userId, SettingsState.HOME_LAT);
@@ -500,6 +520,8 @@ public class ProcessInputAbility extends AbstractAbility {
             InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку как документ: %s".formatted(TelegramUtils.booleanToString(!telegramUser.getSendImageAsAPhoto()))).callbackData("general_image").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту как документ: %s".formatted(TelegramUtils.booleanToString(!telegramUser.getSendMapAsAPhoto()))).callbackData("general_map").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Показывать маленькие города: %s".formatted(TelegramUtils.booleanToString(telegramUser.getShowSmallCities()))).callbackData("general_cities").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Показывать разломы: %s".formatted(TelegramUtils.booleanToString(telegramUser.getShowFaults()))).callbackData("general_faults").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
             sendInlineKeyboard(markupInline, chatId, messageId);
         }

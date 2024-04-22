@@ -184,6 +184,8 @@ public final class Settings {
     public static Double stationsLoadDist;
     public static Boolean enableLimitedEarthquakes;
     public static Boolean enableLimitedArchivedEarthquakes;
+    public static Boolean showSmallCities;
+    public static Boolean showFaults;
 
     public static String telegramBotToken;
     public static String telegramBotUsername;
@@ -391,6 +393,8 @@ public final class Settings {
         loadProperty("stationsLoadDist", "1000.0", o -> validateDouble(0, 30000, (Double) o));
         loadProperty("enableLimitedEarthquakes", "true");
         loadProperty("enableLimitedArchivedEarthquakes", "true");
+        loadProperty("showSmallCities", "true");
+        loadProperty("showFaults", "true");
 
         loadProperty("telegramBotToken", "");
         loadProperty("telegramBotUsername", "");

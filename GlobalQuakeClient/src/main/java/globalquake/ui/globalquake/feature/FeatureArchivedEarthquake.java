@@ -87,7 +87,7 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
             return;
         }
 
-        if(Settings.antialiasingOldQuakes) {
+        if(Boolean.TRUE.equals(Settings.antialiasingOldQuakes)) {
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
@@ -169,7 +169,7 @@ public class FeatureArchivedEarthquake extends RenderFeature<ArchivedQuake> {
 
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((ArchivedQuake) (entity.getOriginal())).getLat(), ((ArchivedQuake) (entity.getOriginal())).getLon());
+    public Point2D getCenterCoords(RenderEntity<ArchivedQuake> entity) {
+        return new Point2D(entity.getOriginal().getLat(), entity.getOriginal().getLon());
     }
 }

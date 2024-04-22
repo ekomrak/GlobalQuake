@@ -9,6 +9,7 @@ import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.earthquake.data.MagnitudeReading;
 import globalquake.core.earthquake.quality.QualityClass;
+import globalquake.core.faults.Faults;
 import globalquake.core.geo.taup.TauPTravelTimeCalculator;
 import globalquake.core.intensity.IntensityScales;
 import globalquake.core.intensity.Level;
@@ -59,6 +60,7 @@ public class MapImageDrawer {
         renderer.addFeature(new FeatureGeoPolygons(Regions.raw_polygonsHW, 0, 0.5));
         renderer.addFeature(new FeatureGeoPolygons(Regions.raw_polygonsIT, 0, 0.20));
 
+        renderer.addFeature(new FeatureFaults(Faults.raw_polygons, 0, 0.25));
         renderer.addFeature(new FeatureShakemap());
         renderer.addFeature(new FeatureGlobalStation(GlobalQuake.instance.getStationManager().getStations()));
         renderer.addFeature(new FeatureArchivedEarthquake(GlobalQuake.instance.getArchive().getArchivedQuakes()));

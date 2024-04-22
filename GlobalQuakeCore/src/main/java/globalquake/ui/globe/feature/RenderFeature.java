@@ -38,8 +38,8 @@ public abstract class RenderFeature<E> {
     public final boolean updateEntities(){
         int hash;
 
-        if(getElements() instanceof Monitorable){
-            hash = ((Monitorable) getElements()).getMonitorState();
+        if(getElements() instanceof Monitorable monitorable){
+            hash = monitorable.getMonitorState();
         }else {
             hash = getElements().hashCode();
             if(needsUpdateEntities() && !warned){
@@ -111,7 +111,7 @@ public abstract class RenderFeature<E> {
 
     public abstract void render(GlobeRenderer renderer, Graphics2D graphics, RenderEntity<E> entity, RenderProperties renderProperties);
 
-    public boolean isEntityVisible(RenderEntity<?> entity) {return true;}
+    public boolean isEntityVisible(RenderEntity<E> entity) {return true;}
 
     public void renderAll(GlobeRenderer renderer, Graphics2D graphics, RenderProperties properties) {
         getEntities().stream().filter(this::isEntityVisible).forEach(entity -> {
@@ -120,5 +120,5 @@ public abstract class RenderFeature<E> {
         });
     }
 
-    public abstract Point2D getCenterCoords(RenderEntity<?> entity);
+    public abstract Point2D getCenterCoords(RenderEntity<E> entity);
 }

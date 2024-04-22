@@ -1,6 +1,6 @@
 package globalquake.ui.globalquake.feature;
 
-import globalquake.client.GlobalQuakeClient;
+import globalquake.client.GlobalQuakeLocal;
 import globalquake.core.analysis.AnalysisStatus;
 import globalquake.core.analysis.Event;
 import globalquake.core.earthquake.data.Cluster;
@@ -124,10 +124,10 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
     }
 
     @Override
-    public boolean isEntityVisible(RenderEntity<?> entity) {
-        AbstractStation station = (AbstractStation) entity.getOriginal();
+    public boolean isEntityVisible(RenderEntity<AbstractStation> entity) {
+        AbstractStation station = entity.getOriginal();
 
-        if(Settings.hideDeadStations && !station.hasDisplayableData()){
+        if(Boolean.TRUE.equals(Settings.hideDeadStations) && !station.hasDisplayableData()){
             return false;
         }
 
@@ -146,7 +146,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
         RenderElement elementStationSquare = entity.getRenderElement(1);
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                Settings.antialiasing ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+                Boolean.TRUE.equals(Settings.antialiasing) ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
         graphics.setColor(getDisplayColor(entity.getOriginal()));
         graphics.fill(elementStationCircle.getShape());
 
@@ -164,7 +164,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
 
         Vector3D point3D = null;
         Point2D centerPoint = null;
-        if(Settings.displayClusters){
+        if(Boolean.TRUE.equals(Settings.displayClusters)){
             for(Event event2 : entity.getOriginal().getAnalysis().getDetectedEvents()){
                 Cluster cluster = event2.assignedCluster;
                 if(cluster != null){
@@ -199,7 +199,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
             }
 
             graphics.setColor(c);
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, Settings.antialiasing ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, Boolean.TRUE.equals(Settings.antialiasing) ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
             graphics.draw(elementStationSquare.getShape());
         }
 
@@ -265,7 +265,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
             return Color.gray;
         }
 
-        if ((GlobalQuakeClient.instance == null && station.getAnalysis().getStatus() == AnalysisStatus.INIT) || !station.hasDisplayableData()) {
+        if ((GlobalQuakeLocal.instance == null && station.getAnalysis().getStatus() == AnalysisStatus.INIT) || !station.hasDisplayableData()) {
             return Color.lightGray;
         } else {
             return Scale.getColorRatio(station.getMaxRatio60S());
@@ -274,7 +274,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((AbstractStation) (entity.getOriginal())).getLatitude(), ((AbstractStation) (entity.getOriginal())).getLongitude());
+    public Point2D getCenterCoords(RenderEntity<AbstractStation> entity) {
+        return new Point2D(entity.getOriginal().getLatitude(), entity.getOriginal().getLongitude());
     }
 }

@@ -76,7 +76,7 @@ public class FeatureGeoPolygons extends RenderFeature<GQPolygon> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
+    public Point2D getCenterCoords(RenderEntity<GQPolygon> entity) {
         return null;
     }
 

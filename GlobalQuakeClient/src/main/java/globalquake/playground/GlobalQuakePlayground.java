@@ -7,6 +7,7 @@ import globalquake.core.database.StationDatabaseManager;
 import globalquake.core.earthquake.EarthquakeAnalysis;
 import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.exception.ApplicationErrorHandler;
+import globalquake.core.faults.Faults;
 import globalquake.core.regions.Regions;
 import globalquake.core.station.GlobalStationManager;
 import globalquake.main.Main;
@@ -32,6 +33,7 @@ public class GlobalQuakePlayground extends GlobalQuakeLocal {
     public static void main(String[] args) throws Exception {
         GlobalQuake.prepare(Main.MAIN_FOLDER, new ApplicationErrorHandler(null, false));
         Regions.init();
+        Faults.init();
         Scale.load();
 
         new GlobalQuakePlayground();

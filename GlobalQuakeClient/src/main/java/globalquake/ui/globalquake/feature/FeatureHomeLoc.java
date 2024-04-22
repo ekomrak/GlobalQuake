@@ -30,6 +30,11 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
     public void createPolygon(GlobeRenderer renderer, RenderEntity<LocationPlaceholder> entity, RenderProperties renderProperties) {
         RenderElement elementCross = entity.getRenderElement(0);
 
+        /*renderer.createHome(elementCross.getPolygon(),
+                entity.getOriginal().getLat(),
+                entity.getOriginal().getLon(), renderer
+                        .pxToDeg(8, renderProperties));*/
+
         renderer.createCross(elementCross.getPolygon(),
                 entity.getOriginal().getLat(),
                 entity.getOriginal().getLon(), renderer
@@ -74,7 +79,7 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((LocationPlaceholder) (entity.getOriginal())).getLat(), ((LocationPlaceholder) (entity.getOriginal())).getLon());
+    public Point2D getCenterCoords(RenderEntity<LocationPlaceholder> entity) {
+        return new Point2D(entity.getOriginal().getLat(), entity.getOriginal().getLon());
     }
 }

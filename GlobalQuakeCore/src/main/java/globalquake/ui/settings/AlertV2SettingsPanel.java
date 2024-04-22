@@ -17,6 +17,8 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JTextField stationsLoadDist;
     private JCheckBox sendImageAsAPhoto;
     private JCheckBox sendMapAsAPhoto;
+    private JCheckBox showSmallCities;
+    private JCheckBox showFaults;
 
     private JTextField telegramBotToken;
     private JTextField telegramBotUsername;
@@ -91,6 +93,12 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
         sendMapAsAPhoto = new JCheckBox("Send map as a photo", Settings.sendMapAsAPhoto);
         generalPanel.add(sendMapAsAPhoto, createGbc(5));
+
+        showSmallCities = new JCheckBox("Show small cities", Settings.showSmallCities);
+        generalPanel.add(showSmallCities, createGbc(6));
+
+        showFaults = new JCheckBox("Show faults", Settings.showFaults);
+        generalPanel.add(showFaults, createGbc(7));
 
         add(generalPanel);
     }
@@ -285,6 +293,8 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.enableLimitedArchivedEarthquakes = enableLimitedArchivedEarthquakes.isSelected();
         Settings.sendImageAsAPhoto = sendImageAsAPhoto.isSelected();
         Settings.sendMapAsAPhoto = sendMapAsAPhoto.isSelected();
+        Settings.showSmallCities = showSmallCities.isSelected();
+        Settings.showFaults = showFaults.isSelected();
 
         Settings.telegramBotToken = telegramBotToken.getText();
         Settings.telegramBotUsername = telegramBotUsername.getText();

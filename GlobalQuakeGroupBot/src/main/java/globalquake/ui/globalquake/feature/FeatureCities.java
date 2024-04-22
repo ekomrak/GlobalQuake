@@ -21,7 +21,6 @@ import java.util.*;
 
 public class FeatureCities extends RenderFeature<CityLocation> {
 
-    private static final int MIN_POPULATION = 1;
     private final Collection<CityLocation> cityLocations;
 
     public FeatureCities() {
@@ -38,10 +37,6 @@ public class FeatureCities extends RenderFeature<CityLocation> {
                 double lat = Double.parseDouble(fields[2]);
                 double lon = Double.parseDouble(fields[3]);
                 int population = Integer.parseInt(fields[4]);
-
-                if(population < MIN_POPULATION){
-                    continue;
-                }
 
                 result.add(new CityLocation(cityName, lat, lon, population));
             }
@@ -81,6 +76,15 @@ public class FeatureCities extends RenderFeature<CityLocation> {
     @Override
     public boolean needsCreatePolygon(RenderEntity<CityLocation> entity, boolean propertiesChanged) {
         return propertiesChanged;
+    }
+
+    @Override
+    public boolean isEntityVisible(RenderEntity<CityLocation> entity) {
+        int minPopulation = 200000;
+        if (Settings.showSmallCities) {
+            minPopulation = 1;
+        }
+        return entity.getOriginal().population() >= minPopulation;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class FeatureCities extends RenderFeature<CityLocation> {
     }
 
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((CityLocation) (entity.getOriginal())).lat(), ((CityLocation) (entity.getOriginal())).lon());
+    public Point2D getCenterCoords(RenderEntity<CityLocation> entity) {
+        return new Point2D(entity.getOriginal().lat(), entity.getOriginal().lon());
     }
 }

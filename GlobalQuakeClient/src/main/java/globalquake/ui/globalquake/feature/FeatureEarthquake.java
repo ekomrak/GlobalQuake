@@ -148,7 +148,7 @@ public class FeatureEarthquake extends RenderFeature<Earthquake> {
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        if (Settings.confidencePolygons && shouldDrawConfidencePolygons()) {
+        if (Boolean.TRUE.equals(Settings.confidencePolygons) && shouldDrawConfidencePolygons()) {
             for (int i = 5; i < 9; i++) {
                 RenderElement elementConfidencePolygon = entity.getRenderElement(i);
                 if (elementConfidencePolygon.shouldDraw) {
@@ -159,7 +159,7 @@ public class FeatureEarthquake extends RenderFeature<Earthquake> {
             }
         }
 
-        if (Settings.antialiasingQuakes) {
+        if (Boolean.TRUE.equals(Settings.antialiasingQuakes)) {
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
@@ -175,7 +175,7 @@ public class FeatureEarthquake extends RenderFeature<Earthquake> {
             graphics.draw(elementSWave.getShape());
         }
 
-        if (Settings.displayCoreWaves) {
+        if (Boolean.TRUE.equals(Settings.displayCoreWaves)) {
             if (elementPKPWave.shouldDraw) {
                 graphics.setColor(Color.MAGENTA);
                 graphics.setStroke(new BasicStroke(4.0f * thicknessMultiplier));
@@ -318,9 +318,8 @@ public class FeatureEarthquake extends RenderFeature<Earthquake> {
         return Color.magenta;
     }
 
-
     @Override
-    public Point2D getCenterCoords(RenderEntity<?> entity) {
-        return new Point2D(((Earthquake) (entity.getOriginal())).getLat(), ((Earthquake) (entity.getOriginal())).getLon());
+    public Point2D getCenterCoords(RenderEntity<Earthquake> entity) {
+        return new Point2D(entity.getOriginal().getLat(), entity.getOriginal().getLon());
     }
 }

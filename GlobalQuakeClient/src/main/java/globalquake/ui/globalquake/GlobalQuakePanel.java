@@ -12,6 +12,7 @@ import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.earthquake.data.MagnitudeReading;
 import globalquake.core.earthquake.quality.Quality;
 import globalquake.core.earthquake.quality.QualityClass;
+import globalquake.core.faults.Faults;
 import globalquake.core.intensity.MMIIntensityScale;
 import globalquake.core.station.AbstractStation;
 import globalquake.core.database.SeedlinkNetwork;
@@ -112,6 +113,7 @@ public class GlobalQuakePanel extends GlobePanel {
     }
 
     protected void addRenderFeatures() {
+        getRenderer().addFeature(new FeatureFaults(Faults.raw_polygons, 0 , 0.25));
         getRenderer().addFeature(new FeatureShakemap());
         getRenderer().addFeature(new FeatureGlobalStation(GlobalQuake.instance.getStationManager().getStations()));
         getRenderer().addFeature(new FeatureArchivedEarthquake(GlobalQuake.instance.getArchive().getArchivedQuakes()));

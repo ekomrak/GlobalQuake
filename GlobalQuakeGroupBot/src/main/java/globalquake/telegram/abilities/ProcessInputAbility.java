@@ -44,6 +44,16 @@ public class ProcessInputAbility extends AbstractAbility {
                                 Settings.save();
                                 navigateToGeneralSettings(chatId, messageId);
                             }
+                            case "general_cities" -> {
+                                Settings.showSmallCities = !Settings.showSmallCities;
+                                Settings.save();
+                                navigateToGeneralSettings(chatId, messageId);
+                            }
+                            case "general_faults" -> {
+                                Settings.showFaults = !Settings.showFaults;
+                                Settings.save();
+                                navigateToGeneralSettings(chatId, messageId);
+                            }
                             case "home_settings" -> navigateToHomeSettings(chatId, messageId);
                             case "home_lat" -> {
                                 getTelegramService().setSettingsState(SettingsState.HOME_LAT);
@@ -373,6 +383,8 @@ public class ProcessInputAbility extends AbstractAbility {
         InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать картинку как документ: %s".formatted(TelegramUtils.booleanToString(!Settings.sendImageAsAPhoto))).callbackData("general_image").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать карту как документ: %s".formatted(TelegramUtils.booleanToString(!Settings.sendMapAsAPhoto))).callbackData("general_map").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Показывать маленькие города: %s".formatted(TelegramUtils.booleanToString(Settings.showSmallCities))).callbackData("general_cities").build()))
+                .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Показывать разломы: %s".formatted(TelegramUtils.booleanToString(Settings.showFaults))).callbackData("general_faults").build()))
                 .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
         sendInlineKeyboard(markupInline, chatId, messageId);
     }
