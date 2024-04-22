@@ -7,6 +7,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public interface EarthquakeDao {
@@ -16,4 +17,8 @@ public interface EarthquakeDao {
     @SqlQuery("SELECT * FROM \"earthquake\" WHERE greatcircledistance(latitude, longitude, ?, ?) <= ? order by origin desc limit ?")
     @RegisterBeanMapper(ArchivedEarthquake.class)
     List<ArchivedEarthquake> listLastEarthquakes(double latitude, double longitude, double radius, int limit);
+
+    @SqlQuery("SELECT * FROM \"earthquake\" WHERE id = ?")
+    @RegisterBeanMapper(ArchivedEarthquake.class)
+    ArchivedEarthquake findArchivedEarthquakeById(UUID id);
 }

@@ -11,6 +11,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DatabaseService {
     private final Jdbi jdbi;
@@ -77,6 +78,10 @@ public class DatabaseService {
 
     public List<ArchivedEarthquake> listLastEarthquakes(double latitude, double longitude, double radius, int limit) {
         return jdbi.withExtension(EarthquakeDao.class, extension -> extension.listLastEarthquakes(latitude, longitude, radius, limit));
+    }
+
+    public ArchivedEarthquake findArchivedEarthquakeById(UUID id) {
+        return jdbi.withExtension(EarthquakeDao.class, extension -> extension.findArchivedEarthquakeById(id));
     }
 
     public void invalidateUser(Long userId) {
