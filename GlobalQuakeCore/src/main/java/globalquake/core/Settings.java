@@ -186,6 +186,7 @@ public final class Settings {
     public static Boolean enableLimitedArchivedEarthquakes;
     public static Boolean showSmallCities;
     public static Boolean showFaults;
+    public static Boolean showStreamStations;
 
     public static String telegramBotToken;
     public static String telegramBotUsername;
@@ -395,6 +396,7 @@ public final class Settings {
         loadProperty("enableLimitedArchivedEarthquakes", "true");
         loadProperty("showSmallCities", "true");
         loadProperty("showFaults", "true");
+        loadProperty("showStreamStations", "false");
 
         loadProperty("telegramBotToken", "");
         loadProperty("telegramBotUsername", "");

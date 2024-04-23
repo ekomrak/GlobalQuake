@@ -445,37 +445,83 @@ public class GlobeRenderer {
         polygon3D.reset();
 
         Point2DGQ point = new Point2DGQ();
+        Point2DGQ startPoint = new Point2DGQ();
         GeoUtils.MoveOnGlobePrecomputed precomputed = new GeoUtils.MoveOnGlobePrecomputed();
         GeoUtils.precomputeMoveOnGlobe(precomputed, lat, lon, radius);
 
-        GeoUtils.moveOnGlobe(precomputed, point, 45);
+        GeoUtils.moveOnGlobe(precomputed, startPoint, 45);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
 
         GeoUtils.moveOnGlobe(precomputed, point, 135);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
 
-        GeoUtils.moveOnGlobe(precomputed, point, 225);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
-
-        GeoUtils.moveOnGlobe(precomputed, point, 315);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
-
-        double[] latLon = GeoUtils.moveOnGlobe(lat, lon, radius * 2, 0);
+        double[] latLon = GeoUtils.moveOnGlobe(point.x, point.y, 3 * radius / 10 * Math.sqrt(2), 270);
         Vector3D vector3D = new Vector3D(
                 GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
                 GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
                 GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
 
+        latLon = GeoUtils.moveOnGlobe(latLon[0], latLon[1], 2 * radius / 3, 0);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        latLon = GeoUtils.moveOnGlobe(latLon[0], latLon[1], 2 * radius / 5 * Math.sqrt(2), 270);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        latLon = GeoUtils.moveOnGlobe(latLon[0], latLon[1], 2 * radius / 3, 180);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        latLon = GeoUtils.moveOnGlobe(latLon[0], latLon[1], 3 * radius / 10 * Math.sqrt(2), 270);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        GeoUtils.moveOnGlobe(precomputed, point, 315);
+        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
+
+        latLon = GeoUtils.moveOnGlobe(point.x, point.y, radius / 5 * Math.sqrt(2), 270);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        latLon = GeoUtils.moveOnGlobe(lat, lon, radius * 1.6, 0);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
+        polygon3D.addPoint(vector3D);
+
+        latLon = GeoUtils.moveOnGlobe(startPoint.x, startPoint.y, radius / 5 * Math.sqrt(2), 90);
+        vector3D = new Vector3D(
+                GlobeRenderer.getX_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getY_3D(latLon[0], latLon[1], 0),
+                GlobeRenderer.getZ_3D(latLon[0], latLon[1], 0));
         polygon3D.addPoint(vector3D);
 
         GeoUtils.moveOnGlobe(precomputed, point, 45);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
 
-        GeoUtils.moveOnGlobe(precomputed, point, 315);
+        /*GeoUtils.moveOnGlobe(precomputed, point, 315);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
 
         GeoUtils.moveOnGlobe(precomputed, point, 45);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
+        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));*/
 
         polygon3D.finish();
     }

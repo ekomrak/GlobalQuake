@@ -255,6 +255,26 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
             int y = (int) centerPoint.y;
             g.drawString(str, x - g.getFontMetrics().stringWidth(str) / 2, y + _y + 9);
         }
+        if (Settings.showStreamStations && !mouseNearby && scroll < Settings.stationIntensityVisibilityZoomLevel && ("KZ PDGK BHZ".equals(station.getIdentifier().trim()) || "AD TMCH HNZ".equals(station.getIdentifier().trim()) || "AD ANAN HNZ".equals(station.getIdentifier().trim()))) {
+            if ("KZ PDGK BHZ".equals(station.getIdentifier().trim())) {
+                g.setColor(Color.green);
+            } else if ("AD TMCH HNZ".equals(station.getIdentifier().trim())) {
+                g.setColor(Color.green);
+            } else {
+                g.setColor(Color.green);
+            }
+            String str = station.getStationCode();
+
+            if(centerPoint == null) {
+                var point3D = GlobeRenderer.createVec3D(getCenterCoords(entity));
+                centerPoint = renderer.projectPoint(point3D, renderProperties);
+            }
+
+            int x = (int) centerPoint.x;
+            int y = (int) centerPoint.y;
+
+            g.drawString(str, x - g.getFontMetrics().stringWidth(str) / 2, y - _y);
+        }
     }
 
     private Color getDisplayColor(AbstractStation station) {

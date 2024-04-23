@@ -19,6 +19,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JCheckBox sendMapAsAPhoto;
     private JCheckBox showSmallCities;
     private JCheckBox showFaults;
+    private JCheckBox showStreamStations;
 
     private JTextField telegramBotToken;
     private JTextField telegramBotUsername;
@@ -99,6 +100,9 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
         showFaults = new JCheckBox("Show faults", Settings.showFaults);
         generalPanel.add(showFaults, createGbc(7));
+
+        showStreamStations = new JCheckBox("Show stations name for youtube", Settings.showStreamStations);
+        generalPanel.add(showStreamStations, createGbc(8));
 
         add(generalPanel);
     }
@@ -295,6 +299,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.sendMapAsAPhoto = sendMapAsAPhoto.isSelected();
         Settings.showSmallCities = showSmallCities.isSelected();
         Settings.showFaults = showFaults.isSelected();
+        Settings.showStreamStations = showStreamStations.isSelected();
 
         Settings.telegramBotToken = telegramBotToken.getText();
         Settings.telegramBotUsername = telegramBotUsername.getText();

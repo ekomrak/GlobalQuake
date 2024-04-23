@@ -30,15 +30,10 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
     public void createPolygon(GlobeRenderer renderer, RenderEntity<LocationPlaceholder> entity, RenderProperties renderProperties) {
         RenderElement elementCross = entity.getRenderElement(0);
 
-        /*renderer.createHome(elementCross.getPolygon(),
+        renderer.createHome(elementCross.getPolygon(),
                 entity.getOriginal().getLat(),
                 entity.getOriginal().getLon(), renderer
-                        .pxToDeg(8, renderProperties));*/
-
-        renderer.createCross(elementCross.getPolygon(),
-                entity.getOriginal().getLat(),
-                entity.getOriginal().getLon(), renderer
-                        .pxToDeg(8, renderProperties), 0.0);
+                        .pxToDeg(8, renderProperties));
     }
 
     @Override
@@ -73,8 +68,13 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
         RenderElement elementCross = entity.getRenderElement(0);
         if (elementCross.shouldDraw) {
             graphics.setColor(Color.magenta);
-            graphics.setStroke(new BasicStroke(3f));
+            if (Boolean.TRUE.equals(Settings.antialiasing)) {
+                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            }
+            graphics.setStroke(new BasicStroke(1f));
+            graphics.fill(elementCross.getShape());
             graphics.draw(elementCross.getShape());
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         }
     }
 
