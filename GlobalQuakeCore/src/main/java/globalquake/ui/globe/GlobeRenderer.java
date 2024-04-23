@@ -517,12 +517,6 @@ public class GlobeRenderer {
         GeoUtils.moveOnGlobe(precomputed, point, 45);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
 
-        /*GeoUtils.moveOnGlobe(precomputed, point, 315);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
-
-        GeoUtils.moveOnGlobe(precomputed, point, 45);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));*/
-
         polygon3D.finish();
     }
 
