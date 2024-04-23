@@ -71,7 +71,6 @@ public class FeatureHomeLoc extends RenderFeature<LocationPlaceholder> {
             if (Boolean.TRUE.equals(Settings.antialiasing)) {
                 graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             }
-            graphics.setStroke(new BasicStroke(1f));
             graphics.fill(elementCross.getShape());
             graphics.draw(elementCross.getShape());
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
