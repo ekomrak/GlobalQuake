@@ -25,7 +25,7 @@ public class DrawStationsGraphAbility extends AbstractAbility {
     public Ability map() {
         return Ability.builder()
                 .name("stations")
-                .info("По.")
+                .info("Получить сейсмограммы.")
                 .input(0)
                 .locality(USER)
                 .privacy(PUBLIC)
@@ -34,22 +34,35 @@ public class DrawStationsGraphAbility extends AbstractAbility {
                     if (telegramUser != null && telegramUser.getEnabled()) {
                         updateTelegramUser(telegramUser, ctx.user(), ctx.chatId());
 
-                        AbstractStation pdgkStation = GlobalQuakeClient.instance.getStationManager().getStationByIdentifier("KZ PDGK BHZ ");
-
-                        try {
-                            if (Boolean.TRUE.equals(telegramUser.getSendMapAsAPhoto())) {
-                                getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).photo(new InputFile(StationsGraphsDrawer.draw(pdgkStation), "Stations_%d.png".formatted(System.currentTimeMillis()))).build());
-                            } else {
-                                getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(ctx.chatId()).document(new InputFile(StationsGraphsDrawer.draw(pdgkStation), "Stations_%d.png".formatted(System.currentTimeMillis()))).build());
-                            }
-                            GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "stations", "user", ctx.user().getId().toString()).increment();
-                        } catch (TelegramApiException | IOException e) {
-                            Logger.error(e);
+                        if (telegramUser.getSendPDGKStation()) {
+                            AbstractStation pdgkStation = GlobalQuakeClient.instance.getStationManager().getStationByIdentifier("KZ PDGK BHZ ");
+                            sendStationGraph(pdgkStation, telegramUser, ctx.chatId());
+                        }
+                        if (telegramUser.getSendANANStation()) {
+                            AbstractStation ananStation = GlobalQuakeClient.instance.getStationManager().getStationByIdentifier("AD ANAN HNZ ");
+                            sendStationGraph(ananStation, telegramUser, ctx.chatId());
+                        }
+                        if (telegramUser.getSendTMCHStation()) {
+                            AbstractStation tmchStation = GlobalQuakeClient.instance.getStationManager().getStationByIdentifier("AD TMCH HNZ ");
+                            sendStationGraph(tmchStation, telegramUser, ctx.chatId());
                         }
                     } else {
                         sendNotActiveWarning(telegramUser, ctx.user(), ctx.chatId());
                     }
                 })
                 .build();
+    }
+
+    private void sendStationGraph(AbstractStation station, TelegramUser telegramUser, long chatId) {
+        try {
+            if (Boolean.TRUE.equals(telegramUser.getSendGraphsAsAPhoto())) {
+                getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(chatId).photo(new InputFile(StationsGraphsDrawer.draw(station), "Stations_%d.png".formatted(System.currentTimeMillis()))).build());
+            } else {
+                getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(chatId).document(new InputFile(StationsGraphsDrawer.draw(station), "Stations_%d.png".formatted(System.currentTimeMillis()))).build());
+            }
+            GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "stations", "user", telegramUser.getId().toString()).increment();
+        } catch (TelegramApiException | IOException e) {
+            Logger.error(e);
+        }
     }
 }

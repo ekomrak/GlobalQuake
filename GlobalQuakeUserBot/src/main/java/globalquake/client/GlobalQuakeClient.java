@@ -7,6 +7,7 @@ import globalquake.core.events.GlobalQuakeEventHandler;
 import globalquake.db.DatabaseService;
 import globalquake.events.GlobalQuakeLocalEventHandler;
 import globalquake.intensity.ShakemapService;
+import globalquake.station.StationSubscriber;
 import globalquake.telegram.GQInfluxConfig;
 import globalquake.telegram.TelegramService;
 import globalquake.telegram.util.MapImageDrawer;
@@ -35,6 +36,7 @@ public class GlobalQuakeClient extends GlobalQuake {
     private final TelegramBotsLongPollingApplication botsApplication;
     private final TelegramService telegramService;
     private final EarthquakeArchiveService earthquakeArchiveService;
+    private final StationSubscriber stationSubscriber;
 
     public GlobalQuakeClient(ClientSocket clientSocket) {
         instance = this;
@@ -55,6 +57,7 @@ public class GlobalQuakeClient extends GlobalQuake {
         this.botsApplication = new TelegramBotsLongPollingApplication();
         this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
         this.earthquakeArchiveService = new EarthquakeArchiveService();
+        this.stationSubscriber = new StationSubscriber();
         new MapImageDrawer();
     }
 
@@ -109,6 +112,8 @@ public class GlobalQuakeClient extends GlobalQuake {
             Logger.error(e);
         }
         telegramService.destroy();
+        earthquakeArchiveService.destroy();
+        stationSubscriber.destroy();
         registry.close();
     }
 

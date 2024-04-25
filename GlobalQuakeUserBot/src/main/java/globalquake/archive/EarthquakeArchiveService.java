@@ -24,7 +24,7 @@ public class EarthquakeArchiveService {
         });
 
         loadOldService = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("Load old ArchivedEvents"));
-        loadOldService.scheduleAtFixedRate(this::initOld, 10000, 1000, TimeUnit.MILLISECONDS);
+        loadOldService.scheduleAtFixedRate(this::initOld, 15000, 1000, TimeUnit.MILLISECONDS);
     }
 
     private void initOld() {
@@ -37,5 +37,9 @@ public class EarthquakeArchiveService {
             });
             loadOldService.shutdown();
         }
+    }
+
+    public void destroy() {
+        GlobalQuake.instance.stopService(loadOldService);
     }
 }

@@ -78,6 +78,47 @@ public class ProcessInputAbility extends AbstractAbility {
                                     navigateToGeneralSettings(userId, chatId, messageId);
                                 }
                             }
+                            case "graphs_settings" -> navigateToGraphsSettings(userId, chatId, messageId);
+                            case "graphs_photo" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendGraphsAsAPhoto(!telegramUser.getSendGraphsAsAPhoto());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGraphsSettings(userId, chatId, messageId);
+                                }
+                            }
+                            case "graphs_pdgk" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendPDGKStation(!telegramUser.getSendPDGKStation());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGraphsSettings(userId, chatId, messageId);
+                                }
+                            }
+                            case "graphs_anan" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendANANStation(!telegramUser.getSendANANStation());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGraphsSettings(userId, chatId, messageId);
+                                }
+                            }
+                            case "graphs_tmch" -> {
+                                TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+
+                                if (telegramUser != null) {
+                                    telegramUser.setSendTMCHStation(!telegramUser.getSendTMCHStation());
+                                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(telegramUser);
+                                    GlobalQuakeClient.instance.getDatabaseService().invalidateAllUsersLists();
+                                    navigateToGraphsSettings(userId, chatId, messageId);
+                                }
+                            }
                             case "home_settings" -> navigateToHomeSettings(userId, chatId, messageId);
                             case "home_lat" -> {
                                 getTelegramService().getUserState().put(userId, SettingsState.HOME_LAT);
@@ -503,9 +544,26 @@ public class ProcessInputAbility extends AbstractAbility {
         TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
         if (telegramUser != null) {
             InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
-                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Основные настройки").callbackData("general_settings").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Основные настройки").callbackData("general_settings").build(), InlineKeyboardButton.builder().text("Сейсмограммы").callbackData("graphs_settings").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Координаты дома").callbackData("home_settings").build(), InlineKeyboardButton.builder().text("Потенциальные землетрясения").callbackData("cluster_settings").build()))
                     .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Землетрясения").callbackData("earthquake_settings").build(), InlineKeyboardButton.builder().text("Датчики").callbackData("station_settings").build())).build();
+            sendInlineKeyboard(markupInline, chatId, messageId);
+        }
+    }
+
+    private void navigateToGraphsSettings(long userId, long chatId) {
+        navigateToGraphsSettings(userId, chatId);
+    }
+
+    private void navigateToGraphsSettings(long userId, long chatId, Integer messageId) {
+        TelegramUser telegramUser = GlobalQuakeClient.instance.getDatabaseService().findUserById(userId);
+        if (telegramUser != null) {
+            InlineKeyboardMarkup markupInline = InlineKeyboardMarkup.builder()
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Получать графики как документ: %s".formatted(TelegramUtils.booleanToString(!telegramUser.getSendGraphsAsAPhoto()))).callbackData("graphs_photo").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Присылать датчик PDGK: %s".formatted(TelegramUtils.booleanToString(telegramUser.getSendPDGKStation()))).callbackData("graphs_pdgk").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Присылать датчик ANAN: %s".formatted(TelegramUtils.booleanToString(telegramUser.getSendANANStation()))).callbackData("graphs_anan").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Присылать датчик TMCH: %s".formatted(TelegramUtils.booleanToString(telegramUser.getSendTMCHStation()))).callbackData("graphs_tmch").build()))
+                    .keyboardRow(new InlineKeyboardRow(InlineKeyboardButton.builder().text("Назад").callbackData("settings").build())).build();
             sendInlineKeyboard(markupInline, chatId, messageId);
         }
     }

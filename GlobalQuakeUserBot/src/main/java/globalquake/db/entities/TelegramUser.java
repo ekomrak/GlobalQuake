@@ -51,6 +51,11 @@ public class TelegramUser {
     private Boolean sendImageAsAPhoto;
     private Boolean sendMapAsAPhoto;
 
+    private Boolean sendGraphsAsAPhoto;
+    private Boolean sendPDGKStation;
+    private Boolean sendANANStation;
+    private Boolean sendTMCHStation;
+
     private Boolean showSmallCities;
     private Boolean showFaults;
 
@@ -120,6 +125,11 @@ public class TelegramUser {
 
         sendImageAsAPhoto = true;
         sendMapAsAPhoto = true;
+        sendGraphsAsAPhoto = true;
+
+        sendPDGKStation = true;
+        sendANANStation = true;
+        sendTMCHStation = true;
 
         showSmallCities = true;
         showFaults = false;
@@ -427,6 +437,38 @@ public class TelegramUser {
 
     public void setSendMapAsAPhoto(Boolean sendMapAsAPhoto) {
         this.sendMapAsAPhoto = sendMapAsAPhoto;
+    }
+
+    public Boolean getSendGraphsAsAPhoto() {
+        return sendGraphsAsAPhoto;
+    }
+
+    public void setSendGraphsAsAPhoto(Boolean sendGraphsAsAPhoto) {
+        this.sendGraphsAsAPhoto = sendGraphsAsAPhoto;
+    }
+
+    public Boolean getSendPDGKStation() {
+        return sendPDGKStation;
+    }
+
+    public void setSendPDGKStation(Boolean sendPDGKStation) {
+        this.sendPDGKStation = sendPDGKStation;
+    }
+
+    public Boolean getSendANANStation() {
+        return sendANANStation;
+    }
+
+    public void setSendANANStation(Boolean sendANANStation) {
+        this.sendANANStation = sendANANStation;
+    }
+
+    public Boolean getSendTMCHStation() {
+        return sendTMCHStation;
+    }
+
+    public void setSendTMCHStation(Boolean sendTMCHStation) {
+        this.sendTMCHStation = sendTMCHStation;
     }
 
     public Boolean getShowSmallCities() {

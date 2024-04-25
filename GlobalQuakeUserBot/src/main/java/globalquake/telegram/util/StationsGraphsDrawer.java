@@ -32,8 +32,7 @@ public class StationsGraphsDrawer {
     private static final int WIDTH = 600;
     private static final int HEIGHT = 500;
 
-    private static final Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,
-            new float[]{3}, 0);
+    private static final Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
 
     public static InputStream draw(AbstractStation station) throws IOException {
         BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
@@ -48,11 +47,6 @@ public class StationsGraphsDrawer {
         }
 
         g.fillRect(0, 0, WIDTH, HEIGHT);
-        g.setColor(Color.black);
-        g.setFont(new Font("Calibri", Font.BOLD, 14));
-        g.drawString("Raw Data", 4, 14);
-        g.drawString("Band Pass %sHz - %sHz".formatted(BetterAnalysis.minFreqDefault, BetterAnalysis.maxFreqDefault), 4, (int) (HEIGHT * HEIGHT_1 + 14));
-        g.drawString("Averages Ratio", 4, (int) (HEIGHT * HEIGHT_2 + 14));
 
         long upperMinute = (long) (Math.ceil(getTime() / (1000 * 60.0) + 1) * (1000L * 60L));
         for (int deltaSec = 0; deltaSec <= 60 * Settings.logsStoreTimeMinutes + 80; deltaSec += 10) {
@@ -229,6 +223,14 @@ public class StationsGraphsDrawer {
         g.draw(new Rectangle2D.Double(0, 0, WIDTH - 1, (HEIGHT - 1) * HEIGHT_1));
         g.draw(new Rectangle2D.Double(0, HEIGHT * HEIGHT_1, WIDTH - 1, (HEIGHT - 1) * HEIGHT_1));
         g.draw(new Rectangle2D.Double(0, HEIGHT * HEIGHT_2, WIDTH - 1, (HEIGHT - 1) * (1 - HEIGHT_2)));
+
+        g.setColor(Color.black);
+        g.setFont(new Font("Calibri", Font.BOLD, 20));
+        g.drawString(station.getIdentifier(), WIDTH - g.getFontMetrics().stringWidth(station.getIdentifier()) - 10, 20);
+        g.setFont(new Font("Calibri", Font.BOLD, 14));
+        g.drawString("Raw Data", 4, 14);
+        g.drawString("Band Pass %sHz - %sHz".formatted(BetterAnalysis.minFreqDefault, BetterAnalysis.maxFreqDefault), 4, (int) (HEIGHT * HEIGHT_1 + 14));
+        g.drawString("Averages Ratio", 4, (int) (HEIGHT * HEIGHT_2 + 14));
 
         g.dispose();
 
