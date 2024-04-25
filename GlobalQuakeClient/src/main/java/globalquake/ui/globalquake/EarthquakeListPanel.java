@@ -39,7 +39,7 @@ public class EarthquakeListPanel extends JPanel {
         }
         return archivedQuakes.stream().filter(archivedQuake -> {
             double distGCD = GeoUtils.greatCircleDistance(archivedQuake.getLat(), archivedQuake.getLon(), Settings.homeLat, Settings.homeLon);
-            return (((archivedQuake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((archivedQuake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || !Settings.enableLimitedArchivedEarthquakes);
+            return (distGCD <= Settings.stationsLoadDist);
         }).toList();
     }
 
