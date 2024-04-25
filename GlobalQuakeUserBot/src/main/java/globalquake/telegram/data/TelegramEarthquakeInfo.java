@@ -1,6 +1,9 @@
 package globalquake.telegram.data;
 
+import globalquake.core.Settings;
 import globalquake.core.earthquake.data.Earthquake;
+
+import java.time.Instant;
 
 public class TelegramEarthquakeInfo extends TelegramAbstractInfo<Earthquake> {
     private double mag;
@@ -9,6 +12,7 @@ public class TelegramEarthquakeInfo extends TelegramAbstractInfo<Earthquake> {
     private double depth;
     private String region;
     private long origin;
+    private String originDate;
     private String quality;
 
     public TelegramEarthquakeInfo(Earthquake earthquake) {
@@ -23,6 +27,7 @@ public class TelegramEarthquakeInfo extends TelegramAbstractInfo<Earthquake> {
         this.depth = earthquake.getDepth();
         this.region = earthquake.getRegion();
         this.origin = earthquake.getOrigin();
+        this.originDate = Settings.formatDateTime(Instant.ofEpochMilli(origin));
         if (earthquake.getHypocenter() != null) {
             this.quality = earthquake.getHypocenter().quality.getSummary().toString();
         } else {
@@ -57,6 +62,10 @@ public class TelegramEarthquakeInfo extends TelegramAbstractInfo<Earthquake> {
 
     public long getOrigin() {
         return origin;
+    }
+
+    public String getOriginDate() {
+        return originDate;
     }
 
     public String getQuality() {

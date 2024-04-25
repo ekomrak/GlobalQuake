@@ -8,7 +8,6 @@ import globalquake.telegram.data.TelegramClusterInfo;
 import globalquake.telegram.data.TelegramEarthquakeInfo;
 import globalquake.telegram.data.TelegramStationInfo;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -42,7 +41,7 @@ public final class TelegramUtils {
                 "<b>" + "M%.1f".formatted(info.getMag()) + " " + info.getRegion() + "</b>\n" +
                 "Расстояние: %.1f км. Глубина: %.1f км.%n".formatted(distGCD, info.getDepth()) +
                 "MMI: " + formatLevel(IntensityScales.MMI.getLevel(pga)) + " / Shindo: " + formatLevel(IntensityScales.SHINDO.getLevel(pga)) + "\n" +
-                "Время: " + Settings.formatDateTime(Instant.ofEpochMilli(info.getOrigin())) + "\n" +
+                "Время: " + info.getOriginDate() + "\n" +
                 "Класс: " + (info.getQuality().isEmpty() ? "?" : info.getQuality());
     }
 

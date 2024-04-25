@@ -2,9 +2,11 @@ package globalquake.telegram.util;
 
 import globalquake.core.Settings;
 import globalquake.core.analysis.Event;
-import globalquake.core.earthquake.data.Earthquake;
+import globalquake.core.earthquake.data.Cluster;
+import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.regions.GQPolygon;
 import globalquake.core.regions.Regions;
+import globalquake.telegram.data.TelegramEarthquakeInfo;
 import globalquake.utils.Scale;
 
 import javax.imageio.ImageIO;
@@ -25,17 +27,17 @@ public final class EventImageDrawer {
     private static final Color landC = new Color(15, 47, 68);
     private static final Color borderC = new Color(153, 153, 153);
 
-    public static InputStream drawEarthquakeImage(Earthquake earthquake) throws IOException {
+    public static InputStream drawEarthquakeImage(TelegramEarthquakeInfo info, Cluster cluster, Hypocenter hypocenter) throws IOException {
         BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
-        drawCommonPart(g, earthquake.getLat(), earthquake.getLon());
+        drawCommonPart(g, info.getLat(), info.getLon());
 
         g.setStroke(new BasicStroke(1f));
-        for (Event event : earthquake.getCluster().getAssignedEvents().values()) {
-            double x = getX(event.report.lon(), earthquake.getLon());
-            double y = getY(event.report.lat(), earthquake.getLat());
+        for (Event event : cluster.getAssignedEvents().values()) {
+            double x = getX(event.report.lon(), info.getLon());
+            double y = getY(event.report.lat(), info.getLat());
             double r = 12;
-            g.setColor(Scale.getColorRatio(event.getMaxVelocity(earthquake.getHypocenter().magnitudeType)));
+            g.setColor(Scale.getColorRatio(event.getMaxVelocity(hypocenter.magnitudeType)));
             Ellipse2D.Double ell1 = new Ellipse2D.Double(x - r / 2, y - r / 2, r, r);
             g.fill(ell1);
         }

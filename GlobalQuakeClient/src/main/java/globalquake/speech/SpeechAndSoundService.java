@@ -40,10 +40,10 @@ import java.util.concurrent.TimeUnit;
 
 public class SpeechAndSoundService {
     private final ScheduledExecutorService stationsCheckService;
-    private final Cache<Earthquake, Integer> earthquakesSpeech;
-    private final Cache<Cluster, Integer> clustersSpeech;
+    private final Cache<UUID, Integer> earthquakesSpeech;
+    private final Cache<UUID, Integer> clustersSpeech;
     //private final Cache<Cluster, Integer> clustersSound;
-    private final Cache<ClientStation, Double> stationsSpeech;
+    private final Cache<String, Double> stationsSpeech;
     //private final Cache<AbstractStation, Double> stationsSound;
     private Synthesizer synthesizer;
     private final VoiceSelectionParams voice;
@@ -80,7 +80,7 @@ public class SpeechAndSoundService {
                 }*/
                 if (canSpeak(event.cluster(), distGCD)) {
                     speak(generateClusterText(event.cluster(), distGCD));
-                    clustersSpeech.put(event.cluster(), 0);
+                    clustersSpeech.put(event.cluster().getUuid(), 0);
                 }
             }
 
@@ -94,13 +94,13 @@ public class SpeechAndSoundService {
                 }*/
                 if (canSpeak(event.earthquake(), distGCD, pga)) {
                     speak(generateEarthquakeText(event.earthquake(), distGCD));
-                    earthquakesSpeech.put(event.earthquake(), 0);
+                    earthquakesSpeech.put(event.earthquake().getUuid(), 0);
                 }
             }
 
             @Override
             public void onQuakeUpdate(QuakeUpdateEvent event) {
-                Integer flag = earthquakesSpeech.getIfPresent(event.earthquake());
+                Integer flag = earthquakesSpeech.getIfPresent(event.earthquake().getUuid());
                 if (flag == null) {
                     onQuakeCreate(new QuakeCreateEvent(event.earthquake()));
                 }
@@ -108,7 +108,7 @@ public class SpeechAndSoundService {
 
             @Override
             public void onClusterLevelup(ClusterLevelUpEvent event) {
-                Integer flag = clustersSpeech.getIfPresent(event.cluster());
+                Integer flag = clustersSpeech.getIfPresent(event.cluster().getUuid());
                 if (flag == null) {
                     onClusterCreate(new ClusterCreateEvent(event.cluster()));
                 }
@@ -137,10 +137,10 @@ public class SpeechAndSoundService {
             stationManager.getStations().forEach(abstractStation -> {
                 if (abstractStation instanceof ClientStation clientStation) {
                     double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), Settings.homeLat, Settings.homeLon);
-                    Double intensity = stationsSpeech.getIfPresent(clientStation);
+                    Double intensity = stationsSpeech.getIfPresent(clientStation.getIdentifier());
                     if (intensity == null && canSpeak(clientStation, distGCD)) {
                         speak(generateStationMessage(clientStation, distGCD));
-                        stationsSpeech.put(clientStation, clientStation.getMaxRatio60S());
+                        stationsSpeech.put(clientStation.getIdentifier(), clientStation.getMaxRatio60S());
                     }
                 }
             });
