@@ -28,8 +28,8 @@ public final class TelegramUtils {
         return (cluster.getLevel() >= user.getTsPossibleShakingMinLevel()) && (distGCD <= user.getTsPossibleShakingMaxDist());
     }
 
-    public static boolean canSend(ClientStation clientStation, TelegramUser user, double distGCD) {
-        return ((clientStation.getMaxRatio60S() >= user.getTsStationMinIntensity1()) && (distGCD <= user.getTsStationMaxDist1()) || (clientStation.getMaxRatio60S() >= user.getTsStationMinIntensity2()) && (distGCD <= user.getTsStationMaxDist2()));
+    public static boolean canSend(double intensity, TelegramUser user, double distGCD) {
+        return ((intensity >= user.getTsStationMinIntensity1()) && (distGCD <= user.getTsStationMaxDist1()) || (intensity >= user.getTsStationMinIntensity2()) && (distGCD <= user.getTsStationMaxDist2()));
     }
 
     public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga) {
@@ -56,10 +56,10 @@ public final class TelegramUtils {
                 "<b>Уровень:" + cluster.getLevel() + ". Расстояние: " + "%.1f".formatted(distGCD) + " км.</b>\n";
     }
 
-    public static String generateStationMessage(ClientStation station, double distGCD) {
+    public static String generateStationMessage(ClientStation station, double intensity, double distGCD) {
         return "<b>Высокий уровень датчика.</b>\n" +
                 "<b>" + station + "</b>\n" +
-                "<b>Уровень: %.1f. Расстояние: %.1f км.</b>%n".formatted(station.getMaxRatio60S(), distGCD);
+                "<b>Уровень: %.1f. Расстояние: %.1f км.</b>%n".formatted(intensity, distGCD);
     }
 
     public static String booleanToString(boolean boolValue) {
