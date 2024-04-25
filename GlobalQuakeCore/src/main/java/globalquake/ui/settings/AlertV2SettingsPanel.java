@@ -21,6 +21,10 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JCheckBox showFaults;
     private JCheckBox showStreamStations;
 
+    private JCheckBox enableDarkMode;
+    private JTextField morningTime;
+    private JTextField eveningTime;
+
     private JTextField telegramBotToken;
     private JTextField telegramBotUsername;
     private JTextField telegramChatId;
@@ -65,6 +69,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         createGeneralSettings();
+        createNightModeSettings();
         createTelegramBotSettings();
         createTSEarthquakeAlertSettings();
         createTSPossibleShakingAlertSettings();
@@ -105,6 +110,24 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         generalPanel.add(showStreamStations, createGbc(8));
 
         add(generalPanel);
+    }
+
+    private void createNightModeSettings() {
+        JPanel nightModePanel = new JPanel(new GridBagLayout());
+        nightModePanel.setBorder(BorderFactory.createTitledBorder("Night Mode Settings"));
+
+        enableDarkMode = new JCheckBox("Enable night mode", Settings.enableDarkMode);
+        nightModePanel.add(enableDarkMode, createGbc(0));
+
+        nightModePanel.add(new JLabel("Enable from: ", SwingConstants.LEFT), createGbc(0, 1));
+        eveningTime = new JTextField(String.format("%s", Settings.eveningTime));
+        nightModePanel.add(eveningTime, createGbc(1, 1));
+
+        nightModePanel.add(new JLabel("Enable before: ", SwingConstants.LEFT), createGbc(0, 2));
+        morningTime = new JTextField(String.format("%s", Settings.morningTime));
+        nightModePanel.add(morningTime, createGbc(1, 2));
+
+        add(nightModePanel);
     }
 
     private void createTelegramBotSettings() {
@@ -300,6 +323,10 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.showSmallCities = showSmallCities.isSelected();
         Settings.showFaults = showFaults.isSelected();
         Settings.showStreamStations = showStreamStations.isSelected();
+
+        Settings.enableDarkMode = enableDarkMode.isSelected();
+        Settings.morningTime = parseInt(morningTime.getText(), "Hours", 0, 23);
+        Settings.eveningTime = parseInt(eveningTime.getText(), "Hours", 0, 23);
 
         Settings.telegramBotToken = telegramBotToken.getText();
         Settings.telegramBotUsername = telegramBotUsername.getText();

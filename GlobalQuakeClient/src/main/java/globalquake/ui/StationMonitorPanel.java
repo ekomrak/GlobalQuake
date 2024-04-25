@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -42,9 +43,16 @@ public class StationMonitorPanel extends JPanel {
         int h = getHeight();
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
-        g.setColor(Color.white);
-        g.fillRect(0, 0, w, h);
+        LocalTime currentTime = LocalTime.now();
+        LocalTime morning = LocalTime.of(Settings.morningTime, 0);
+        LocalTime evening = LocalTime.of(Settings.eveningTime, 0);
+        if (Boolean.TRUE.equals(Settings.enableDarkMode) && (currentTime.isBefore(morning) || currentTime.isAfter(evening))) {
+            g.setColor(Color.darkGray);
+        } else {
+            g.setColor(Color.white);
+        }
 
+        g.fillRect(0, 0, w, h);
         g.setColor(Color.black);
         g.setFont(new Font("Calibri", Font.BOLD, 14));
         g.drawString("Raw Data", 4, 14);

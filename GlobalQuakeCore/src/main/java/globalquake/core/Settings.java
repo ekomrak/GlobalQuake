@@ -188,6 +188,10 @@ public final class Settings {
     public static Boolean showFaults;
     public static Boolean showStreamStations;
 
+    public static Boolean enableDarkMode;
+    public static Integer morningTime;
+    public static Integer eveningTime;
+
     public static String telegramBotToken;
     public static String telegramBotUsername;
     public static String telegramChatId;
@@ -397,6 +401,10 @@ public final class Settings {
         loadProperty("showSmallCities", "true");
         loadProperty("showFaults", "true");
         loadProperty("showStreamStations", "false");
+
+        loadProperty("enableDarkMode", "false");
+        loadProperty("morningTime", "9", o -> validateInt(0, 23, (Integer) o));
+        loadProperty("eveningTime", "22", o -> validateInt(0, 23, (Integer) o));
 
         loadProperty("telegramBotToken", "");
         loadProperty("telegramBotUsername", "");
