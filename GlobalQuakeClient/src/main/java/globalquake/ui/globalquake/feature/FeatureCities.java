@@ -108,7 +108,7 @@ public class FeatureCities extends RenderFeature<CityLocation> {
             graphics.setColor(Color.white);
             graphics.setStroke(new BasicStroke(3f));
 
-            if(renderProperties.scroll < 0.6) {
+            if (renderProperties.scroll < 0.6) {
                 graphics.fill(element.getShape());
             }
 

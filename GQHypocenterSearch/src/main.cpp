@@ -1,11 +1,29 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
 
 #include "globalquake.hpp"
 #include "globalquake_jni_GQNativeFunctions.h"
 #include "travel_table.hpp"
 #include <sys/time.h>
+
+void append_to_csv(const char *filename, int best_pps, int block_hypocs, int tile) {
+    FILE *file = fopen(filename, "a"); // Open the file in append mode
+
+    // Check if the file was opened successfully
+    if (file == NULL) {
+        printf("Error opening file %s\n", filename);
+        return;
+    }
+
+    // Append data to the file in CSV format
+    fprintf(file, "%d;%d;%d\n", block_hypocs, tile, best_pps);
+
+    // Close the file
+    fclose(file);
+}
 
 int main() {
     table_max_depth = 750.0;
@@ -49,21 +67,40 @@ int main() {
 
     float final_result[4];
 
-    struct timeval t1, t2;
+    int tests = TESTS;
 
-    gettimeofday(&t1, 0);
+    double best_pps = 0;
 
-    double time = 0.0;
-
-    if (!run_hypocenter_search(stations, st_c, points, 0, 90.0 * RADIANS, 0, 0, final_result, 2.2f)) {
-        printf("Error!\n");
-        goto cleanup;
-    }
+    const char* filename = "../autotune_results.csv";
     
-    gettimeofday(&t2, 0);
-    time = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000.0;
+    for(int i = 0; i < tests; i++){
+        struct timeval t1, t2;
 
-    printf("Standard test with 100_000 points, 50 stations and 0.5km depth resolution: %.1fms @ %.1fpps @ %.1fpscps\n", time, ((points * 1000.0) / time), ((points * 1000.0 * st_c) / time));
+        gettimeofday(&t1, 0);
+
+        double time = 0.0;
+
+        if (!run_hypocenter_search(stations, st_c, points, 0, 90.0 * RADIANS, 0, 0, final_result, 2.2f)) {
+            printf("Error!\n");
+            goto cleanup;
+        }
+        
+        gettimeofday(&t2, 0);
+        time = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000.0;
+
+        double pps = ((points * 1000.0) / time);
+        printf("Standard test with %d points (BLOCK=%d, TILE=%d), 50 stations and 0.5km depth resolution: %.1fms @ %.1fpps @ %.1fpscps\n", points, BLOCK_HYPOCS, TILE,time, pps, ((points * 1000.0 * st_c) / time));
+
+        if(pps > best_pps){
+            best_pps = pps;
+        }
+    }
+
+    printf("best: %.2fpps\n", best_pps);
+
+    append_to_csv(filename, best_pps, BLOCK_HYPOCS, TILE);
+
+    printf("allocation size %.2fkB\n", get_total_allocation_size(points, st_c, depth_resolution) / 1024.0);
 
     cleanup:
     if (p_wave_travel_table) {

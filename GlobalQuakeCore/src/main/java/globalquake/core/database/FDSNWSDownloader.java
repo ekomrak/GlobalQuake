@@ -60,15 +60,15 @@ public class FDSNWSDownloader {
         }
 
         sensitivityCorrections = new ArrayList<>();
-        try{
+        try {
             File file = new File(GlobalQuake.mainFolder, "sensitivity_corrections.txt");
-            if(!file.exists()) {
-                if(!file.createNewFile()){
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
                     throw new RuntimeException("Failed to create sensitivity_corrections.txt file!");
                 }
             }
             sensitivityCorrections.addAll(loadSensitivityCorrections(file.getAbsolutePath()));
-        } catch(Exception e){
+        } catch (Exception e) {
             Logger.error("Unable to load sensitivity corrections", e);
         }
     }
@@ -97,6 +97,12 @@ public class FDSNWSDownloader {
         Logger.info("Loaded %d sensitivity correction rules.");
 
         return corrections;
+    }
+
+    public static void main(String[] args) throws Exception {
+        GlobalQuake.prepare(new File("./.GlobalQuakeData/"), null);
+        var a = loadSensitivityCorrections(new File(GlobalQuake.mainFolder, "sensitivity_corrections.txt").getAbsolutePath());
+        System.err.println(a);
     }
 
     private static List<String> downloadWadl(StationSource stationSource) throws Exception {
@@ -356,8 +362,8 @@ public class FDSNWSDownloader {
     }
 
     public static double getSensitivityCorrection(String networkCode, String stationCode) {
-        for(SensitivityCorrection sensitivityCorrection : sensitivityCorrections){
-            if(sensitivityCorrection.match(networkCode, stationCode)){
+        for (SensitivityCorrection sensitivityCorrection : sensitivityCorrections) {
+            if (sensitivityCorrection.match(networkCode, stationCode)) {
                 return sensitivityCorrection.getMultiplier();
             }
         }
