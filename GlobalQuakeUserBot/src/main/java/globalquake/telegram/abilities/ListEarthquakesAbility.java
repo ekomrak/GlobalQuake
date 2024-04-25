@@ -73,9 +73,9 @@ public class ListEarthquakesAbility extends AbstractAbility {
                         if (!earthquakes.isEmpty() && message.isPresent()) {
                             try {
                                 if (Boolean.TRUE.equals(telegramUser.getSendImageAsAPhoto())) {
-                                    getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).photo(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                                    getTelegramService().getTelegramClient().execute(SendPhoto.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).photo(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "List_%d.png".formatted(System.currentTimeMillis()))).build());
                                 } else {
-                                    getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).document(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "list_%d.png".formatted(System.currentTimeMillis()))).build());
+                                    getTelegramService().getTelegramClient().execute(SendDocument.builder().chatId(ctx.chatId()).replyToMessageId(message.get().getMessageId()).document(new InputFile(EventImageDrawer.drawEventsImage(telegramUser, earthquakes), "List_%d.png".formatted(System.currentTimeMillis()))).build());
                                 }
                             } catch (TelegramApiException | IOException e) {
                                 Logger.error(e);
