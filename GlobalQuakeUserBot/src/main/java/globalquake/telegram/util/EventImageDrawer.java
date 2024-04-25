@@ -2,11 +2,13 @@ package globalquake.telegram.util;
 
 import globalquake.core.Settings;
 import globalquake.core.analysis.Event;
-import globalquake.core.earthquake.data.Earthquake;
+import globalquake.core.earthquake.data.Cluster;
+import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.regions.GQPolygon;
 import globalquake.core.regions.Regions;
 import globalquake.db.entities.ArchivedEarthquake;
 import globalquake.db.entities.TelegramUser;
+import globalquake.telegram.data.TelegramEarthquakeInfo;
 import globalquake.ui.globalquake.feature.FeatureEarthquake;
 import globalquake.utils.Scale;
 
@@ -19,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -32,20 +35,20 @@ public final class EventImageDrawer {
     private static final Color landC = new Color(15, 47, 68);
     private static final Color borderC = new Color(153, 153, 153);
 
-    public static InputStream drawEarthquakeImage(TelegramUser user, Earthquake earthquake) throws IOException {
+    public static InputStream drawEarthquakeImage(TelegramUser user, TelegramEarthquakeInfo info, Cluster cluster, Hypocenter hypocenter) throws IOException {
         BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = img.createGraphics();
-        drawCommonPart(g, earthquake.getLat(), earthquake.getLon());
-        drawEventPoint(g, earthquake.getLat(), earthquake.getLon(), earthquake.getLat(), earthquake.getLon());
-        drawDetails(g, earthquake.getLat(), earthquake.getLon(), earthquake.getOriginDate(), earthquake.getLat(), earthquake.getLon(), earthquake.getDepth(), earthquake.getMag());
-        drawHome(g, user, earthquake.getLat(), earthquake.getLon());
+        drawCommonPart(g, info.getLat(), info.getLon());
+        drawEventPoint(g, info.getLat(), info.getLon(), info.getLat(), info.getLon());
+        drawDetails(g, info.getLat(), info.getLon(), Instant.ofEpochMilli(info.getOrigin()).atZone(ZoneId.systemDefault()).toLocalDateTime(), info.getLat(), info.getLon(), info.getDepth(), info.getMag());
+        drawHome(g, user, info.getLat(), info.getLon());
 
         g.setStroke(new BasicStroke(1f));
-        for (Event event : earthquake.getCluster().getAssignedEvents().values()) {
-            double x = getX(event.report.lon(), earthquake.getLon());
-            double y = getY(event.report.lat(), earthquake.getLat());
+        for (Event event : cluster.getAssignedEvents().values()) {
+            double x = getX(event.report.lon(), info.getLon());
+            double y = getY(event.report.lat(), info.getLat());
             double r = 12;
-            g.setColor(Scale.getColorRatio(event.getMaxVelocity(earthquake.getHypocenter().magnitudeType)));
+            g.setColor(Scale.getColorRatio(event.getMaxVelocity(hypocenter.magnitudeType)));
             Ellipse2D.Double ell1 = new Ellipse2D.Double(x - r / 2, y - r / 2, r, r);
             g.fill(ell1);
         }

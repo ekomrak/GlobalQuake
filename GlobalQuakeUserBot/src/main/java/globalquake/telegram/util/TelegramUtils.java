@@ -1,12 +1,12 @@
 package globalquake.telegram.util;
 
-import globalquake.client.data.ClientStation;
 import globalquake.core.Settings;
-import globalquake.core.earthquake.data.Cluster;
-import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.intensity.IntensityScales;
 import globalquake.core.intensity.Level;
 import globalquake.db.entities.TelegramUser;
+import globalquake.telegram.data.TelegramClusterInfo;
+import globalquake.telegram.data.TelegramEarthquakeInfo;
+import globalquake.telegram.data.TelegramStationInfo;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -18,45 +18,40 @@ public final class TelegramUtils {
     private TelegramUtils() {
     }
 
-    public static boolean canSend(Earthquake earthquake, TelegramUser user, double distGCD, double pga) {
+    public static boolean canSend(TelegramEarthquakeInfo info, TelegramUser user, double distGCD, double pga) {
         double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(user.getTsEarthquakeMinIntensity()).getPga();
 
-        return (((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea1()) && (distGCD <= user.getTsEarthquakeMaxDistArea1())) || ((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea2()) && (distGCD <= user.getTsEarthquakeMaxDistArea2())) || (pga >= earthquakeThreshold));
+        return (((info.getMag() >= user.getTsEarthquakeMinMagnitudeArea1()) && (distGCD <= user.getTsEarthquakeMaxDistArea1())) || ((info.getMag() >= user.getTsEarthquakeMinMagnitudeArea2()) && (distGCD <= user.getTsEarthquakeMaxDistArea2())) || (pga >= earthquakeThreshold));
     }
 
-    public static boolean canSend(Cluster cluster, TelegramUser user, double distGCD) {
-        return (cluster.getLevel() >= user.getTsPossibleShakingMinLevel()) && (distGCD <= user.getTsPossibleShakingMaxDist());
+    public static boolean canSend(TelegramClusterInfo info, TelegramUser user, double distGCD) {
+        return (info.getLevel() >= user.getTsPossibleShakingMinLevel()) && (distGCD <= user.getTsPossibleShakingMaxDist());
     }
 
-    public static boolean canSend(double intensity, TelegramUser user, double distGCD) {
-        return ((intensity >= user.getTsStationMinIntensity1()) && (distGCD <= user.getTsStationMaxDist1()) || (intensity >= user.getTsStationMinIntensity2()) && (distGCD <= user.getTsStationMaxDist2()));
+    public static boolean canSend(TelegramStationInfo info, TelegramUser user, double distGCD) {
+        return ((info.getIntensity() >= user.getTsStationMinIntensity1()) && (distGCD <= user.getTsStationMaxDist1()) || (info.getIntensity() >= user.getTsStationMinIntensity2()) && (distGCD <= user.getTsStationMaxDist2()));
     }
 
-    public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga) {
-        return generateEarthquakeMessage(earthquake, distGCD, pga, false);
+    public static String generateEarthquakeMessage(TelegramEarthquakeInfo info, double distGCD, double pga) {
+        return generateEarthquakeMessage(info, distGCD, pga, false);
     }
 
-    public static String generateEarthquakeMessage(Earthquake earthquake, double distGCD, double pga, boolean test) {
-        String quality = "?";
-        if (earthquake.getHypocenter().quality != null) {
-            quality = earthquake.getHypocenter().quality.getSummary().toString();
-        }
-
+    public static String generateEarthquakeMessage(TelegramEarthquakeInfo info, double distGCD, double pga, boolean test) {
         String header = test ? "<b>Выдуманное землетрясение.</b>\n" : "<b>Землетрясение обнаружено.</b>\n";
         return  header +
-                "<b>" + "M%.1f".formatted(earthquake.getMag()) + " " + earthquake.getRegion() + "</b>\n" +
-                "Расстояние: %.1f км. Глубина: %.1f км.%n".formatted(distGCD, earthquake.getDepth()) +
+                "<b>" + "M%.1f".formatted(info.getMag()) + " " + info.getRegion() + "</b>\n" +
+                "Расстояние: %.1f км. Глубина: %.1f км.%n".formatted(distGCD, info.getDepth()) +
                 "MMI: " + formatLevel(IntensityScales.MMI.getLevel(pga)) + " / Shindo: " + formatLevel(IntensityScales.SHINDO.getLevel(pga)) + "\n" +
-                "Время: " + Settings.formatDateTime(Instant.ofEpochMilli(earthquake.getOrigin())) + "\n" +
-                "Класс: " + quality;
+                "Время: " + Settings.formatDateTime(Instant.ofEpochMilli(info.getOrigin())) + "\n" +
+                "Класс: " + (info.getQuality().isEmpty() ? "?" : info.getQuality());
     }
 
-    public static String generateClusterMessage(Cluster cluster, double distGCD) {
+    public static String generateClusterMessage(TelegramClusterInfo info, double distGCD) {
         return "<b>Возможное землетрясение обнаружено.</b>\n" +
-                "<b>Уровень:" + cluster.getLevel() + ". Расстояние: " + "%.1f".formatted(distGCD) + " км.</b>\n";
+                "<b>Уровень:" + info.getLevel() + ". Расстояние: " + "%.1f".formatted(distGCD) + " км.</b>\n";
     }
 
-    public static String generateStationMessage(ClientStation station, double intensity, double distGCD) {
+    public static String generateStationMessage(String station, double intensity, double distGCD) {
         return "<b>Высокий уровень датчика.</b>\n" +
                 "<b>" + station + "</b>\n" +
                 "<b>Уровень: %.1f. Расстояние: %.1f км.</b>%n".formatted(intensity, distGCD);

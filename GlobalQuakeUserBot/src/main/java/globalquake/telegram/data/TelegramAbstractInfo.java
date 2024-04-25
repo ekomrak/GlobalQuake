@@ -6,6 +6,10 @@ import java.util.Map;
 public abstract class TelegramAbstractInfo<T> {
     private final Map<Long, Integer> messages = new HashMap<>();
 
+    public TelegramAbstractInfo(T t) {
+        updateWith(t);
+    }
+
     public Map<Long, Integer> getMessages() {
         return messages;
     }

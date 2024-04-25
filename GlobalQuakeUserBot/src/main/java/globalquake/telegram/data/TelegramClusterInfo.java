@@ -7,6 +7,10 @@ public class TelegramClusterInfo extends TelegramAbstractInfo<Cluster> {
     private double lat;
     private double lon;
 
+    public TelegramClusterInfo(Cluster cluster) {
+        super(cluster);
+    }
+
     @Override
     public void updateWith(Cluster cluster) {
         this.level = cluster.getLevel();
@@ -17,5 +21,17 @@ public class TelegramClusterInfo extends TelegramAbstractInfo<Cluster> {
     @Override
     public boolean equalsTo(Cluster cluster) {
         return (cluster.getLevel() == level) && (cluster.getRootLat() == lat) && (cluster.getRootLon() == lon);
+    }
+
+    public double getLevel() {
+        return level;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
     }
 }

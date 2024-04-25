@@ -44,9 +44,9 @@ import java.util.concurrent.TimeUnit;
 
 
 public class TelegramService extends AbilityBot {
-    private final Cache<Earthquake, TelegramEarthquakeInfo> earthquakes;
-    private final Cache<Cluster, TelegramClusterInfo> clusters;
-    private final Cache<ClientStation, TelegramStationInfo> stations;
+    private final Cache<UUID, TelegramEarthquakeInfo> earthquakes;
+    private final Cache<UUID, TelegramClusterInfo> clusters;
+    private final Cache<String, TelegramStationInfo> stations;
     private final Cache<Long, SettingsState> userState;
     private final ScheduledExecutorService stationsCheckService;
     private final RandomDataGenerator randomDataGenerator;
@@ -86,7 +86,7 @@ public class TelegramService extends AbilityBot {
 
             @Override
             public void onQuakeArchive(QuakeArchiveEvent event) {
-                earthquakes.invalidate(event.earthquake());
+                earthquakes.invalidate(event.earthquake().getUuid());
             }
         });
 
@@ -108,132 +108,132 @@ public class TelegramService extends AbilityBot {
     }
 
     private void processClusterCreate(ClusterCreateEvent event) {
-        TelegramClusterInfo info = new TelegramClusterInfo();
+        TelegramClusterInfo info = new TelegramClusterInfo(event.cluster());
         GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().forEach(telegramUser -> {
-            double distGCD = GeoUtils.greatCircleDistance(event.cluster().getRootLat(), event.cluster().getRootLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-            if (TelegramUtils.canSend(event.cluster(), telegramUser, distGCD)) {
+            double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
+            if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                 try {
                     InputFile inputFile = null;
                     boolean sendAsAPhoto = true;
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingImage())) {
-                        inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, event.cluster().getRootLat(), event.cluster().getRootLon()), "Cluster_%d.png".formatted(System.currentTimeMillis()));
+                        inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_%d.png".formatted(System.currentTimeMillis()));
                         sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
                     }
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingMap())) {
                         inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_%d.png".formatted(System.currentTimeMillis()));
                         sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                     }
-                    sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(event.cluster(), distGCD), event.cluster().getRootLat(), event.cluster().getRootLon(), inputFile, sendAsAPhoto);
+                    sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), inputFile, sendAsAPhoto);
                 } catch (IOException e) {
                     Logger.error(e);
                 }
             }
         });
         if (!info.getMessages().isEmpty()) {
-            info.updateWith(event.cluster());
-            clusters.put(event.cluster(), info);
+            clusters.put(event.cluster().getUuid(), info);
         }
     }
 
     private void processQuakeCreation(QuakeCreateEvent event) {
-        TelegramEarthquakeInfo info = new TelegramEarthquakeInfo();
+        TelegramEarthquakeInfo info = new TelegramEarthquakeInfo(event.earthquake());
         GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().forEach(telegramUser -> {
-            double distGCD = GeoUtils.greatCircleDistance(event.earthquake().getLat(), event.earthquake().getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-            double dist = GeoUtils.geologicalDistance(event.earthquake().getLat(), event.earthquake().getLon(), -event.earthquake().getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
-            double pga = GeoUtils.pgaFunction(event.earthquake().getMag(), dist, event.earthquake().getDepth());
+            double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
+            double dist = GeoUtils.geologicalDistance(info.getLat(), info.getLon(), -info.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
+            double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
 
-            if (TelegramUtils.canSend(event.earthquake(), telegramUser, distGCD, pga)) {
+            if (TelegramUtils.canSend(info, telegramUser, distGCD, pga)) {
                 try {
                     InputFile inputFile = null;
                     boolean sendAsAPhoto = true;
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                        inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, event.earthquake()), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
+                        inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
                         sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
                     }
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
                         inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
                         sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                     }
-                    sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(event.earthquake(), distGCD, pga), event.earthquake().getLat(), event.earthquake().getLon(), inputFile, sendAsAPhoto);
+                    sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), inputFile, sendAsAPhoto);
                 } catch (IOException e) {
                     Logger.error(e);
                 }
             }
         });
         if (!info.getMessages().isEmpty()) {
-            info.updateWith(event.earthquake());
-            earthquakes.put(event.earthquake(), info);
+            earthquakes.put(event.earthquake().getUuid(), info);
         }
     }
 
     private void processQuakeUpdate(QuakeUpdateEvent event) {
-        TelegramEarthquakeInfo info = earthquakes.getIfPresent(event.earthquake());
+        TelegramEarthquakeInfo info = earthquakes.getIfPresent(event.earthquake().getUuid());
         if (info != null) {
+            boolean isUpdated = !info.equalsTo(event.earthquake());
+            info.updateWith(event.earthquake());
             GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().forEach(telegramUser -> {
-                double distGCD = GeoUtils.greatCircleDistance(event.earthquake().getLat(), event.earthquake().getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-                double dist = GeoUtils.geologicalDistance(event.earthquake().getLat(), event.earthquake().getLon(), -event.earthquake().getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
-                double pga = GeoUtils.pgaFunction(event.earthquake().getMag(), dist, event.earthquake().getDepth());
+                double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
+                double dist = GeoUtils.geologicalDistance(info.getLat(), info.getLon(), -info.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
+                double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
 
-                if (TelegramUtils.canSend(event.earthquake(), telegramUser, distGCD, pga)) {
+                if (TelegramUtils.canSend(info, telegramUser, distGCD, pga)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
-                        if (!info.equalsTo(event.earthquake())) {
-                            updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateEarthquakeMessage(event.earthquake(), distGCD, pga), telegramUser.getChatId());
+                        if (isUpdated) {
+                            updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), telegramUser.getChatId());
                         }
                     } else {
                         try {
                             InputFile inputFile = null;
                             boolean sendAsAPhoto = true;
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, event.earthquake()), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
+                                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
                                 sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
                             }
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
                                 inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_%d.png".formatted(System.currentTimeMillis()));
                                 sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                             }
-                            sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(event.earthquake(), distGCD, pga), event.earthquake().getLat(), event.earthquake().getLon(), inputFile, sendAsAPhoto);
+                            sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), inputFile, sendAsAPhoto);
                         } catch (IOException e) {
                             Logger.error(e);
                         }
                     }
                 }
             });
-            info.updateWith(event.earthquake());
         } else {
             processQuakeCreation(new QuakeCreateEvent(event.earthquake()));
         }
     }
 
     private void processClusterLevelup(ClusterLevelUpEvent event) {
-        TelegramClusterInfo info = clusters.getIfPresent(event.cluster());
+        TelegramClusterInfo info = clusters.getIfPresent(event.cluster().getUuid());
         if (info != null) {
+            boolean isUpdated = !info.equalsTo(event.cluster());
+            info.updateWith(event.cluster());
             GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().forEach(telegramUser -> {
-                double distGCD = GeoUtils.greatCircleDistance(event.cluster().getRootLat(), event.cluster().getRootLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-                if (TelegramUtils.canSend(event.cluster(), telegramUser, distGCD)) {
+                double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
+                if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
-                        if (!info.equalsTo(event.cluster())) {
-                            updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateClusterMessage(event.cluster(), distGCD), telegramUser.getChatId());
+                        if (isUpdated) {
+                            updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateClusterMessage(info, distGCD), telegramUser.getChatId());
                         }
                     } else {
                         try {
                             InputFile inputFile = null;
                             boolean sendAsAPhoto = true;
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingImage())) {
-                                inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, event.cluster().getRootLat(), event.cluster().getRootLon()), "Cluster_%d.png".formatted(System.currentTimeMillis()));
+                                inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_%d.png".formatted(System.currentTimeMillis()));
                                 sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
                             }
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingMap())) {
                                 inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_%d.png".formatted(System.currentTimeMillis()));
                                 sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                             }
-                            sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(event.cluster(), distGCD), event.cluster().getRootLat(), event.cluster().getRootLon(), inputFile, sendAsAPhoto);
+                            sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), inputFile, sendAsAPhoto);
                         } catch (IOException e) {
                             Logger.error(e);
                         }
                     }
                 }
             });
-            info.updateWith(event.cluster());
         } else {
             processClusterCreate(new ClusterCreateEvent(event.cluster()));
         }
@@ -259,22 +259,23 @@ public class TelegramService extends AbilityBot {
         fakeCluster.setPreviousHypocenter(fakeHypocenter);
         Earthquake fakeEarthquake = new Earthquake(fakeCluster);
 
-        double distGCD = GeoUtils.greatCircleDistance(fakeEarthquake.getLat(), fakeEarthquake.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-        double dist = GeoUtils.geologicalDistance(fakeEarthquake.getLat(), fakeEarthquake.getLon(), -fakeEarthquake.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
-        double pga = GeoUtils.pgaFunction(fakeEarthquake.getMag(), dist, fakeEarthquake.getDepth());
+        TelegramEarthquakeInfo info = new TelegramEarthquakeInfo(fakeEarthquake);
+        double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
+        double dist = GeoUtils.geologicalDistance(info.getLat(), info.getLon(), -info.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
+        double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
 
         try {
             InputFile inputFile = null;
             boolean sendAsAPhoto = true;
             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, fakeEarthquake), "Fake_Earthquake_%d.png".formatted(System.currentTimeMillis()));
+                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, fakeCluster, fakeHypocenter), "Fake_Earthquake_%d.png".formatted(System.currentTimeMillis()));
                 sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
             }
             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
                 inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Fake_Earthquake_%d.png".formatted(System.currentTimeMillis()));
                 sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
             }
-            sendMessage(EventType.EARTHQUAKE, telegramUser, null, TelegramUtils.generateEarthquakeMessage(fakeEarthquake, distGCD, pga, true), fakeEarthquake.getLat(), fakeEarthquake.getLon(), inputFile, sendAsAPhoto);
+            sendMessage(EventType.EARTHQUAKE, telegramUser, null, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga, true), info.getLat(), info.getLon(), inputFile, sendAsAPhoto);
         } catch (IOException e) {
             Logger.error(e);
         }
@@ -292,17 +293,18 @@ public class TelegramService extends AbilityBot {
     }
 
     private void processStation(ClientStation clientStation) {
-        double intensity = clientStation.getMaxRatio60S();
-        TelegramStationInfo info = stations.getIfPresent(clientStation);
+        TelegramStationInfo info = stations.getIfPresent(clientStation.getIdentifier());
         if (info != null) {
+            boolean isUpdated = !info.equalsTo(clientStation);
+            info.updateWith(clientStation);
             GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
 
-                if (TelegramUtils.canSend(intensity, telegramUser, distGCD)) {
+                if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
-                        if (!info.equalsTo(clientStation)) {
+                        if (isUpdated) {
                             //TODO: Temporary disabled
-                            //updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateStationMessage(clientStation, distGCD), telegramUser.getChatId());
+                            //updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), telegramUser.getChatId());
                         }
                     } else {
                         try {
@@ -316,19 +318,18 @@ public class TelegramService extends AbilityBot {
                                 inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_%d.png".formatted(System.currentTimeMillis()));
                                 sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                             }
-                            sendMessage(EventType.STATION, telegramUser, info, TelegramUtils.generateStationMessage(clientStation, intensity, distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
+                            sendMessage(EventType.STATION, telegramUser, info, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
                         } catch (IOException e) {
                             Logger.error(e);
                         }
                     }
                 }
             });
-            info.updateWith(clientStation);
         } else {
-            TelegramStationInfo newInfo = new TelegramStationInfo();
+            TelegramStationInfo newInfo = new TelegramStationInfo(clientStation);
             GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-                if (TelegramUtils.canSend(intensity, telegramUser, distGCD)) {
+                if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                     try {
                         InputFile inputFile = null;
                         boolean sendAsAPhoto = true;
@@ -340,15 +341,14 @@ public class TelegramService extends AbilityBot {
                             inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_%d.png".formatted(System.currentTimeMillis()));
                             sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                         }
-                        sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation, intensity, distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
+                        sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
                     } catch (IOException e) {
                         Logger.error(e);
                     }
                 }
             });
             if (!newInfo.getMessages().isEmpty()) {
-                newInfo.updateWith(clientStation);
-                stations.put(clientStation, newInfo);
+                stations.put(clientStation.getIdentifier(), newInfo);
             }
         }
     }
