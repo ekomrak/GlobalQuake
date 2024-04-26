@@ -10,6 +10,7 @@ import globalquake.core.earthquake.data.Cluster;
 import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.earthquake.data.Hypocenter;
 import globalquake.core.earthquake.interval.DepthConfidenceInterval;
+import globalquake.core.earthquake.quality.Quality;
 import globalquake.core.events.GlobalQuakeEventListener;
 import globalquake.core.events.specific.*;
 import globalquake.core.station.GlobalStationManager;
@@ -256,6 +257,7 @@ public class TelegramService extends AbilityBot {
     public void sendTestEarthquake(TelegramUser telegramUser) {
         Hypocenter fakeHypocenter = new Hypocenter((Math.random() * 180.0) - 90.0, (Math.random() * 360.0) - 180.0, randomDataGenerator.nextUniform(0, 100), System.currentTimeMillis(), 0, 0, new DepthConfidenceInterval(0, 2), Collections.emptyList());
         fakeHypocenter.magnitude = randomDataGenerator.nextUniform(1, 8);
+        fakeHypocenter.quality = new Quality(randomDataGenerator.nextUniform(0, 20), randomDataGenerator.nextUniform(0, 100), randomDataGenerator.nextUniform(0, 60), randomDataGenerator.nextUniform(0, 60), randomDataGenerator.nextInt(0, 50), randomDataGenerator.nextUniform(50, 100));
         Cluster fakeCluster = new Cluster();
         fakeCluster.setPreviousHypocenter(fakeHypocenter);
         Earthquake fakeEarthquake = new Earthquake(fakeCluster);
