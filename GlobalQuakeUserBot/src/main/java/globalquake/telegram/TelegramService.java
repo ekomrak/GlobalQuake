@@ -332,7 +332,7 @@ public class TelegramService extends AbilityBot {
             TelegramStationInfo newInfo = new TelegramStationInfo(clientStation);
             GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
-                if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
+                if (TelegramUtils.canSend(newInfo, telegramUser, distGCD)) {
                     try {
                         InputFile inputFile = null;
                         boolean sendAsAPhoto = true;
@@ -344,7 +344,7 @@ public class TelegramService extends AbilityBot {
                             inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_%d.png".formatted(System.currentTimeMillis()));
                             sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
                         }
-                        sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
+                        sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), newInfo.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputFile, sendAsAPhoto);
                     } catch (IOException e) {
                         Logger.error(e);
                     }
