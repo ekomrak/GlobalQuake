@@ -119,11 +119,11 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         enableDarkMode = new JCheckBox("Enable night mode", Settings.enableDarkMode);
         nightModePanel.add(enableDarkMode, createGbc(0));
 
-        nightModePanel.add(new JLabel("Enable from: ", SwingConstants.LEFT), createGbc(0, 1));
+        nightModePanel.add(new JLabel("Night mode start (hours): ", SwingConstants.LEFT), createGbc(0, 1));
         eveningTime = new JTextField(String.format("%s", Settings.eveningTime));
         nightModePanel.add(eveningTime, createGbc(1, 1));
 
-        nightModePanel.add(new JLabel("Enable before: ", SwingConstants.LEFT), createGbc(0, 2));
+        nightModePanel.add(new JLabel("Night mode end (hours): ", SwingConstants.LEFT), createGbc(0, 2));
         morningTime = new JTextField(String.format("%s", Settings.morningTime));
         nightModePanel.add(morningTime, createGbc(1, 2));
 
