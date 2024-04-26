@@ -25,7 +25,7 @@ public class GlobalQuakeClient extends GlobalQuake {
     private final ShakemapService shakemapService;
 
     private final TelegramBotsLongPollingApplication botsApplication;
-    private final TelegramService telegramService;
+    private TelegramService telegramService;
 
     public GlobalQuakeClient(ClientSocket clientSocket) {
         instance = this;
@@ -41,7 +41,9 @@ public class GlobalQuakeClient extends GlobalQuake {
         this.localEventHandler = new GlobalQuakeLocalEventHandler().runHandler();
         this.shakemapService = new ShakemapService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
-        this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
+        }
         new MapImageDrawer();
     }
 
@@ -71,11 +73,13 @@ public class GlobalQuakeClient extends GlobalQuake {
     }
 
     public void init() {
-        try {
-            botsApplication.registerBot(Settings.telegramBotToken, telegramService);
-            telegramService.onRegister();
-        } catch (TelegramApiException e) {
-            Logger.error(e);
+        if (!Settings.telegramBotUsername.isEmpty()) {
+            try {
+                botsApplication.registerBot(Settings.telegramBotToken, telegramService);
+                telegramService.onRegister();
+            } catch (TelegramApiException e) {
+                Logger.error(e);
+            }
         }
     }
 
