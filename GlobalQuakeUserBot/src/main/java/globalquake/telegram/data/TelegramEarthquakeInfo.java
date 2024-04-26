@@ -37,7 +37,11 @@ public class TelegramEarthquakeInfo extends TelegramAbstractInfo<Earthquake> {
 
     @Override
     public boolean equalsTo(Earthquake earthquake) {
-        return (earthquake.getMag() == mag) && (earthquake.getLat() == lat) && (earthquake.getLon() == lon) && (earthquake.getDepth() == depth) && (earthquake.getRegion().equals(region)) && (earthquake.getOrigin() == origin) && ((earthquake.getHypocenter() == null && "".equals(quality)) || (earthquake.getHypocenter() != null && earthquake.getHypocenter().quality.getSummary().toString().equals(quality)));
+        String newQuality = "";
+        if (earthquake.getHypocenter() != null) {
+            newQuality = earthquake.getHypocenter().quality.getSummary().toString();
+        }
+        return (earthquake.getMag() == mag) && (earthquake.getLat() == lat) && (earthquake.getLon() == lon) && (earthquake.getDepth() == depth) && (earthquake.getRegion().equals(region)) && (earthquake.getOrigin() == origin) && (newQuality.equals(quality));
     }
 
     public double getMag() {
