@@ -94,7 +94,7 @@ public class SpeechAndSoundService {
                 double dist = GeoUtils.geologicalDistance(event.earthquake().getLat(), event.earthquake().getLon(), -event.earthquake().getDepth(), Settings.homeLat, Settings.homeLon, 0);
                 double pga = GeoUtils.pgaFunction(event.earthquake().getMag(), dist, event.earthquake().getDepth());
                 if (canPlay(event.earthquake(),distGCD, pga)) {
-                    play(pga);
+                    play(event.earthquake(), pga);
                 }
                 if (canSpeak(event.earthquake(), distGCD, pga)) {
                     speak(generateEarthquakeText(event.earthquake(), distGCD));
@@ -278,8 +278,12 @@ public class SpeechAndSoundService {
         }
     }
 
-    private void play(double pga) {
-        Sounds.playSound(Sounds.intensify);
+    private void play(Earthquake earthquake, double pga) {
+        if (earthquake.getMag() < 6 ) {
+            Sounds.playSound(Sounds.intensify);
+        } else {
+            Sounds.playSound(Sounds.level_3);
+        }
         double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(Settings.tsEarthquakeMinIntensity).getPga();
         double earthquakeStrongThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeStrongIntensityScale].getLevels().get(Settings.tsEarthquakeStrongMinIntensity).getPga();
         if (pga >= earthquakeThreshold) {
