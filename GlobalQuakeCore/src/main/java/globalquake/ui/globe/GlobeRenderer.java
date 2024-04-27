@@ -450,7 +450,7 @@ public class GlobeRenderer {
         GeoUtils.precomputeMoveOnGlobe(precomputed, lat, lon, radius);
 
         GeoUtils.moveOnGlobe(precomputed, startPoint, 45);
-        polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
+        polygon3D.addPoint(new Vector3D(getX_3D(startPoint.x, startPoint.y, 0), getY_3D(startPoint.x, startPoint.y, 0), getZ_3D(startPoint.x, startPoint.y, 0)));
 
         GeoUtils.moveOnGlobe(precomputed, point, 135);
         polygon3D.addPoint(new Vector3D(getX_3D(point.x, point.y, 0), getY_3D(point.x, point.y, 0), getZ_3D(point.x, point.y, 0)));
