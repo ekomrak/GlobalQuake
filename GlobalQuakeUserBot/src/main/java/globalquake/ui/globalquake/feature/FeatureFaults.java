@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class FeatureFaults extends RenderFeature<GQLine> {
-
+    private static final AlphaComposite TRANSPARENT = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f);
     public static final Color borderColor = new Color(81, 110, 174);
 
     private final List<GQLine> polygonList;
@@ -84,15 +84,13 @@ public class FeatureFaults extends RenderFeature<GQLine> {
         if(!element.shouldDraw){
             return;
         }
-        AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f);
-        graphics.setComposite(alcom);
+        graphics.setComposite(TRANSPARENT);
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         graphics.setColor(borderColor);
         graphics.draw(element.getShape());
 
-        alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-        graphics.setComposite(alcom);
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 
     public void setEnabled(boolean enabled) {

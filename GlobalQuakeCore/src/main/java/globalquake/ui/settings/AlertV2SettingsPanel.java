@@ -33,7 +33,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
     private JCheckBox enableTelegramEarthquakeAlert;
     private JCheckBox enableSpeechEarthquakeAlert;
-    //private JCheckBox enableSoundEarthquakeAlert;
+    private JCheckBox enableSoundEarthquakeAlert;
     private JCheckBox enableTelegramEarthquakeLocation;
     private JCheckBox enableTelegramEarthquakeImage;
     private JCheckBox enableTelegramEarthquakeMap;
@@ -42,10 +42,11 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JTextField tsEarthquakeMinMagnitudeArea2;
     private JTextField tsEarthquakeMaxDistArea2;
     private IntensityScaleSelector tsEarthquakeMinIntensity;
+    private IntensityScaleSelector tsEarthquakeStrongMinIntensity;
 
     private JCheckBox enableTelegramPossibleShakingAlert;
     private JCheckBox enableSpeechPossibleShakingAlert;
-    //private JCheckBox enableSoundPossibleShakingAlert;
+    private JCheckBox enableSoundPossibleShakingAlert;
     private JCheckBox enableTelegramPossibleShakingLocation;
     private JCheckBox enableTelegramPossibleShakingImage;
     private JCheckBox enableTelegramPossibleShakingMap;
@@ -54,7 +55,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
     private JCheckBox enableTelegramStationHighIntensityAlert;
     private JCheckBox enableSpeechStationHighIntensityAlert;
-    //private JCheckBox enableSoundStationHighIntensityAlert;
+    private JCheckBox enableSoundStationHighIntensityAlert;
     private JCheckBox enableTelegramStationHighIntensityLocation;
     private JCheckBox enableTelegramStationHighIntensityImage;
     private JCheckBox enableTelegramStationHighIntensityMap;
@@ -173,17 +174,17 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         enableSpeechEarthquakeAlert = new JCheckBox("Enable earthquake alert by Speech", Settings.enableSpeechEarthquakeAlert);
         tsEarthquakeAlertPanel.add(enableSpeechEarthquakeAlert, createGbc(1));
 
-        /*enableSoundEarthquakeAlert = new JCheckBox("Enable earthquake alert by Sound", Settings.enableSoundEarthquakeAlert);
-        tsEarthquakeAlertPanel.add(enableSoundEarthquakeAlert, createGbc(2));*/
+        enableSoundEarthquakeAlert = new JCheckBox("Enable earthquake alert by Sound", Settings.enableSoundEarthquakeAlert);
+        tsEarthquakeAlertPanel.add(enableSoundEarthquakeAlert, createGbc(2));
 
         enableTelegramEarthquakeLocation = new JCheckBox("Send earthquake location", Settings.enableTelegramEarthquakeLocation);
-        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeLocation, createGbc(2));
+        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeLocation, createGbc(3));
 
         enableTelegramEarthquakeImage = new JCheckBox("Send earthquake image", Settings.enableTelegramEarthquakeImage);
-        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeImage, createGbc(3));
+        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeImage, createGbc(4));
 
         enableTelegramEarthquakeMap = new JCheckBox("Send earthquake map", Settings.enableTelegramEarthquakeMap);
-        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeMap, createGbc(4));
+        tsEarthquakeAlertPanel.add(enableTelegramEarthquakeMap, createGbc(5));
 
         JPanel area1Panel = new JPanel(new GridBagLayout());
         area1Panel.setBorder(BorderFactory.createTitledBorder("Area 1"));
@@ -196,7 +197,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         tsEarthquakeMaxDistArea1 = new JTextField(String.format("%s", Settings.tsEarthquakeMaxDistArea1));
         area1Panel.add(tsEarthquakeMaxDistArea1, createGbc(1, 1));
 
-        tsEarthquakeAlertPanel.add(area1Panel, createGbc(5));
+        tsEarthquakeAlertPanel.add(area1Panel, createGbc(6));
 
         JPanel area2Panel = new JPanel(new GridBagLayout());
         area2Panel.setBorder(BorderFactory.createTitledBorder("Area 2"));
@@ -209,10 +210,13 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         tsEarthquakeMaxDistArea2 = new JTextField(String.format("%s", Settings.tsEarthquakeMaxDistArea2));
         area2Panel.add(tsEarthquakeMaxDistArea2, createGbc(1, 1));
 
-        tsEarthquakeAlertPanel.add(area2Panel, createGbc(6));
+        tsEarthquakeAlertPanel.add(area2Panel, createGbc(7));
 
         tsEarthquakeMinIntensity = new IntensityScaleSelector("Earthquake alert min intensity:", Settings.tsEarthquakeIntensityScale, Settings.tsEarthquakeMinIntensity);
-        tsEarthquakeAlertPanel.add(tsEarthquakeMinIntensity, createGbc(1, 7));
+        tsEarthquakeAlertPanel.add(tsEarthquakeMinIntensity, createGbc(1, 8));
+
+        tsEarthquakeStrongMinIntensity = new IntensityScaleSelector("Earthquake strong alert min intensity:", Settings.tsEarthquakeStrongIntensityScale, Settings.tsEarthquakeStrongMinIntensity);
+        tsEarthquakeAlertPanel.add(tsEarthquakeStrongMinIntensity, createGbc(1, 9));
 
         add(tsEarthquakeAlertPanel);
     }
@@ -227,25 +231,25 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         enableSpeechPossibleShakingAlert = new JCheckBox("Enable possible shaking alert by Speech", Settings.enableSpeechPossibleShakingAlert);
         tsPossibleShakingAlertPanel.add(enableSpeechPossibleShakingAlert, createGbc(1));
 
-        /*enableSoundPossibleShakingAlert = new JCheckBox("Enable possible shaking alert by Sound", Settings.enableSoundPossibleShakingAlert);
-        tsPossibleShakingAlertPanel.add(enableSoundPossibleShakingAlert, createGbc(2));*/
+        enableSoundPossibleShakingAlert = new JCheckBox("Enable possible shaking alert by Sound", Settings.enableSoundPossibleShakingAlert);
+        tsPossibleShakingAlertPanel.add(enableSoundPossibleShakingAlert, createGbc(2));
 
         enableTelegramPossibleShakingLocation = new JCheckBox("Send earthquake location", Settings.enableTelegramPossibleShakingLocation);
-        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingLocation, createGbc(2));
+        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingLocation, createGbc(3));
 
         enableTelegramPossibleShakingImage = new JCheckBox("Send earthquake image", Settings.enableTelegramPossibleShakingImage);
-        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingImage, createGbc(3));
+        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingImage, createGbc(4));
 
         enableTelegramPossibleShakingMap = new JCheckBox("Send earthquake map", Settings.enableTelegramPossibleShakingMap);
-        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingMap, createGbc(4));
+        tsPossibleShakingAlertPanel.add(enableTelegramPossibleShakingMap, createGbc(5));
 
-        tsPossibleShakingAlertPanel.add(new JLabel("Possible Shaking alert min level: ", SwingConstants.LEFT), createGbc(0, 5));
+        tsPossibleShakingAlertPanel.add(new JLabel("Possible Shaking alert min level: ", SwingConstants.LEFT), createGbc(0, 6));
         tsPossibleShakingMinLevel = new JTextField(String.format("%s", Settings.tsPossibleShakingMinLevel));
-        tsPossibleShakingAlertPanel.add(tsPossibleShakingMinLevel, createGbc(1, 5));
+        tsPossibleShakingAlertPanel.add(tsPossibleShakingMinLevel, createGbc(1, 6));
 
-        tsPossibleShakingAlertPanel.add(new JLabel("Possible Shaking alert max distance: ", SwingConstants.LEFT), createGbc(0, 6));
+        tsPossibleShakingAlertPanel.add(new JLabel("Possible Shaking alert max distance: ", SwingConstants.LEFT), createGbc(0, 7));
         tsPossibleShakingMaxDist = new JTextField(String.format("%s", Settings.tsPossibleShakingMaxDist));
-        tsPossibleShakingAlertPanel.add(tsPossibleShakingMaxDist, createGbc(1, 6));
+        tsPossibleShakingAlertPanel.add(tsPossibleShakingMaxDist, createGbc(1, 7));
 
         add(tsPossibleShakingAlertPanel);
 
@@ -261,17 +265,17 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         enableSpeechStationHighIntensityAlert = new JCheckBox("Enable station high intensity alert by Speech", Settings.enableSpeechStationHighIntensityAlert);
         tsStationHighIntensityAlertPanel.add(enableSpeechStationHighIntensityAlert, createGbc(1));
 
-        /*enableSoundStationHighIntensityAlert = new JCheckBox("Enable station high intensity alert by Sound", Settings.enableSoundStationHighIntensityAlert);
-        tsStationHighIntensityAlertPanel.add(enableSoundStationHighIntensityAlert, createGbc(2));*/
+        enableSoundStationHighIntensityAlert = new JCheckBox("Enable station high intensity alert by Sound", Settings.enableSoundStationHighIntensityAlert);
+        tsStationHighIntensityAlertPanel.add(enableSoundStationHighIntensityAlert, createGbc(2));
 
         enableTelegramStationHighIntensityLocation = new JCheckBox("Send earthquake location", Settings.enableTelegramStationHighIntensityLocation);
-        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityLocation, createGbc(2));
+        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityLocation, createGbc(3));
 
         enableTelegramStationHighIntensityImage = new JCheckBox("Send earthquake image", Settings.enableTelegramStationHighIntensityImage);
-        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityImage, createGbc(3));
+        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityImage, createGbc(4));
 
         enableTelegramStationHighIntensityMap = new JCheckBox("Send earthquake map", Settings.enableTelegramStationHighIntensityMap);
-        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityMap, createGbc(4));
+        tsStationHighIntensityAlertPanel.add(enableTelegramStationHighIntensityMap, createGbc(5));
 
         JPanel area1Panel = new JPanel(new GridBagLayout());
         area1Panel.setBorder(BorderFactory.createTitledBorder("Area 1"));
@@ -284,7 +288,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         tsStationMaxDist1 = new JTextField(String.format("%s", Settings.tsStationMaxDist1));
         area1Panel.add(tsStationMaxDist1, createGbc(1, 1));
 
-        tsStationHighIntensityAlertPanel.add(area1Panel, createGbc(5));
+        tsStationHighIntensityAlertPanel.add(area1Panel, createGbc(6));
 
         JPanel area2Panel = new JPanel(new GridBagLayout());
         area2Panel.setBorder(BorderFactory.createTitledBorder("Area 2"));
@@ -297,7 +301,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         tsStationMaxDist2 = new JTextField(String.format("%s", Settings.tsStationMaxDist2));
         area2Panel.add(tsStationMaxDist2, createGbc(1, 1));
 
-        tsStationHighIntensityAlertPanel.add(area2Panel, createGbc(6));
+        tsStationHighIntensityAlertPanel.add(area2Panel, createGbc(7));
 
         add(tsStationHighIntensityAlertPanel);
     }
@@ -336,7 +340,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
         Settings.enableTelegramEarthquakeAlert = enableTelegramEarthquakeAlert.isSelected();
         Settings.enableSpeechEarthquakeAlert = enableSpeechEarthquakeAlert.isSelected();
-        //Settings.enableSoundEarthquakeAlert = enableSoundEarthquakeAlert.isSelected();
+        Settings.enableSoundEarthquakeAlert = enableSoundEarthquakeAlert.isSelected();
         Settings.enableTelegramEarthquakeLocation = enableTelegramEarthquakeLocation.isSelected();
         Settings.enableTelegramEarthquakeImage = enableTelegramEarthquakeImage.isSelected();
         Settings.enableTelegramEarthquakeMap = enableTelegramEarthquakeMap.isSelected();
@@ -346,10 +350,12 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.tsEarthquakeMaxDistArea2 = parseDouble(tsEarthquakeMaxDistArea2.getText(), "Earthquake alert max distance", 0, 30000);
         Settings.tsEarthquakeIntensityScale = tsEarthquakeMinIntensity.getShakingScaleComboBox().getSelectedIndex();
         Settings.tsEarthquakeMinIntensity = tsEarthquakeMinIntensity.getLevelComboBox().getSelectedIndex();
+        Settings.tsEarthquakeStrongIntensityScale = tsEarthquakeStrongMinIntensity.getShakingScaleComboBox().getSelectedIndex();
+        Settings.tsEarthquakeStrongMinIntensity = tsEarthquakeStrongMinIntensity.getLevelComboBox().getSelectedIndex();
 
         Settings.enableTelegramPossibleShakingAlert = enableTelegramPossibleShakingAlert.isSelected();
         Settings.enableSpeechPossibleShakingAlert = enableSpeechPossibleShakingAlert.isSelected();
-        //Settings.enableSoundPossibleShakingAlert = enableSoundPossibleShakingAlert.isSelected();
+        Settings.enableSoundPossibleShakingAlert = enableSoundPossibleShakingAlert.isSelected();
         Settings.enableTelegramPossibleShakingLocation = enableTelegramPossibleShakingLocation.isSelected();
         Settings.enableTelegramPossibleShakingImage = enableTelegramPossibleShakingImage.isSelected();
         Settings.enableTelegramPossibleShakingMap = enableTelegramPossibleShakingMap.isSelected();
@@ -358,7 +364,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
 
         Settings.enableTelegramStationHighIntensityAlert = enableTelegramStationHighIntensityAlert.isSelected();
         Settings.enableSpeechStationHighIntensityAlert = enableSpeechStationHighIntensityAlert.isSelected();
-        //Settings.enableSoundStationHighIntensityAlert = enableSoundStationHighIntensityAlert.isSelected();
+        Settings.enableSoundStationHighIntensityAlert = enableSoundStationHighIntensityAlert.isSelected();
         Settings.enableTelegramStationHighIntensityLocation = enableTelegramStationHighIntensityLocation.isSelected();
         Settings.enableTelegramStationHighIntensityImage = enableTelegramStationHighIntensityImage.isSelected();
         Settings.enableTelegramStationHighIntensityMap = enableTelegramStationHighIntensityMap.isSelected();

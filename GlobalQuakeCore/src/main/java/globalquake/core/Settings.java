@@ -208,6 +208,8 @@ public final class Settings {
     public static Double tsEarthquakeMaxDistArea2;
     public static Integer tsEarthquakeIntensityScale;
     public static Integer tsEarthquakeMinIntensity;
+    public static Integer tsEarthquakeStrongIntensityScale;
+    public static Integer tsEarthquakeStrongMinIntensity;
 
     public static Boolean enableTelegramPossibleShakingAlert;
     public static Boolean enableTelegramPossibleShakingLocation;
@@ -422,6 +424,8 @@ public final class Settings {
         loadProperty("tsEarthquakeMaxDistArea2", "300.0", o -> validateDouble(0, 30000, (Double) o));
         loadProperty("tsEarthquakeIntensityScale", "0", o -> validateInt(0, IntensityScales.INTENSITY_SCALES.length - 1, (Integer) o));
         loadProperty("tsEarthquakeMinIntensity", "1", o -> validateInt(0, IntensityScales.INTENSITY_SCALES[tsEarthquakeIntensityScale].getLevels().size() - 1, (Integer) o));
+        loadProperty("tsEarthquakeStrongIntensityScale", "0", o -> validateInt(0, IntensityScales.INTENSITY_SCALES.length - 1, (Integer) o));
+        loadProperty("tsEarthquakeStrongMinIntensity", "3", o -> validateInt(0, IntensityScales.INTENSITY_SCALES[tsEarthquakeStrongIntensityScale].getLevels().size() - 1, (Integer) o));
 
         loadProperty("enableTelegramPossibleShakingAlert", "false");
         loadProperty("enableTelegramPossibleShakingLocation", "false");

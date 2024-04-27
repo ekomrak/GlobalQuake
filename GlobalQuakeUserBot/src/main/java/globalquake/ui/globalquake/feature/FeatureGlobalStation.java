@@ -19,10 +19,13 @@ import gqserver.api.packets.station.InputType;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Collection;
+import java.util.Locale;
 
 public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
-
+    private static final DecimalFormat df = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
     private final Collection<AbstractStation> globalStations;
 
     public static final double RATIO_YELLOW = 2000.0;
@@ -200,7 +203,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
         int _y = (int) (7 + 6 * Settings.stationsSizeMul);
         if (scroll < Settings.stationIntensityVisibilityZoomLevel) {
             g.setColor(Color.white);
-            String str = !station.hasDisplayableData() ? "-.-" : "%.1f".formatted(station.getMaxRatio60S());
+            String str = !station.hasDisplayableData() ? "-.-" : df.format(station.getMaxRatio60S());
             g.setFont(new Font("Calibri", Font.PLAIN, 13));
             g.setColor(station.getAnalysis().getStatus() == AnalysisStatus.EVENT ? Color.green : Color.LIGHT_GRAY);
             if (centerPoint == null) {

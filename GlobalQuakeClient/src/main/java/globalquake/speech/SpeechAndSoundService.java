@@ -17,6 +17,7 @@ import globalquake.core.events.specific.QuakeCreateEvent;
 import globalquake.core.events.specific.QuakeUpdateEvent;
 import globalquake.core.intensity.IntensityScales;
 import globalquake.core.station.GlobalStationManager;
+import globalquake.sounds.Sounds;
 import globalquake.utils.GeoUtils;
 import globalquake.utils.NamedThreadFactory;
 import org.apache.commons.collections.CollectionUtils;
@@ -42,9 +43,9 @@ public class SpeechAndSoundService {
     private final ScheduledExecutorService stationsCheckService;
     private final Cache<UUID, Integer> earthquakesSpeech;
     private final Cache<UUID, Integer> clustersSpeech;
-    //private final Cache<Cluster, Integer> clustersSound;
+    private final Cache<UUID, Integer> clustersSound;
     private final Cache<String, Double> stationsSpeech;
-    //private final Cache<AbstractStation, Double> stationsSound;
+    private final Cache<String, Double> stationsSound;
     private Synthesizer synthesizer;
     private final VoiceSelectionParams voice;
     private final AudioConfig audioConfig;
@@ -56,6 +57,9 @@ public class SpeechAndSoundService {
         earthquakesSpeech = Caffeine.newBuilder().maximumSize(20).build();
         clustersSpeech = Caffeine.newBuilder().maximumSize(20).build();
         stationsSpeech = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+
+        clustersSound = Caffeine.newBuilder().maximumSize(20).build();
+        stationsSound = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
         try {
             System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
@@ -74,10 +78,10 @@ public class SpeechAndSoundService {
             @Override
             public void onClusterCreate(ClusterCreateEvent event) {
                 double distGCD = GeoUtils.greatCircleDistance(event.cluster().getRootLat(), event.cluster().getRootLon(), Settings.homeLat, Settings.homeLon);
-                /*if (canPlay(event.cluster())) {
+                if (canPlay(event.cluster(), distGCD)) {
                     play(event.cluster());
-                    clustersSound.put(event.cluster(), 0);
-                }*/
+                    clustersSound.put(event.cluster().getUuid(), 0);
+                }
                 if (canSpeak(event.cluster(), distGCD)) {
                     speak(generateClusterText(event.cluster(), distGCD));
                     clustersSpeech.put(event.cluster().getUuid(), 0);
@@ -89,9 +93,9 @@ public class SpeechAndSoundService {
                 double distGCD = GeoUtils.greatCircleDistance(event.earthquake().getLat(), event.earthquake().getLon(), Settings.homeLat, Settings.homeLon);
                 double dist = GeoUtils.geologicalDistance(event.earthquake().getLat(), event.earthquake().getLon(), -event.earthquake().getDepth(), Settings.homeLat, Settings.homeLon, 0);
                 double pga = GeoUtils.pgaFunction(event.earthquake().getMag(), dist, event.earthquake().getDepth());
-                /*if (canPlay(event.earthquake())) {
-                    play(event.earthquake());
-                }*/
+                if (canPlay(event.earthquake(),distGCD, pga)) {
+                    play(pga);
+                }
                 if (canSpeak(event.earthquake(), distGCD, pga)) {
                     speak(generateEarthquakeText(event.earthquake(), distGCD));
                     earthquakesSpeech.put(event.earthquake().getUuid(), 0);
@@ -129,7 +133,7 @@ public class SpeechAndSoundService {
     }
 
     private void checkStations() {
-        if (Boolean.FALSE.equals(Settings.enableSpeechStationHighIntensityAlert)) {
+        if (Boolean.FALSE.equals(Settings.enableSpeechStationHighIntensityAlert) && Boolean.FALSE.equals(Settings.enableSoundStationHighIntensityAlert)) {
             return;
         }
         GlobalStationManager stationManager = GlobalQuakeLocal.instance.getStationManager();
@@ -137,11 +141,18 @@ public class SpeechAndSoundService {
             stationManager.getStations().forEach(abstractStation -> {
                 if (abstractStation instanceof ClientStation clientStation) {
                     double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), Settings.homeLat, Settings.homeLon);
-                    Double intensity = stationsSpeech.getIfPresent(clientStation.getIdentifier());
+                    Double intensity = stationsSound.getIfPresent(clientStation.getIdentifier());
+                    if (intensity == null && canPlay(clientStation, distGCD)) {
+                        Sounds.playSound(Sounds.found);
+                        stationsSound.put(clientStation.getIdentifier(), clientStation.getMaxRatio60S());
+                    }
+
+                    intensity = stationsSpeech.getIfPresent(clientStation.getIdentifier());
                     if (intensity == null && canSpeak(clientStation, distGCD)) {
                         speak(generateStationMessage(clientStation, distGCD));
                         stationsSpeech.put(clientStation.getIdentifier(), clientStation.getMaxRatio60S());
                     }
+
                 }
             });
         }
@@ -168,19 +179,26 @@ public class SpeechAndSoundService {
         return canAlert(clientStation, distGCD);
     }
 
-    /*private boolean canPlay(Earthquake earthquake) {
-        if (earthquake == null || !Settings.enableSoundEarthquakeAlert) {
+    private boolean canPlay(Earthquake earthquake, double distGCD, double pga) {
+        if (Boolean.FALSE.equals(Settings.enableSoundEarthquakeAlert)) {
             return false;
         }
-        return canAlert(earthquake);
+        return canAlert(earthquake, distGCD, pga);
     }
 
-    private boolean canPlay(Cluster cluster) {
-        if (cluster == null || !Settings.enableSoundPossibleShakingAlert) {
+    private boolean canPlay(Cluster cluster, double distGCD) {
+        if (Boolean.FALSE.equals(Settings.enableSoundPossibleShakingAlert)) {
             return false;
         }
-        return canAlert(cluster);
-    }*/
+        return canAlert(cluster, distGCD);
+    }
+
+    private boolean canPlay(ClientStation clientStation, double distGCD) {
+        if (Boolean.FALSE.equals(Settings.enableSoundStationHighIntensityAlert)) {
+            return false;
+        }
+        return canAlert(clientStation, distGCD);
+    }
 
     private boolean canAlert(Earthquake earthquake, double distGCD, double pga) {
         double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(Settings.tsEarthquakeMinIntensity).getPga();
@@ -260,12 +278,14 @@ public class SpeechAndSoundService {
         }
     }
 
-    /*private void play(Earthquake earthquake) {
-        if (earthquake.getMag() <= 5.0) {
+    private void play(double pga) {
+        Sounds.playSound(Sounds.intensify);
+        double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(Settings.tsEarthquakeMinIntensity).getPga();
+        double earthquakeStrongThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeStrongIntensityScale].getLevels().get(Settings.tsEarthquakeStrongMinIntensity).getPga();
+        if (pga >= earthquakeThreshold) {
             Sounds.playSound(Sounds.felt);
-        } else {
-            Sounds.playSound(Sounds.felt);
-            //Sounds.playSound(Sounds.felt_strong);
+        } else if (pga >= earthquakeStrongThreshold) {
+            Sounds.playSound(Sounds.felt_strong);
         }
     }
 
@@ -295,7 +315,7 @@ public class SpeechAndSoundService {
                 Sounds.playSound(Sounds.level_0);
                 break;
         }
-    }*/
+    }
 
     private SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);

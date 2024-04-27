@@ -10,7 +10,6 @@ import globalquake.core.station.GlobalStationManager;
 import globalquake.events.GlobalQuakeLocalEventHandler;
 import globalquake.intensity.ShakemapService;
 import globalquake.main.Main;
-import globalquake.sounds.SoundsService;
 import globalquake.speech.SpeechAndSoundService;
 import globalquake.telegram.TelegramService;
 import globalquake.ui.globalquake.GlobalQuakeFrame;
@@ -33,7 +32,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
     private final ShakemapService shakemapService;
 
     private final TelegramBotsLongPollingApplication botsApplication;
-    private final SoundsService soundsService;
+    //private final SoundsService soundsService;
     private TelegramService telegramService;
     private final SpeechAndSoundService speechService;
 
@@ -46,7 +45,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
 
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
-        this.soundsService = new SoundsService();
+        //this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
         if (!Settings.telegramBotUsername.isEmpty()) {
             this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
@@ -62,7 +61,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
 
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
-        this.soundsService = new SoundsService();
+        //this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
         if (!Settings.telegramBotUsername.isEmpty()) {
             this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
@@ -78,7 +77,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
 
         this.alertManager = new AlertManager();
         this.shakemapService = new ShakemapService();
-        this.soundsService = new SoundsService();
+        //this.soundsService = new SoundsService();
         this.botsApplication = new TelegramBotsLongPollingApplication();
         if (!Settings.telegramBotUsername.isEmpty()) {
             this.telegramService = new TelegramService(new OkHttpTelegramClient(Settings.telegramBotToken));
@@ -135,7 +134,7 @@ public class GlobalQuakeLocal extends GlobalQuake {
         super.destroy();
         getLocalEventHandler().stopHandler();
         getShakemapService().stop();
-        soundsService.destroy();
+        //soundsService.destroy();
         telegramService.destroy();
         speechService.destroy();
         try {

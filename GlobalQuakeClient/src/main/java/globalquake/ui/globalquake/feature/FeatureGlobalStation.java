@@ -20,11 +20,15 @@ import gqserver.api.packets.station.InputType;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Collection;
+import java.util.Locale;
 
 public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
 
     private final Collection<AbstractStation> globalStations;
+    private static final DecimalFormat df = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
     public static final double RATIO_YELLOW = 2000.0;
     public static final double RATIO_RED = 20000.0;
@@ -243,7 +247,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
         }
         if (scroll < Settings.stationIntensityVisibilityZoomLevel || (mouseNearby && scroll < 1)) {
             g.setColor(Color.white);
-            String str = !station.hasDisplayableData() ? "-.-" : "%.1f".formatted(station.getMaxRatio60S());
+            String str = !station.hasDisplayableData() ? "-.-" : df.format(station.getMaxRatio60S());
             g.setFont(new Font("Calibri", Font.PLAIN, 13));
             g.setColor(station.getAnalysis().getStatus() == AnalysisStatus.EVENT ? Color.green : Color.LIGHT_GRAY);
             if(centerPoint == null) {
@@ -255,7 +259,7 @@ public class FeatureGlobalStation extends RenderFeature<AbstractStation> {
             int y = (int) centerPoint.y;
             g.drawString(str, x - g.getFontMetrics().stringWidth(str) / 2, y + _y + 9);
         }
-        if (Settings.showStreamStations && !mouseNearby && scroll < Settings.stationIntensityVisibilityZoomLevel && ("KZ PDGK BHZ".equals(station.getIdentifier().trim()) || "AD TMCH HNZ".equals(station.getIdentifier().trim()) || "AD ANAN HNZ".equals(station.getIdentifier().trim()))) {
+        if (Boolean.TRUE.equals(Settings.showStreamStations) && !mouseNearby && scroll < Settings.stationIntensityVisibilityZoomLevel && ("KZ PDGK BHZ".equals(station.getIdentifier().trim()) || "AD TMCH HNZ".equals(station.getIdentifier().trim()) || "AD ANAN HNZ".equals(station.getIdentifier().trim()))) {
             if ("KZ PDGK BHZ".equals(station.getIdentifier().trim())) {
                 g.setColor(Color.green);
             } else if ("AD TMCH HNZ".equals(station.getIdentifier().trim())) {
