@@ -3,6 +3,7 @@ package globalquake.telegram.abilities;
 import globalquake.client.GlobalQuakeClient;
 import globalquake.telegram.TelegramService;
 import globalquake.db.entities.TelegramUser;
+import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.abilitybots.api.objects.Ability;
 
 import static org.telegram.telegrambots.abilitybots.api.objects.Flag.MESSAGE;
@@ -38,8 +39,12 @@ public class FeedbackAbility extends AbstractAbility {
                     GlobalQuakeClient.instance.getRegistry().counter("ability.used", "name", "feedback", "user", ctx.user().getId().toString()).increment();
                 })
                 .reply((baseAbilityBot, update) -> {
-                    getTelegramService().getSilent().send("UserId: %d. Username: %s%n%s".formatted(update.getMessage().getFrom().getId(), update.getMessage().getFrom().getUserName(), update.getMessage().getText()), getTelegramService().creatorId());
-                    getTelegramService().getSilent().send("Спасибо за предоставленную обратную связь!", update.getMessage().getChatId());
+                    if (!update.getMessage().getText().isEmpty() && (update.getMessage().getText().charAt(0) != '/' || (update.getMessage().getText().charAt(0) == '/' && !getTelegramService().getAbilities().containsKey(StringUtils.strip(update.getMessage().getText(),"/"))))) {
+                        getTelegramService().getSilent().send("UserId: %d. Username: %s%n%s".formatted(update.getMessage().getFrom().getId(), update.getMessage().getFrom().getUserName(), update.getMessage().getText()), getTelegramService().creatorId());
+                        getTelegramService().getSilent().send("Спасибо за предоставленную обратную связь!", update.getMessage().getChatId());
+                    } else {
+                        getTelegramService().getSilent().send("Введено некорректное сообщение.", update.getMessage().getChatId());
+                    }
                 }, MESSAGE, REPLY, isReplyToBot(getTelegramService().getBotUsername()), isReplyToMessage(feedbackMessage))
                 .build();
     }
