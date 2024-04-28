@@ -8,11 +8,15 @@ import globalquake.telegram.data.TelegramClusterInfo;
 import globalquake.telegram.data.TelegramEarthquakeInfo;
 import globalquake.telegram.data.TelegramStationInfo;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public final class TelegramUtils {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.systemDefault());
+    private static final DecimalFormat df = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
     private TelegramUtils() {
     }
@@ -36,24 +40,24 @@ public final class TelegramUtils {
     }
 
     public static String generateEarthquakeMessage(TelegramEarthquakeInfo info, double distGCD, double pga, boolean test) {
-        String header = test ? "<b>Выдуманное землетрясение.</b>\n" : "<b>Землетрясение обнаружено.</b>\n";
+        String header = test ? "*Выдуманное землетрясение.*\n" : "*Землетрясение обнаружено.*\n";
         return  header +
-                "<b>" + "M%.1f".formatted(info.getMag()) + " " + info.getRegion() + "</b>\n" +
-                "Расстояние: %.1f км. Глубина: %.1f км.%n".formatted(distGCD, info.getDepth()) +
+                "*M" + df.format(info.getMag()) + " " + info.getRegion() + "*\n" +
+                "Расстояние: " + df.format(distGCD) + " км. Глубина: " + df.format(info.getDepth()) + " км.\n" +
                 "MMI: " + formatLevel(IntensityScales.MMI.getLevel(pga)) + " / Shindo: " + formatLevel(IntensityScales.SHINDO.getLevel(pga)) + "\n" +
                 "Время: " + info.getOriginDate() + "\n" +
                 "Класс: " + (info.getQuality().isEmpty() ? "?" : info.getQuality());
     }
 
     public static String generateClusterMessage(TelegramClusterInfo info, double distGCD) {
-        return "<b>Возможное землетрясение обнаружено.</b>\n" +
-                "<b>Уровень:" + info.getLevel() + ". Расстояние: " + "%.1f".formatted(distGCD) + " км.</b>\n";
+        return "*Возможное землетрясение обнаружено.*\n" +
+                "*Уровень:" + info.getLevel() + ". Расстояние: " + df.format(distGCD) + " км.*\n";
     }
 
     public static String generateStationMessage(String station, double intensity, double distGCD) {
-        return "<b>Высокий уровень датчика.</b>\n" +
-                "<b>" + station + "</b>\n" +
-                "<b>Уровень: %.1f. Расстояние: %.1f км.</b>%n".formatted(intensity, distGCD);
+        return "*Высокий уровень датчика.*\n" +
+                "*" + station + "*\n" +
+                "*Уровень: " + df.format(intensity) + ". Расстояние: " + df.format(distGCD) + " км.*\n";
     }
 
     public static String booleanToString(boolean boolValue) {
