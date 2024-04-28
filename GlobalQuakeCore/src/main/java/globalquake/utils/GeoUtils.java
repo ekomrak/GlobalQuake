@@ -117,7 +117,7 @@ public interface GeoUtils {
         double dlon = lon2 - lon1;
 
         // Haversine formula
-        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+        double a = FastMath.pow(FastMath.sin(dlat / 2), 2) + FastMath.cos(lat1) * FastMath.cos(lat2) * FastMath.pow(FastMath.sin(dlon / 2), 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return EARTH_RADIUS * c; // Angular distance in radians
@@ -148,13 +148,13 @@ public interface GeoUtils {
         alt1 += EARTH_RADIUS;
         alt2 += EARTH_RADIUS;
         double x1 = FastMath.sin(Math.toRadians(lon1)) * alt1 * FastMath.cos(Math.toRadians(lat1));
-        double z1 = -Math.cos(Math.toRadians(lon1)) * alt1 * FastMath.cos(Math.toRadians(lat1));
+        double z1 = -FastMath.cos(Math.toRadians(lon1)) * alt1 * FastMath.cos(Math.toRadians(lat1));
         double y1 = FastMath.sin(Math.toRadians(lat1)) * alt1;
 
         double x2 = FastMath.sin(Math.toRadians(lon2)) * alt2 * FastMath.cos(Math.toRadians(lat2));
         double z2 = -FastMath.cos(Math.toRadians(lon2)) * alt2 * FastMath.cos(Math.toRadians(lat2));
         double y2 = FastMath.sin(Math.toRadians(lat2)) * alt2;
-        return FastMath.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2));
+        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2));
     }
 
     static double getMaxPGA(double lat, double lon, double depth, double mag) {
@@ -169,7 +169,7 @@ public interface GeoUtils {
     }
 
     private static double pgaFunctionGen2(double mag, double distKm) {
-        return Math.pow(10, mag * 0.575) / (0.36 * Math.pow(distKm, 1.25 + mag / 22.0) + 10);
+        return FastMath.pow(10, mag * 0.575) / (0.36 * FastMath.pow(distKm, 1.25 + mag / 22.0) + 10);
     }
 
     @Deprecated
