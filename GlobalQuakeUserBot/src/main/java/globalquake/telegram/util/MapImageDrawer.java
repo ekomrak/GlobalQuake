@@ -7,7 +7,6 @@ import globalquake.core.Settings;
 import globalquake.core.earthquake.data.Cluster;
 import globalquake.core.earthquake.data.Earthquake;
 import globalquake.core.earthquake.data.Hypocenter;
-import globalquake.core.earthquake.data.MagnitudeReading;
 import globalquake.core.earthquake.quality.QualityClass;
 import globalquake.core.faults.Faults;
 import globalquake.core.geo.taup.TauPTravelTimeCalculator;
@@ -25,7 +24,6 @@ import globalquake.utils.Scale;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
