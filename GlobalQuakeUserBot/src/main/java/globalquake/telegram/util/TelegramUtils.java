@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public final class TelegramUtils {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.systemDefault());
-    private static final DecimalFormat df = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
     private TelegramUtils() {
     }
@@ -42,8 +42,8 @@ public final class TelegramUtils {
     public static String generateEarthquakeMessage(TelegramEarthquakeInfo info, double distGCD, double pga, boolean test) {
         String header = test ? "*Выдуманное землетрясение.*\n" : "*Землетрясение обнаружено.*\n";
         return  header +
-                "*M" + df.format(info.getMag()) + " " + info.getRegion() + "*\n" +
-                "Расстояние: " + df.format(distGCD) + " км. Глубина: " + df.format(info.getDepth()) + " км.\n" +
+                "*M" + DECIMAL_FORMAT.format(info.getMag()) + " " + info.getRegion() + "*\n" +
+                "Расстояние: " + DECIMAL_FORMAT.format(distGCD) + " км. Глубина: " + DECIMAL_FORMAT.format(info.getDepth()) + " км.\n" +
                 "MMI: " + formatLevel(IntensityScales.MMI.getLevel(pga)) + " / Shindo: " + formatLevel(IntensityScales.SHINDO.getLevel(pga)) + "\n" +
                 "Время: " + info.getOriginDate() + "\n" +
                 "Класс: " + (info.getQuality().isEmpty() ? "?" : info.getQuality());
@@ -51,13 +51,13 @@ public final class TelegramUtils {
 
     public static String generateClusterMessage(TelegramClusterInfo info, double distGCD) {
         return "*Возможное землетрясение обнаружено.*\n" +
-                "*Уровень:" + info.getLevel() + ". Расстояние: " + df.format(distGCD) + " км.*\n";
+                "*Уровень:" + info.getLevel() + ". Расстояние: " + DECIMAL_FORMAT.format(distGCD) + " км.*\n";
     }
 
     public static String generateStationMessage(String station, double intensity, double distGCD) {
         return "*Высокий уровень датчика.*\n" +
                 "*" + station + "*\n" +
-                "*Уровень: " + df.format(intensity) + ". Расстояние: " + df.format(distGCD) + " км.*\n";
+                "*Уровень: " + DECIMAL_FORMAT.format(intensity) + ". Расстояние: " + DECIMAL_FORMAT.format(distGCD) + " км.*\n";
     }
 
     public static String booleanToString(boolean boolValue) {

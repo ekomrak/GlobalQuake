@@ -88,7 +88,7 @@ public class MapImageDrawer {
         }
         renderer.updateCamera(new RenderProperties(width, height, user.getHomeLat(), user.getHomeLon(), scroll));
         featureHomeLoc.setPlaceholders(user.getHomeLat(), user.getHomeLon());
-        if (user.getShowSmallCities()) {
+        if (Boolean.TRUE.equals(user.getShowSmallCities())) {
             featureCities.setMinPopulation(1);
         } else {
             featureCities.setMinPopulation(200000);
@@ -133,7 +133,7 @@ public class MapImageDrawer {
         g.setFont(new Font("Calibri", Font.BOLD, 24));
         g.setColor(Color.gray);
 
-        String str = "https://t.me/%s".formatted(Settings.telegramBotUsername);
+        String str = "https://t.me/" + Settings.telegramBotUsername;
         g.drawString(str, width - g.getFontMetrics().stringWidth(str) - 6, height - g.getFontMetrics().getHeight() - 15);
 
         g.dispose();
@@ -179,7 +179,7 @@ public class MapImageDrawer {
         String quakeString = null;
 
         if (quake != null) {
-            quakeString = "%s Earthquake detected".formatted(quake.magnitudeFormatted());
+            quakeString = quake.magnitudeFormatted() + " Earthquake detected";
             xOffset = getIntensityBoxWidth(g) + 4;
             g.setFont(regionFont);
             baseWidth = Math.max(baseWidth + xOffset, g.getFontMetrics().stringWidth(quake.getRegion()) + xOffset + 10);
@@ -233,21 +233,17 @@ public class MapImageDrawer {
                     g.setColor(isDark(levelColor) ? Color.white : Color.black);
                     g.drawString(quakeString, x + 3, y + 21);
 
-                    String sim = GlobalQuake.instance.isSimulation() ? " (Simulated)":"";
-
                     g.setColor(Color.white);
                     g.setFont(regionFont);
                     g.drawString(quake.getRegion(), x + xOffset + 3, y + 44);
 
                     g.setColor(GlobalQuake.instance.isSimulation() ? Color.orange : Color.white);
-                    g.drawString("%s%s".formatted(Settings.formatDateTime(Instant.ofEpochMilli(quake.getOrigin())), sim), x + xOffset + 3, y + 66);
+                    g.drawString(Settings.formatDateTime(Instant.ofEpochMilli(quake.getOrigin())), x + xOffset + 3, y + 66);
 
                     g.setColor(Color.white);
                     g.setFont(new Font("Calibri", Font.BOLD, 16));
                     g.drawString("lat: " + f4d.format(quake.getLat()) + " lon: " + f4d.format(quake.getLon()), x + xOffset + 3, y + 85);
-                    g.drawString("Depth: %s %s".formatted(
-                                    Settings.getSelectedDistanceUnit().format(quake.getDepth(), 1),
-                                    hypocenter.depthFixed ? "(fixed)" : ""),
+                    g.drawString("Depth: " + Settings.getSelectedDistanceUnit().format(quake.getDepth(), 1) + " " + (hypocenter.depthFixed ? "(fixed)" : ""),
                             x + xOffset + 3, y + 104);
                     str = "Revision no. " + quake.getRevisionID();
                     g.drawString(str, x + xOffset + 3, y + 123);
@@ -348,7 +344,7 @@ public class MapImageDrawer {
 
         drawIntensityBox(g, level, x + 4, y + 30, height - 34);
         g.setFont(new Font("Calibri", Font.BOLD, 16));
-        drawAccuracyBox(g, true, "", x + width + 2, y + 46, "%s".formatted(quake.magnitudeFormatted()), Scale.getColorEasily(quake.getMag() / 8.0));
+        drawAccuracyBox(g, true, "", x + width + 2, y + 46, quake.magnitudeFormatted(), Scale.getColorEasily(quake.getMag() / 8.0));
 
         int intW = getIntensityBoxWidth(g);
         int _x = x + intW + 8;
@@ -356,13 +352,13 @@ public class MapImageDrawer {
         g.setColor(Color.white);
         g.setFont(new Font("Calibri", Font.BOLD, 17));
 
-        str = "Distance: %s".formatted(Settings.getSelectedDistanceUnit().format(distGC, 1));
+        str = "Distance: " + Settings.getSelectedDistanceUnit().format(distGC, 1);
         g.drawString(str, _x, y + 48);
-        str = "Depth: %s".formatted(Settings.getSelectedDistanceUnit().format(quake.getDepth(), 1));
+        str = "Depth: " + Settings.getSelectedDistanceUnit().format(quake.getDepth(), 1);
         g.drawString(str, _x, y + 72);
 
-        drawAccuracyBox(g, false, "P Wave arrival: ", x + intW + 15, y + 96, "%ds".formatted(secondsP), secondsP == 0 ? Color.gray : new Color(0, 100, 220));
-        drawAccuracyBox(g, false, "S Wave arrival: ", x + intW + 15, y + 122, "%ds".formatted(secondsS), secondsS == 0 ? Color.gray : new Color(255, 50, 0));
+        drawAccuracyBox(g, false, "P Wave arrival: ", x + intW + 15, y + 96, secondsP + "s", secondsP == 0 ? Color.gray : new Color(0, 100, 220));
+        drawAccuracyBox(g, false, "S Wave arrival: ", x + intW + 15, y + 122, secondsS + "s", secondsS == 0 ? Color.gray : new Color(255, 50, 0));
 
         Path2D path = new Path2D.Double();
         int s = 70;

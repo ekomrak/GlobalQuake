@@ -111,7 +111,7 @@ public class TelegramService extends AbilityBot {
 
     private void processClusterCreate(ClusterCreateEvent event) {
         TelegramClusterInfo info = new TelegramClusterInfo(event.cluster());
-        GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().forEach(telegramUser -> {
+        GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().parallelStream().forEach(telegramUser -> {
             double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
             if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                 try {
@@ -138,7 +138,7 @@ public class TelegramService extends AbilityBot {
 
     private void processQuakeCreation(QuakeCreateEvent event) {
         TelegramEarthquakeInfo info = new TelegramEarthquakeInfo(event.earthquake());
-        GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().forEach(telegramUser -> {
+        GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().parallelStream().forEach(telegramUser -> {
             double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
             double dist = GeoUtils.geologicalDistance(info.getLat(), info.getLon(), -info.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
             double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
@@ -171,7 +171,7 @@ public class TelegramService extends AbilityBot {
         if (info != null) {
             boolean isUpdated = !info.equalsTo(event.earthquake());
             info.updateWith(event.earthquake());
-            GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().forEach(telegramUser -> {
+            GlobalQuakeClient.instance.getDatabaseService().listUsersWithEarthquakeAlert().parallelStream().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
                 double dist = GeoUtils.geologicalDistance(info.getLat(), info.getLon(), -info.getDepth(), telegramUser.getHomeLat(), telegramUser.getHomeLon(), 0);
                 double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
@@ -210,7 +210,7 @@ public class TelegramService extends AbilityBot {
         if (info != null) {
             boolean isUpdated = !info.equalsTo(event.cluster());
             info.updateWith(event.cluster());
-            GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().forEach(telegramUser -> {
+            GlobalQuakeClient.instance.getDatabaseService().listUsersWithClusterAlert().parallelStream().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
                 if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
@@ -300,7 +300,7 @@ public class TelegramService extends AbilityBot {
         if (info != null) {
             boolean isUpdated = !info.equalsTo(clientStation);
             info.updateWith(clientStation);
-            GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().forEach(telegramUser -> {
+            GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().parallelStream().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
 
                 if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
@@ -330,7 +330,7 @@ public class TelegramService extends AbilityBot {
             });
         } else {
             TelegramStationInfo newInfo = new TelegramStationInfo(clientStation);
-            GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().forEach(telegramUser -> {
+            GlobalQuakeClient.instance.getDatabaseService().listUsersWithStationAlert().parallelStream().forEach(telegramUser -> {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
                 if (TelegramUtils.canSend(newInfo, telegramUser, distGCD)) {
                     try {

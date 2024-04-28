@@ -11,6 +11,7 @@ import globalquake.db.entities.TelegramUser;
 import globalquake.telegram.data.TelegramEarthquakeInfo;
 import globalquake.ui.globalquake.feature.FeatureEarthquake;
 import globalquake.utils.Scale;
+import org.apache.commons.math3.util.FastMath;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -160,7 +161,7 @@ public final class EventImageDrawer {
     private static void drawDetails(Graphics2D graphics, double centerLat, double centerLon, LocalDateTime origin, double eventLat, double eventLon, double depth, double magnitude) {
         graphics.setFont(new Font("Calibri", Font.PLAIN, 13));
 
-        String str = "M%.1f  %s".formatted(magnitude, Settings.getSelectedDistanceUnit().format(depth, 1));
+        String str = "M" + TelegramUtils.DECIMAL_FORMAT.format(magnitude) + Settings.getSelectedDistanceUnit().format(depth, 1);
         double x = getX(eventLon, centerLon);
         double y = getY(eventLat, centerLat) - 40;
         graphics.setColor(FeatureEarthquake.getCrossColor(magnitude));
@@ -169,7 +170,7 @@ public final class EventImageDrawer {
         y+=15;
 
         graphics.setColor(Color.white);
-        str = "%s".formatted(Settings.formatDateTime(origin));
+        str = Settings.formatDateTime(origin);
         graphics.drawString(str, (int) (x - graphics.getFontMetrics().stringWidth(str) * 0.5), (int) y);
     }
 
@@ -182,7 +183,7 @@ public final class EventImageDrawer {
     }
 
     private static double getY(double lat, double centerLat) {
-        return (centerLat - lat) / (scroll / (300 - 200 * Math.cos(0.5 * Math.toRadians(centerLat + lat))))
+        return (centerLat - lat) / (scroll / (300 - 200 * FastMath.cos(0.5 * Math.toRadians(centerLat + lat))))
                 + (HEIGHT * 0.5);
     }
 }
