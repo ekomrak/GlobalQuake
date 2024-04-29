@@ -157,7 +157,7 @@ public class FeatureShakemap extends RenderFeature<IntensityHex> {
         Color col = level.getColor();
 
         graphics.setStroke(new BasicStroke(1.0f));
-        graphics.setColor(new Color(col.getRed(), col.getGreen(), col.getBlue(), 100));
+        graphics.setColor(level.getColorAlpha100());
         graphics.fill(elementHex.getShape());
     }
 

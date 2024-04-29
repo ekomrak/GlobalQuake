@@ -22,11 +22,9 @@ import globalquake.telegram.util.MapImageDrawer;
 import globalquake.telegram.util.TelegramUtils;
 import globalquake.utils.GeoUtils;
 import globalquake.utils.NamedThreadFactory;
-import io.github.resilience4j.core.functions.CheckedRunnable;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
-import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.telegram.telegrambots.abilitybots.api.bot.AbilityBot;
@@ -282,6 +280,10 @@ public class TelegramService extends AbilityBot {
 
     public Cache<Long, SettingsState> getUserState() {
         return userState;
+    }
+
+    public RateLimiter getRateLimiter() {
+        return rateLimiter;
     }
 
     public void sendTestEarthquake(TelegramUser telegramUser) {
