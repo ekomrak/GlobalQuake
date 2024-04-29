@@ -44,6 +44,16 @@
 		<JDA.version>5.0.0-beta.23</JDA.version> <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
 		<junit.version>4.13.2</junit.version> <!-- https://mvnrepository.com/artifact/junit/junit -->
 
+		<google.cloud.version>26.37.0</google.cloud.version> <!-- https://mvnrepository.com/artifact/com.google.cloud/libraries-bom -->
+		<telegrambots.version>7.2.1</telegrambots.version> <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-abilities -->
+		<freetts.version>1.2.2</freetts.version> <!-- https://mvnrepository.com/artifact/net.sf.sociaal/freetts -->
+		<caffeine.version>3.1.8</caffeine.version> <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+		<jdbi3.version>3.45.1</jdbi3.version> <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3-bom -->
+		<HikariCP.version>5.1.0</HikariCP.version> <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+		<postgresql.version>42.7.3</postgresql.version> <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<micrometer.version>1.12.5</micrometer.version> <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-influx -->
+		<resilience4j.version>2.2.0</resilience4j.version> <!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-ratelimiter -->
+
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version> <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
 	</properties>
 
@@ -57,6 +67,21 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>libraries-bom</artifactId>
+				<version>${google.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jdbi</groupId>
+				<artifactId>jdbi3-bom</artifactId>
+				<version>${jdbi3.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>GlobalQuakeAPI</artifactId>
@@ -162,6 +187,48 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.telegram</groupId>
+				<artifactId>telegrambots-client</artifactId>
+				<version>${telegrambots.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.telegram</groupId>
+				<artifactId>telegrambots-abilities</artifactId>
+				<version>${telegrambots.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.sociaal</groupId>
+				<artifactId>freetts</artifactId>
+				<version>${freetts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.ben-manes.caffeine</groupId>
+				<artifactId>caffeine</artifactId>
+				<version>${caffeine.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.zaxxer</groupId>
+				<artifactId>HikariCP</artifactId>
+				<version>${HikariCP.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<scope>runtime</scope>
+				<version>${postgresql.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-registry-influx</artifactId>
+				<version>${micrometer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.resilience4j</groupId>
+				<artifactId>resilience4j-ratelimiter</artifactId>
+				<version>${resilience4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
