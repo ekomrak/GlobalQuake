@@ -14,11 +14,16 @@ import globalquake.utils.Scale;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 
 public class Main {
     private static ApplicationErrorHandler errorHandler;
-    public static final File MAIN_FOLDER = new File("./.GlobalQuakeData/");
+    public static final File MAIN_FOLDER = new File("./.GlobalQuakeUserBotData/");
 
     public static void main(String[] args) {
         initErrorHandler();
@@ -47,6 +52,22 @@ public class Main {
     private static void initMainDirectory() {
         if (!MAIN_FOLDER.exists() && (!MAIN_FOLDER.mkdirs())) {
             getErrorHandler().handleException(new FatalIOException("Unable to create main directory!", null));
+        }
+        try {
+            Path exportPath = Paths.get(new File(MAIN_FOLDER, "templates/").getAbsolutePath());
+            if (!Files.exists(exportPath)) {
+                Files.createDirectory(exportPath);
+            }
+            Path exportedFilePath = exportPath.resolve("earthquakes_template.xlsx");
+            if (!Files.exists(exportedFilePath)) {
+                InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("templates/earthquakes_template.xlsx");
+                if (is != null) {
+                    Files.copy(is, exportedFilePath, StandardCopyOption.REPLACE_EXISTING);
+                    is.close();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

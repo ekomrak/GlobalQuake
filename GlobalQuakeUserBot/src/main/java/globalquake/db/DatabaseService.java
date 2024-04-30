@@ -18,13 +18,13 @@ public class DatabaseService {
     private final Cache<Long, TelegramUser> usersCache;
     private final Cache<UsersCacheListType, List<TelegramUser>> usersListsCache;
     private final Cache<CountCacheListType, Integer> countCache;
-    //private final Cache<EarthquakeCacheListType, List<ArchivedEarthquake>> earthquakeListCache;
+    private final Cache<EarthquakeCacheListType, List<ArchivedEarthquake>> earthquakeListCache;
 
     public DatabaseService() {
         usersCache = Caffeine.newBuilder().build();
         usersListsCache = Caffeine.newBuilder().build();
         countCache = Caffeine.newBuilder().build();
-        //earthquakeListCache = Caffeine.newBuilder().build();
+        earthquakeListCache = Caffeine.newBuilder().build();
         HikariDataSourceProvider hikariDataSourceProvider = new HikariDataSourceProvider();
         jdbi = Jdbi.create(hikariDataSourceProvider.getHikariDataSource()).installPlugin(new SqlObjectPlugin()).installPlugin(new CaffeineCachePlugin());
     }
@@ -74,6 +74,11 @@ public class DatabaseService {
 
     public void insertEarthquake(ArchivedEarthquake earthquake) {
         jdbi.useExtension(EarthquakeDao.class, extension -> extension.insertEarthquake(earthquake));
+        earthquakeListCache.invalidate(EarthquakeCacheListType.ALL);
+    }
+
+    public List<ArchivedEarthquake> listAllEarthquakes() {
+        return earthquakeListCache.get(EarthquakeCacheListType.ALL, earthquakeCacheListType -> jdbi.withExtension(EarthquakeDao.class, EarthquakeDao::listAllEarthquakes));
     }
 
     public List<ArchivedEarthquake> listLastEarthquakes(double latitude, double longitude, double radius, int limit) {

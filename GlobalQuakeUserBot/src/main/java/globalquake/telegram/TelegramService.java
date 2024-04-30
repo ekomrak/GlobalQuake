@@ -120,7 +120,8 @@ public class TelegramService extends AbilityBot {
                 new PrintUserInfoAbility(this),
                 new ProcessInputAbility(this),
                 new ListEarthquakesAbility(this),
-                new DrawStationsGraphAbility(this));
+                new DrawStationsGraphAbility(this),
+                new DataAbility(this));
     }
 
     private void processClusterCreate(ClusterCreateEvent event) {
