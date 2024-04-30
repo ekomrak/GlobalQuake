@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class Main {
     private static ApplicationErrorHandler errorHandler;
-    public static final File MAIN_FOLDER = new File("./.GlobalQuakeData/");
+    public static final File MAIN_FOLDER = new File("./.GlobalQuakeGroupBotData/");
 
     public static void main(String[] args) {
         initErrorHandler();
