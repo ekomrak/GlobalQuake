@@ -200,7 +200,7 @@ public class TelegramService extends AbilityBot {
                 if (TelegramUtils.canSend(info, telegramUser, distGCD, pga)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
                         if (isUpdated) {
-                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), telegramUser.getChatId()));
+                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), telegramUser));
                             restrictedCall.run();
                         }
                     } else {
@@ -240,7 +240,7 @@ public class TelegramService extends AbilityBot {
                 if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
                         if (isUpdated) {
-                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateClusterMessage(info, distGCD), telegramUser.getChatId()));
+                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateClusterMessage(info, distGCD), telegramUser));
                             restrictedCall.run();
                         }
                     } else {
@@ -343,7 +343,7 @@ public class TelegramService extends AbilityBot {
                     if (info.getMessages().containsKey(telegramUser.getChatId())) {
                         if (isUpdated) {
                             //TODO: Temporary disabled
-                            //Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), telegramUser.getChatId()));
+                            //Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> updateMessage(info.getMessages().get(telegramUser.getChatId()), TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), telegramUser));
                             //restrictedCall.run();
                         }
                     } else {
@@ -430,12 +430,16 @@ public class TelegramService extends AbilityBot {
         }
     }
 
-    private void updateMessage(Integer messageId, String text, Long chatId) {
+    private void updateMessage(Integer messageId, String text, TelegramUser user) {
         if (messageId != null) {
             try {
-                telegramClient.execute(EditMessageText.builder().chatId(chatId).messageId(messageId).text(text).parseMode(ParseMode.MARKDOWN).build());
+                telegramClient.execute(EditMessageText.builder().chatId(user.getChatId()).messageId(messageId).text(text).parseMode(ParseMode.MARKDOWN).build());
             } catch (TelegramApiException e) {
-                Logger.error("Update: ChatId: %d".formatted(chatId));
+                if (e.getMessage().contains("[403] Forbidden: bot was blocked by the user") || e.getMessage().contains("[403] Forbidden: user is deactivated")) {
+                    user.setEnabled(false);
+                    GlobalQuakeClient.instance.getDatabaseService().updateTelegramUser(user);
+                }
+                Logger.error("Update: ChatId: %d".formatted(user.getChatId()));
                 Logger.error(e);
             }
         }
