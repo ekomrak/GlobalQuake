@@ -55,8 +55,10 @@
 		<micrometer.version>1.12.5</micrometer.version> <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-influx -->
 		<resilience4j.version>2.2.0</resilience4j.version> <!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-ratelimiter -->
 		<jxls.version>3.0.0</jxls.version> <!-- https://mvnrepository.com/artifact/org.jxls/jxls-poi -->
+		<apache.poi.version>5.2.5</apache.poi.version> <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 
-		<maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version> <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version> <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+		<!--<maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>-->
 	</properties>
 
 	<repositories>
@@ -247,17 +249,17 @@
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>
-				<version>5.2.5</version>
+				<version>${apache.poi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
-				<version>5.2.5</version>
+				<version>${apache.poi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml-lite</artifactId>
-				<version>5.2.5</version>
+				<version>${apache.poi.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
