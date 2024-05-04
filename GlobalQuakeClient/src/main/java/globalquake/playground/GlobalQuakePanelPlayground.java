@@ -166,8 +166,8 @@ public class GlobalQuakePanelPlayground extends GlobalQuakePanel {
     }
 
     @Override
-    public void paint(Graphics gr) {
-        super.paint(gr);
+    public void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
         var g = ((Graphics2D) gr);
         String str = ((GlobalQuakePlayground) GlobalQuake.getInstance()).getWatermark();
         g.setColor(new Color(255, 100, 0, (int) ((1.0 + Math.sin(System.currentTimeMillis() / 300.0)) * 40.0 + 80)));

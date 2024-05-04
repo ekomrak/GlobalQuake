@@ -112,8 +112,8 @@ public class ArchivedQuakePanel extends GlobePanel {
 
     @SuppressWarnings("UnusedAssignment")
     @Override
-    public void paint(Graphics gr) {
-        super.paint(gr);
+    public void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
 
         Graphics2D g = (Graphics2D) gr;
         g.setColor(Color.white);

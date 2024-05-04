@@ -55,8 +55,8 @@ public class StationSelectFrame extends GQFrame implements ActionListener {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         stationSelectPanel = new StationSelectPanel(this, manager) {
             @Override
-            public void paint(Graphics gr) {
-                super.paint(gr);
+            public void paintComponent(Graphics gr) {
+                super.paintComponent(gr);
                 centerPanel.repaint();
             }
         };

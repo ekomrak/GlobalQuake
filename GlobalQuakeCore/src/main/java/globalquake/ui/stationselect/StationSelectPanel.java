@@ -146,8 +146,8 @@ public class StationSelectPanel extends GlobePanel {
     }
 
     @Override
-    public void paint(Graphics gr) {
-        super.paint(gr);
+    public void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
         Graphics2D g = (Graphics2D) gr;
         if (stationSelectFrame.getDragMode() == DragMode.NONE) {
             return;

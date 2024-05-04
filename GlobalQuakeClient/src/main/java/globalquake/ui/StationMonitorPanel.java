@@ -271,8 +271,8 @@ public class StationMonitorPanel extends JPanel {
     }
 
     @Override
-    public void paint(Graphics gr) {
-        super.paint(gr);
+    public void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
         Graphics2D g = (Graphics2D) gr;
         g.drawImage(image, 0, 0, null);
     }

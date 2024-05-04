@@ -27,8 +27,8 @@ public class GlobalQuakeFrame extends GQFrame {
         panel = new GlobalQuakePanel(this) {
 
             @Override
-            public void paint(Graphics gr) {
-                super.paint(gr);
+            public void paintComponent(Graphics gr) {
+                super.paintComponent(gr);
                 Graphics2D g = (Graphics2D) gr;
                 g.setColor(_containsListToggle ? Color.gray : Color.lightGray);
                 g.fillRect(getWidth() - 20, 0, 20, 30);

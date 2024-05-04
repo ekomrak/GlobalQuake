@@ -113,8 +113,8 @@ public class EarthquakeListPanel extends JPanel {
     }
 
     @Override
-    public void paint(Graphics gr) {
-        super.paint(gr);
+    public void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
 
         if (getWidth() <= 60) {
             return;

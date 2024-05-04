@@ -48,8 +48,8 @@ public class GlobePanelDebug extends GQFrame {
         panel = new GlobePanel(50, 17) {
 
             @Override
-            public void paint(Graphics gr) {
-                super.paint(gr);
+            public void paintComponent(Graphics gr) {
+                super.paintComponent(gr);
                 Graphics2D g = (Graphics2D) gr;
 
                 g.setColor(_containsListToggle ? Color.gray : Color.lightGray);

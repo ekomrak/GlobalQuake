@@ -106,8 +106,8 @@ public class StationCountPanel extends JPanel {
             }
 
             @Override
-            public void paint(Graphics gr) {
-                super.paint(gr);
+            public void paintComponent(Graphics gr) {
+                super.paintComponent(gr);
                 Graphics2D g = (Graphics2D) gr;
                 int size = Math.min(getWidth(), getHeight()) - 1;
 
