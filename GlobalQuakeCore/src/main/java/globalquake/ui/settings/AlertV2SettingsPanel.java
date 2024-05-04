@@ -30,6 +30,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
     private JTextField telegramChatId;
     private JTextField telegramMessageThreadId;
     private JTextField telegramCreatorId;
+    private JTextField telegramLogoText;
 
     private JCheckBox enableTelegramEarthquakeAlert;
     private JCheckBox enableSpeechEarthquakeAlert;
@@ -136,11 +137,11 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         telegramBotPanel.setBorder(BorderFactory.createTitledBorder("Telegram Bot Settings"));
 
         telegramBotPanel.add(new JLabel("Telegram Bot Token: ", SwingConstants.LEFT), createGbc(0, 0));
-        telegramBotToken = new JTextField(String.format("%s", Settings.telegramBotToken));
+        telegramBotToken = new JTextField(Settings.telegramBotToken);
         telegramBotPanel.add(telegramBotToken, createGbc(1, 0));
 
         telegramBotPanel.add(new JLabel("Telegram Bot Username: ", SwingConstants.LEFT), createGbc(0, 1));
-        telegramBotUsername = new JTextField(String.format("%s", Settings.telegramBotUsername));
+        telegramBotUsername = new JTextField(Settings.telegramBotUsername);
         telegramBotPanel.add(telegramBotUsername, createGbc(1, 1));
 
         JTextArea warning = new JTextArea("Warning: Restart of the application is required after the token or username update!");
@@ -150,7 +151,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         telegramBotPanel.add(warning, createGbc(2));
 
         telegramBotPanel.add(new JLabel("Telegram Chat Id: ", SwingConstants.LEFT), createGbc(0, 3));
-        telegramChatId = new JTextField(String.format("%s", Settings.telegramChatId));
+        telegramChatId = new JTextField(Settings.telegramChatId);
         telegramBotPanel.add(telegramChatId, createGbc(1, 3));
 
         telegramBotPanel.add(new JLabel("Telegram Message Thread Id: ", SwingConstants.LEFT), createGbc(0, 4));
@@ -160,6 +161,10 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         telegramBotPanel.add(new JLabel("Telegram Super Admin Id: ", SwingConstants.LEFT), createGbc(0, 5));
         telegramCreatorId = new JTextField(String.format("%s", Settings.telegramCreatorId));
         telegramBotPanel.add(telegramCreatorId, createGbc(1, 5));
+
+        telegramBotPanel.add(new JLabel("Telegram Logo Text: ", SwingConstants.LEFT), createGbc(0, 6));
+        telegramLogoText = new JTextField(Settings.telegramLogoText);
+        telegramBotPanel.add(telegramLogoText, createGbc(1, 6));
 
         add(telegramBotPanel);
     }
@@ -337,6 +342,7 @@ public class AlertV2SettingsPanel extends SettingsPanel {
         Settings.telegramChatId = telegramChatId.getText();
         Settings.telegramMessageThreadId = parseInt(telegramMessageThreadId.getText(), "Telegram message thread id", 0, Integer.MAX_VALUE);
         Settings.telegramCreatorId = parseInt(telegramCreatorId.getText(), "Telegram super admin id", 0, Integer.MAX_VALUE);
+        Settings.telegramLogoText = telegramLogoText.getText();
 
         Settings.enableTelegramEarthquakeAlert = enableTelegramEarthquakeAlert.isSelected();
         Settings.enableSpeechEarthquakeAlert = enableSpeechEarthquakeAlert.isSelected();

@@ -21,6 +21,7 @@ import globalquake.ui.globe.RenderProperties;
 import globalquake.ui.globe.feature.FeatureGeoPolygons;
 import globalquake.utils.GeoUtils;
 import globalquake.utils.Scale;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -115,6 +116,13 @@ public class MapImageDrawer {
             }
 
             g.drawString(str, width - g.getFontMetrics().stringWidth(str) - 6, height - 9);
+        }
+
+        if (StringUtils.isNoneEmpty(Settings.telegramLogoText)) {
+            g.setFont(new Font("Calibri", Font.BOLD, 24));
+            g.setColor(Color.gray);
+
+            g.drawString(Settings.telegramLogoText, width - g.getFontMetrics().stringWidth(Settings.telegramLogoText) - 6, height - g.getFontMetrics().getHeight() - 15);
         }
 
         g.dispose();

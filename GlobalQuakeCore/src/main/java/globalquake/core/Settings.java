@@ -197,6 +197,7 @@ public final class Settings {
     public static String telegramChatId;
     public static Integer telegramMessageThreadId;
     public static Integer telegramCreatorId;
+    public static String telegramLogoText;
 
     public static Boolean enableTelegramEarthquakeAlert;
     public static Boolean enableTelegramEarthquakeLocation;
@@ -413,6 +414,7 @@ public final class Settings {
         loadProperty("telegramChatId", "");
         loadProperty("telegramMessageThreadId", "0");
         loadProperty("telegramCreatorId", "0");
+        loadProperty("telegramLogoText", "");
 
         loadProperty("enableTelegramEarthquakeAlert", "false");
         loadProperty("enableTelegramEarthquakeLocation", "false");
