@@ -10,6 +10,7 @@ import globalquake.core.faults.Faults;
 import globalquake.core.regions.Regions;
 import globalquake.intensity.ShakeMap;
 import globalquake.utils.Scale;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.io.File;
@@ -18,12 +19,18 @@ import java.io.IOException;
 
 public class Main {
     private static ApplicationErrorHandler errorHandler;
-    public static final File MAIN_FOLDER = new File("./.GlobalQuakeGroupBotData/");
 
     public static void main(String[] args) {
+        String gqPath;
+        if (args.length < 1 || StringUtils.isEmpty(args[0])) {
+            gqPath = "./";
+        } else {
+            gqPath = args[0];
+        }
+        File gqMainFolder = new File(gqPath, ".GlobalQuakeGroupBotData");
         initErrorHandler();
-        initMainDirectory();
-        GlobalQuake.prepare(MAIN_FOLDER, getErrorHandler());
+        initMainDirectory(gqMainFolder);
+        GlobalQuake.prepare(gqMainFolder, getErrorHandler());
 
         try {
             Regions.init();
@@ -44,8 +51,8 @@ public class Main {
         }
     }
 
-    private static void initMainDirectory() {
-        if (!MAIN_FOLDER.exists() && (!MAIN_FOLDER.mkdirs())) {
+    private static void initMainDirectory(File mainFolder) {
+        if (!mainFolder.exists() && (!mainFolder.mkdirs())) {
             getErrorHandler().handleException(new FatalIOException("Unable to create main directory!", null));
         }
     }
