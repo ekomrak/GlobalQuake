@@ -130,19 +130,19 @@ public class TelegramService extends AbilityBot {
             double distGCD = GeoUtils.greatCircleDistance(info.getLat(), info.getLon(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
             if (TelegramUtils.canSend(info, telegramUser, distGCD)) {
                 try {
-                    InputFile inputFile = null;
-                    boolean sendAsAPhoto = true;
+                    InputFile inputImageFile;
+                    InputFile inputMapFile;
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingImage())) {
-                        inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_" + System.currentTimeMillis() + ".png");
-                        sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                        inputImageFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_" + System.currentTimeMillis() + ".png");
+                    } else {
+                        inputImageFile = null;
                     }
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingMap())) {
-                        inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_" + System.currentTimeMillis() + ".png");
-                        sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                        inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_" + System.currentTimeMillis() + ".png");
+                    } else {
+                        inputMapFile = null;
                     }
-                    InputFile finalInputFile = inputFile;
-                    boolean finalSendAsAPhoto = sendAsAPhoto;
-                    Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), finalInputFile, finalSendAsAPhoto));
+                    Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), inputImageFile, inputMapFile));
                     restrictedCall.run();
                 } catch (IOException e) {
                     Logger.error(e);
@@ -163,19 +163,19 @@ public class TelegramService extends AbilityBot {
 
             if (TelegramUtils.canSend(info, telegramUser, distGCD, pga)) {
                 try {
-                    InputFile inputFile = null;
-                    boolean sendAsAPhoto = true;
+                    InputFile inputImageFile;
+                    InputFile inputMapFile;
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                        inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_" + System.currentTimeMillis() + ".png");
-                        sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                        inputImageFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_" + System.currentTimeMillis() + ".png");
+                    } else {
+                        inputImageFile = null;
                     }
                     if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
-                        inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_" + System.currentTimeMillis() + ".png");
-                        sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                        inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_" + System.currentTimeMillis() + ".png");
+                    } else {
+                        inputMapFile = null;
                     }
-                    InputFile finalInputFile = inputFile;
-                    boolean finalSendAsAPhoto = sendAsAPhoto;
-                    Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), finalInputFile, finalSendAsAPhoto));
+                    Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), inputImageFile, inputMapFile));
                     restrictedCall.run();
                 } catch (IOException e) {
                     Logger.error(e);
@@ -205,19 +205,19 @@ public class TelegramService extends AbilityBot {
                         }
                     } else {
                         try {
-                            InputFile inputFile = null;
-                            boolean sendAsAPhoto = true;
+                            InputFile inputImageFile;
+                            InputFile inputMapFile;
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                                inputImageFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, event.earthquake().getCluster(), event.earthquake().getHypocenter()), "Earthquake_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputImageFile = null;
                             }
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
-                                inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                                inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Earthquake_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputMapFile = null;
                             }
-                            InputFile finalInputFile = inputFile;
-                            boolean finalSendAsAPhoto = sendAsAPhoto;
-                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), finalInputFile, finalSendAsAPhoto));
+                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, info, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga), info.getLat(), info.getLon(), inputImageFile, inputMapFile));
                             restrictedCall.run();
                         } catch (IOException e) {
                             Logger.error(e);
@@ -245,19 +245,19 @@ public class TelegramService extends AbilityBot {
                         }
                     } else {
                         try {
-                            InputFile inputFile = null;
-                            boolean sendAsAPhoto = true;
+                            InputFile inputImageFile;
+                            InputFile inputMapFile;
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingImage())) {
-                                inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                                inputImageFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, info.getLat(), info.getLon()), "Cluster_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputImageFile = null;
                             }
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramPossibleShakingMap())) {
-                                inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                                inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Cluster_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputMapFile = null;
                             }
-                            InputFile finalInputFile = inputFile;
-                            boolean finalSendAsAPhoto = sendAsAPhoto;
-                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), finalInputFile, finalSendAsAPhoto));
+                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.CLUSTER, telegramUser, info, TelegramUtils.generateClusterMessage(info, distGCD), info.getLat(), info.getLon(), inputImageFile, inputMapFile));
                             restrictedCall.run();
                         } catch (IOException e) {
                             Logger.error(e);
@@ -301,19 +301,19 @@ public class TelegramService extends AbilityBot {
         double pga = GeoUtils.pgaFunction(info.getMag(), dist, info.getDepth());
 
         try {
-            InputFile inputFile = null;
-            boolean sendAsAPhoto = true;
+            InputFile inputImageFile;
+            InputFile inputMapFile;
             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeImage())) {
-                inputFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, fakeCluster, fakeHypocenter), "Fake_Earthquake_" + System.currentTimeMillis() + ".png");
-                sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                inputImageFile = new InputFile(EventImageDrawer.drawEarthquakeImage(telegramUser, info, fakeCluster, fakeHypocenter), "Fake_Earthquake_" + System.currentTimeMillis() + ".png");
+            } else {
+                inputImageFile = null;
             }
             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramEarthquakeMap())) {
-                inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Fake_Earthquake_" + System.currentTimeMillis() + ".png");
-                sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Fake_Earthquake_" + System.currentTimeMillis() + ".png");
+            } else {
+                inputMapFile = null;
             }
-            InputFile finalInputFile = inputFile;
-            boolean finalSendAsAPhoto = sendAsAPhoto;
-            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, null, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga, true), info.getLat(), info.getLon(), finalInputFile, finalSendAsAPhoto));
+            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.EARTHQUAKE, telegramUser, null, TelegramUtils.generateEarthquakeMessage(info, distGCD, pga, true), info.getLat(), info.getLon(), inputImageFile, inputMapFile));
             restrictedCall.run();
         } catch (IOException e) {
             Logger.error(e);
@@ -348,19 +348,19 @@ public class TelegramService extends AbilityBot {
                         }
                     } else {
                         try {
-                            InputFile inputFile = null;
-                            boolean sendAsAPhoto = true;
+                            InputFile inputImageFile;
+                            InputFile inputMapFile;
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramStationHighIntensityImage())) {
-                                inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, clientStation.getLatitude(), clientStation.getLongitude()), "Station_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                                inputImageFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, clientStation.getLatitude(), clientStation.getLongitude()), "Station_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputImageFile = null;
                             }
                             if (Boolean.TRUE.equals(telegramUser.getEnableTelegramStationHighIntensityMap())) {
-                                inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_" + System.currentTimeMillis() + ".png");
-                                sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                                inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_" + System.currentTimeMillis() + ".png");
+                            } else {
+                                inputMapFile = null;
                             }
-                            InputFile finalInputFile = inputFile;
-                            boolean finalSendAsAPhoto = sendAsAPhoto;
-                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.STATION, telegramUser, info, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), finalInputFile, finalSendAsAPhoto));
+                            Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.STATION, telegramUser, info, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), info.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputImageFile, inputMapFile));
                             restrictedCall.run();
                         } catch (IOException e) {
                             Logger.error(e);
@@ -374,19 +374,19 @@ public class TelegramService extends AbilityBot {
                 double distGCD = GeoUtils.greatCircleDistance(clientStation.getLatitude(), clientStation.getLongitude(), telegramUser.getHomeLat(), telegramUser.getHomeLon());
                 if (TelegramUtils.canSend(newInfo, telegramUser, distGCD)) {
                     try {
-                        InputFile inputFile = null;
-                        boolean sendAsAPhoto = true;
+                        InputFile inputImageFile;
+                        InputFile inputMapFile;
                         if (Boolean.TRUE.equals(telegramUser.getEnableTelegramStationHighIntensityImage())) {
-                            inputFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, clientStation.getLatitude(), clientStation.getLongitude()), "Station_" + System.currentTimeMillis() + ".png");
-                            sendAsAPhoto = telegramUser.getSendImageAsAPhoto();
+                            inputImageFile = new InputFile(EventImageDrawer.drawEventImage(telegramUser, clientStation.getLatitude(), clientStation.getLongitude()), "Station_" + System.currentTimeMillis() + ".png");
+                        } else {
+                            inputImageFile = null;
                         }
                         if (Boolean.TRUE.equals(telegramUser.getEnableTelegramStationHighIntensityMap())) {
-                            inputFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_" + System.currentTimeMillis() + ".png");
-                            sendAsAPhoto = telegramUser.getSendMapAsAPhoto();
+                            inputMapFile = new InputFile(MapImageDrawer.instance.drawMap(telegramUser), "Station_" + System.currentTimeMillis() + ".png");
+                        } else {
+                            inputMapFile = null;
                         }
-                        InputFile finalInputFile = inputFile;
-                        boolean finalSendAsAPhoto = sendAsAPhoto;
-                        Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), newInfo.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), finalInputFile, finalSendAsAPhoto));
+                        Runnable restrictedCall = RateLimiter.decorateRunnable(rateLimiter, () -> sendMessage(EventType.STATION, telegramUser, newInfo, TelegramUtils.generateStationMessage(clientStation.getIdentifier(), newInfo.getIntensity(), distGCD), clientStation.getLatitude(), clientStation.getLongitude(), inputImageFile, inputMapFile));
                         restrictedCall.run();
                     } catch (IOException e) {
                         Logger.error(e);
@@ -399,7 +399,7 @@ public class TelegramService extends AbilityBot {
         }
     }
 
-    private void sendMessage(EventType eventType, TelegramUser user, TelegramAbstractInfo<?> info, String text, double lat, double lon, InputFile inputFile, boolean sendAsAPhoto) {
+    private void sendMessage(EventType eventType, TelegramUser user, TelegramAbstractInfo<?> info, String text, double lat, double lon, InputFile inputImageFile, InputFile inputMapFile) {
         try {
             Message message = telegramClient.execute(SendMessage.builder().chatId(user.getChatId()).text(text).parseMode(ParseMode.MARKDOWN).build());
             if (info != null) {
@@ -411,11 +411,18 @@ public class TelegramService extends AbilityBot {
                     (eventType == EventType.STATION && user.getEnableTelegramStationHighIntensityLocation())) {
                 telegramClient.execute(SendLocation.builder().chatId(user.getChatId()).latitude(lat).longitude(lon).replyToMessageId(message.getMessageId()).build());
             }
-            if (inputFile != null) {
-                if (sendAsAPhoto) {
-                    telegramClient.execute(SendPhoto.builder().chatId(user.getChatId()).photo(inputFile).replyToMessageId(message.getMessageId()).build());
+            if (inputImageFile != null) {
+                if (Boolean.TRUE.equals(user.getSendImageAsAPhoto())) {
+                    telegramClient.execute(SendPhoto.builder().chatId(user.getChatId()).photo(inputImageFile).replyToMessageId(message.getMessageId()).build());
                 } else {
-                    telegramClient.execute(SendDocument.builder().chatId(user.getChatId()).document(inputFile).replyToMessageId(message.getMessageId()).build());
+                    telegramClient.execute(SendDocument.builder().chatId(user.getChatId()).document(inputImageFile).replyToMessageId(message.getMessageId()).build());
+                }
+            }
+            if (inputMapFile != null) {
+                if (Boolean.TRUE.equals(user.getSendMapAsAPhoto())) {
+                    telegramClient.execute(SendPhoto.builder().chatId(user.getChatId()).photo(inputMapFile).replyToMessageId(message.getMessageId()).build());
+                } else {
+                    telegramClient.execute(SendDocument.builder().chatId(user.getChatId()).document(inputMapFile).replyToMessageId(message.getMessageId()).build());
                 }
             }
             GlobalQuakeClient.instance.getRegistry().counter("message.sent", "user", user.getId().toString(), "type", eventType.toString(), "operation", "create").increment();
