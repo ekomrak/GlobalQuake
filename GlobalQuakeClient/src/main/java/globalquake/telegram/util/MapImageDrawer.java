@@ -143,7 +143,10 @@ public class MapImageDrawer {
     private void drawEarthquakesBox(Graphics2D g, int x, int y) {
         List<Earthquake> quakes = GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes().stream().filter(earthquake -> {
             double distGCD = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), Settings.homeLat, Settings.homeLon);
-            return (((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || !Settings.enableLimitedEarthquakes);
+            double dist = GeoUtils.geologicalDistance(earthquake.getLat(), earthquake.getLon(), -earthquake.getDepth(), Settings.homeLat, Settings.homeLon, 0);
+            double pga = GeoUtils.pgaFunction(earthquake.getMag(), dist, earthquake.getDepth());
+            double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(Settings.tsEarthquakeMinIntensity).getPga();
+            return (((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || (pga >= earthquakeThreshold) || !Settings.enableLimitedEarthquakes);
         }).toList();
         int displayedQuake = quakes.isEmpty() ? -1 : (int) ((System.currentTimeMillis() / 5000) % (quakes.size()));
 

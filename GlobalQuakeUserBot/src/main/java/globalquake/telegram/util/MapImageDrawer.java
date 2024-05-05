@@ -98,10 +98,10 @@ public class MapImageDrawer {
 
         renderer.render(g, renderer.getRenderProperties());
 
-        drawEarthquakesBox(g, 0, 0);
+        drawEarthquakesBox(g, 0, 0, user);
 
         if (Boolean.TRUE.equals(Settings.displayAlertBox)) {
-            drawAlertsBox(g, width, height);
+            drawAlertsBox(g, width, height, user);
         }
 
         if (Boolean.TRUE.equals(Settings.displayTime)) {
@@ -142,10 +142,13 @@ public class MapImageDrawer {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    private void drawEarthquakesBox(Graphics2D g, int x, int y) {
+    private void drawEarthquakesBox(Graphics2D g, int x, int y, TelegramUser user) {
         List<Earthquake> quakes = GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes().stream().filter(earthquake -> {
-            double distGCD = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), Settings.homeLat, Settings.homeLon);
-            return (((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea1) && (distGCD <= Settings.tsEarthquakeMaxDistArea1)) || ((earthquake.getMag() >= Settings.tsEarthquakeMinMagnitudeArea2) && (distGCD <= Settings.tsEarthquakeMaxDistArea2)) || !Settings.enableLimitedEarthquakes);
+            double distGCD = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), user.getHomeLat(), user.getHomeLon());
+            double dist = GeoUtils.geologicalDistance(earthquake.getLat(), earthquake.getLon(), -earthquake.getDepth(), user.getHomeLat(), user.getHomeLon(), 0);
+            double pga = GeoUtils.pgaFunction(earthquake.getMag(), dist, earthquake.getDepth());
+            double earthquakeThreshold = IntensityScales.INTENSITY_SCALES[Settings.tsEarthquakeIntensityScale].getLevels().get(user.getTsEarthquakeMinIntensity()).getPga();
+            return (((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea1()) && (distGCD <= user.getTsEarthquakeMaxDistArea1())) || ((earthquake.getMag() >= user.getTsEarthquakeMinMagnitudeArea2()) && (distGCD <= user.getTsEarthquakeMaxDistArea2())) || (pga >= earthquakeThreshold) || !Settings.enableLimitedEarthquakes);
         }).toList();
         int displayedQuake = quakes.isEmpty() ? -1 : (int) ((System.currentTimeMillis() / 5000) % (quakes.size()));
 
@@ -256,7 +259,7 @@ public class MapImageDrawer {
         }
     }
 
-    private void drawAlertsBox(Graphics2D g, int widthImage, int heightImage) {
+    private void drawAlertsBox(Graphics2D g, int widthImage, int heightImage, TelegramUser user) {
         Earthquake quake = null;
         double maxPGA = 0.0;
         double distGC = 0;
@@ -267,12 +270,12 @@ public class MapImageDrawer {
         // Select quake to be displayed
 
         for (Earthquake earthquake : GlobalQuake.instance.getEarthquakeAnalysis().getEarthquakes()) {
-            double _dist = GeoUtils.geologicalDistance(earthquake.getLat(), earthquake.getLon(), -earthquake.getDepth(), Settings.homeLat, Settings.homeLon, 0);
+            double _dist = GeoUtils.geologicalDistance(earthquake.getLat(), earthquake.getLon(), -earthquake.getDepth(), user.getHomeLat(), user.getHomeLon(), 0);
             double pga = GeoUtils.pgaFunction(earthquake.getMag(), _dist, earthquake.getDepth());
             if (pga > maxPGA) {
                 maxPGA = pga;
 
-                double _distGC = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), Settings.homeLat, Settings.homeLon);
+                double _distGC = GeoUtils.greatCircleDistance(earthquake.getLat(), earthquake.getLon(), user.getHomeLat(), user.getHomeLon());
                 double age = (GlobalQuake.instance.currentTimeMillis() - earthquake.getOrigin()) / 1000.0;
 
                 double pTravel = (TauPTravelTimeCalculator.getPWaveTravelTime(earthquake.getDepth(),
