@@ -90,13 +90,19 @@ public class SettingsFrame extends GQFrame {
                 try {
                     panel1.save();
                 } catch (NumberFormatException exx) {
+                    setAlwaysOnTop(false);
                     GlobalQuake.getErrorHandler().handleWarning(new RuntimeApplicationException("Failed to parse a number: %s".formatted(exx.getMessage()), exx));
+                    setAlwaysOnTop(true);
                     return;
                 } catch (RuntimeApplicationException exxx) {
+                    setAlwaysOnTop(false);
                     GlobalQuake.getErrorHandler().handleWarning(exxx);
+                    setAlwaysOnTop(true);
                     return;
                 } catch (Exception ex) {
+                    setAlwaysOnTop(false);
                     GlobalQuake.getErrorHandler().handleException(ex);
+                    setAlwaysOnTop(true);
                     return;
                 }
             }
