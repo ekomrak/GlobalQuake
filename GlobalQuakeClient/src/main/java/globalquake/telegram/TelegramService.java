@@ -159,7 +159,8 @@ public class TelegramService extends AbilityBot {
                 new ShowSettingsAbility(this),
                 new SettingsAbility(this),
                 new DrawMapAbility(this),
-                new ProcessInputAbility(this));
+                new ProcessInputAbility(this),
+                new DrawPrivateMapAbility(this));
     }
 
     public SettingsState getSettingsState() {
