@@ -4,6 +4,7 @@ import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
 import globalquake.client.data.ClientStation;
 import globalquake.core.Settings;
+import globalquake.core.GlobalQuake;
 import globalquake.core.database.StationDatabaseManager;
 import globalquake.core.station.AbstractStation;
 import globalquake.core.station.GlobalStationManager;
@@ -103,17 +104,18 @@ public class GlobalStationManagerClient extends GlobalStationManager {
     }
 
     private void resetIndexing(ClientSocket socket, UUID uuid) {
-        if (super.indexing != null) {
-            Logger.info("Station indexing has changed, probably because the server has been restarted");
-            try {
-                socket.sendPacket(new StationsRequestPacket());
-            } catch (IOException e) {
-                Logger.error(e);
-            }
-        }
-
+        Logger.info("Station indexing has changed, probably because the server has been restarted");
+        ((GlobalQuakeClient)GlobalQuake.getInstance()).onIndexingReset(socket);
         super.indexing = uuid;
+    }
+
+    public void onIndexingReset(ClientSocket socket) {
         stations.clear();
         stationsIdMap.clear();
+        try {
+            socket.sendPacket(new StationsRequestPacket());
+        } catch (IOException e) {
+            Logger.error(e);
+        }
     }
 }
