@@ -34,6 +34,7 @@ public abstract class AbstractStation {
     public boolean disabled = false;
     public double _lastRenderSize;
     private Collection<NearbyStationDistanceInfo> nearbyStations;
+    public boolean showName = false;
 
     private final Deque<StationInterval> intervals = new ConcurrentLinkedDeque<>();
 

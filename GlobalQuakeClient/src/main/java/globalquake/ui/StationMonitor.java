@@ -90,7 +90,16 @@ public class StationMonitor extends GQFrame {
             }
         });
 
+        JCheckBox chkBoxShowName = new JCheckBox("Show name on the map", station.showName);
+        chkBoxShowName.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                station.showName = chkBoxShowName.isSelected();
+            }
+        });
+
         panel.add(chkBoxDisable);
+        panel.add(chkBoxShowName);
 
         return panel;
     }

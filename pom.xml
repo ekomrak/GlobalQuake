@@ -41,18 +41,18 @@
 		<tritonus-share.version>0.3.7.4</tritonus-share.version> <!-- https://mvnrepository.com/artifact/com.googlecode.soundlibs/tritonus-share -->
 		<jlayer.version>1.0.1</jlayer.version> <!-- https://mvnrepository.com/artifact/javazoom/jlayer -->
 		<flow-noise.version>1.0.0</flow-noise.version> <!-- https://mvnrepository.com/artifact/com.flowpowered/flow-noise -->
-		<JDA.version>5.0.0-beta.23</JDA.version> <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
+		<JDA.version>5.0.0-beta.24</JDA.version> <!-- https://mvnrepository.com/artifact/net.dv8tion/JDA -->
 		<junit.version>4.13.2</junit.version> <!-- https://mvnrepository.com/artifact/junit/junit -->
 
-		<google.cloud.version>26.38.0</google.cloud.version> <!-- https://mvnrepository.com/artifact/com.google.cloud/libraries-bom -->
+		<google.cloud.version>26.39.0</google.cloud.version> <!-- https://mvnrepository.com/artifact/com.google.cloud/libraries-bom -->
 		<telegrambots.version>7.2.1</telegrambots.version> <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-abilities -->
-		<jackson.version>2.17.0</jackson.version> <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom -->
+		<jackson.version>2.17.1</jackson.version> <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom -->
 		<freetts.version>1.2.2</freetts.version> <!-- https://mvnrepository.com/artifact/net.sf.sociaal/freetts -->
 		<caffeine.version>3.1.8</caffeine.version> <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
 		<jdbi3.version>3.45.1</jdbi3.version> <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3-bom -->
 		<HikariCP.version>5.1.0</HikariCP.version> <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
 		<postgresql.version>42.7.3</postgresql.version> <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-		<micrometer.version>1.12.5</micrometer.version> <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-influx -->
+		<micrometer.version>1.13.0</micrometer.version> <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-influx -->
 		<resilience4j.version>2.2.0</resilience4j.version> <!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-ratelimiter -->
 		<jxls.version>3.0.0</jxls.version> <!-- https://mvnrepository.com/artifact/org.jxls/jxls-poi -->
 		<apache.poi.version>5.2.5</apache.poi.version> <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
